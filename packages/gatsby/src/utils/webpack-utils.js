@@ -193,15 +193,17 @@ module.exports = async ({
 
     css: (options = {}) => {
       return {
-        loader: isSSR
-          ? require.resolve(`css-loader/locals`)
-          : require.resolve(`css-loader`),
+        loader: require.resolve(`css-loader`),
         options: {
           sourceMap: !PRODUCTION,
-          camelCase: `dashesOnly`,
+          onlyLocals: isSSR,
+          localsConvention: `dashesOnly`,
           // https://github.com/webpack-contrib/css-loader/issues/406
-          localIdentName: `[name]--[local]--[hash:base64:5]`,
           ...options,
+          modules: {
+            localIdentName: `[name]--[local]--[hash:base64:5]`,
+            ...options.modules,
+          },
         },
       }
     },
@@ -616,7 +618,8 @@ module.exports = async ({
       ...options,
     })
 
-  plugins.moment = () => plugins.ignore(/^\.\/locale$/, /moment$/)
+  plugins.moment = () =>
+    plugins.ignore({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ })
 
   plugins.extractStats = options => new GatsbyWebpackStatsExtractor(options)
 
