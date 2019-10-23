@@ -63,41 +63,48 @@ const buildSchema = async ({
   return schema
 }
 
-const rebuildSchemaWithSitePage = async ({
+const rebuildSchemaWithTypes = async ({
   schemaComposer,
   nodeStore,
   typeMapping,
   fieldExtensions,
   typeConflictReporter,
   parentSpan,
+  typeNames,
+  newNodesByType,
 }) => {
-  const typeComposer = schemaComposer.getOTC(`SitePage`)
-  const shouldInfer =
-    !typeComposer.hasExtension(`infer`) ||
-    typeComposer.getExtension(`infer`) !== false
-  if (shouldInfer) {
-    addInferredType({
+  for (const typeName of typeNames) {
+    const typeComposer = schemaComposer.getOTC(typeName)
+    const shouldInfer = typeComposer.hasExtension(`infer`)
+      ? typeComposer.getExtension(`infer`) ||
+        typeComposer.getExtension(`addDefaultResolvers`)
+      : true
+    if (shouldInfer) {
+      addInferredType({
+        schemaComposer,
+        typeComposer,
+        nodeStore,
+        nodes: newNodesByType ? newNodesByType[typeName] : undefined,
+        typeConflictReporter,
+        typeMapping,
+        parentSpan,
+      })
+    }
+    await processTypeComposer({
       schemaComposer,
       typeComposer,
+      fieldExtensions,
       nodeStore,
-      typeConflictReporter,
-      typeMapping,
       parentSpan,
     })
   }
-  await processTypeComposer({
-    schemaComposer,
-    typeComposer,
-    fieldExtensions,
-    nodeStore,
-    parentSpan,
-  })
+
   return schemaComposer.buildSchema()
 }
 
 module.exports = {
   buildSchema,
-  rebuildSchemaWithSitePage,
+  rebuildSchemaWithTypes,
 }
 
 const updateSchemaComposer = async ({

@@ -4,7 +4,7 @@ const tracer = require(`opentracing`).globalTracer()
 const { store } = require(`../redux`)
 const nodeStore = require(`../db/nodes`)
 const { createSchemaComposer } = require(`./schema-composer`)
-const { buildSchema, rebuildSchemaWithSitePage } = require(`./schema`)
+const { buildSchema, rebuildSchemaWithTypes } = require(`./schema`)
 const { builtInFieldExtensions } = require(`./extensions`)
 const { TypeConflictReporter } = require(`./infer/type-conflict-reporter`)
 const apiRunner = require(`../utils/api-runner-node`)
@@ -89,13 +89,14 @@ module.exports.rebuildWithSitePage = async ({ parentSpan }) => {
 
   const typeConflictReporter = new TypeConflictReporter()
 
-  const schema = await rebuildSchemaWithSitePage({
+  const schema = await rebuildSchemaWithTypes({
     schemaComposer,
     nodeStore,
     fieldExtensions,
     typeMapping,
     typeConflictReporter,
     parentSpan,
+    typeNames: [`SitePage`],
   })
 
   typeConflictReporter.printConflicts()

@@ -54,7 +54,7 @@ const secondPage = () => {
 
 const nodes = () => [firstPage()]
 
-describe(`build and update schema`, () => {
+describe(`build and update schema for SitePage`, () => {
   let schema
 
   beforeAll(async () => {
@@ -111,13 +111,7 @@ describe(`build and update schema`, () => {
     expect(sortFieldsEnum.getValue(`context___key`)).toBeDefined()
   })
 
-  // FIXME: This is not a problem as long as the only use of rebuilding the
-  // schema to add a `context` field to `SitePage`. But it needs to work
-  // if we want to enable on-demand schema regeneration.
-  // This currently does not work because we need to invalidate all FilterInput
-  // composers on nested types as well. Alternatively, use a local cache
-  // in `filter.js` instead of checking `schemaComposer.has()`.
-  it.skip(`updates nested types on rebuild`, async () => {
+  it(`updates nested types on rebuild`, async () => {
     let fields
     let inputFields
 
@@ -153,3 +147,33 @@ describe(`build and update schema`, () => {
     expect(fieldsEnum.includes(`fields___key`)).toBeTruthy()
   })
 })
+
+// describe(`build and update schema for other types`, () => {
+//   const createNodes = () => [
+//     {
+//       id: `Foo`,
+//       internal: { type: `Foo`, contentDigest: `0` },
+//       numberKey: 1,
+//       stringKey: `5`,
+//       dateKey: `2018-05-05`,
+//     },
+//   ]
+//
+//   let schema
+//
+//   beforeAll(async () => {
+//     store.dispatch({ type: `DELETE_CACHE` })
+//     createNodes().forEach(node =>
+//       actions.createNode(node, { name: `test` })(store.dispatch)
+//     )
+//
+//     await build({})
+//     schema = store.getState().schema
+//   })
+//
+//   it(`should change type when new fields added`, async () => {})
+//
+//   it(`should not change type when nothing changes`, async () => {})
+//
+//   it(`should report error when conflicting changes`, async () => {})
+// })

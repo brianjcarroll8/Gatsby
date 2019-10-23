@@ -165,6 +165,7 @@ const internalExtensionNames = [
   `directives`,
   `infer`,
   `plugin`,
+  `exampleValue`,
   ...specifiedDirectives.map(directive => directive.name),
 ]
 const reservedExtensionNames = [

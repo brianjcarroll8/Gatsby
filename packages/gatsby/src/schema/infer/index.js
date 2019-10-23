@@ -1,3 +1,4 @@
+const _ = require(`lodash`)
 const report = require(`gatsby-cli/lib/reporter`)
 const { ObjectTypeComposer } = require(`graphql-compose`)
 const { getExampleValue } = require(`./example-value`)
@@ -79,17 +80,20 @@ const addInferredType = ({
   nodeStore,
   typeConflictReporter,
   typeMapping,
+  nodes,
   parentSpan,
 }) => {
   const typeName = typeComposer.getTypeName()
-  const nodes = nodeStore.getNodesByType(typeName)
+  if (!nodes) {
+    nodes = nodeStore.getNodesByType(typeName)
+  }
   // TODO: Move this to where the type is created once we can get
   // node type owner information directly from store
   if (typeComposer.getExtension(`createdFrom`) === `inference`) {
     typeComposer.setExtension(`plugin`, nodes[0].internal.owner)
   }
 
-  const exampleValue = getExampleValue({
+  let exampleValue = getExampleValue({
     nodes,
     typeName,
     typeConflictReporter,
@@ -99,6 +103,27 @@ const addInferredType = ({
       `__gatsby_resolved`,
     ],
   })
+
+  if (typeComposer.hasExtension(`exampleValue`)) {
+    const originalExampleValue = typeComposer.getExtension(`exampleValue`)
+    const mergedValue = getExampleValue({
+      nodes: [originalExampleValue, exampleValue],
+      typeName,
+      typeConflictReporter,
+      ignoreFields: [
+        ...getNodeInterface({ schemaComposer }).getFieldNames(),
+        `$loki`,
+        `__gatsby_resolved`,
+      ],
+    })
+    if (_.isEqual(originalExampleValue, mergedValue)) {
+      return typeComposer
+    } else {
+      exampleValue = mergedValue
+    }
+  }
+
+  typeComposer.setExtension(`exampleValue`, exampleValue)
 
   addInferredFields({
     schemaComposer,
