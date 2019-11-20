@@ -4,19 +4,21 @@ const normalize = require(`normalize-path`)
 import glob from "glob"
 const levenshtein = require(`fast-levenshtein`)
 
-import { validate } from "graphql"
-import { IRTransforms } from "@gatsbyjs/relay-compiler"
-import RelayParser from "@gatsbyjs/relay-compiler/lib/RelayParser"
-import ASTConvert from "@gatsbyjs/relay-compiler/lib/ASTConvert"
-import GraphQLCompilerContext from "@gatsbyjs/relay-compiler/lib/GraphQLCompilerContext"
-import filterContextForNode from "@gatsbyjs/relay-compiler/lib/filterContextForNode"
+import {
+  IRTransforms,
+  Parser as RelayParser,
+  ASTConvert,
+  filterContextForNode,
+  CompilerContext as GraphQLCompilerContext,
+  IRPrinter as GraphQLIRPrinter,
+  Schema,
+} from "relay-compiler"
 import getGatsbyDependents from "../utils/gatsby-dependents"
 const _ = require(`lodash`)
 
 import { store } from "../redux"
 const { boundActionCreators } = require(`../redux/actions`)
 import FileParser from "./file-parser"
-import GraphQLIRPrinter from "@gatsbyjs/relay-compiler/lib/GraphQLIRPrinter"
 import { graphqlError, multipleRootQueriesError } from "./graphql-errors"
 import report from "gatsby-cli/lib/reporter"
 import errorParser, { locInGraphQlToLocInFile } from "./error-parser"
@@ -24,7 +26,27 @@ const websocketManager = require(`../utils/websocket-manager`)
 
 import type { DocumentNode, GraphQLSchema } from "graphql"
 
-const { printTransforms } = IRTransforms
+const ClientExtensionsTransform = require(`relay-compiler/lib/transforms/ClientExtensionsTransform`)
+const FilterDirectivesTransform = require(`relay-compiler/lib/transforms/FilterDirectivesTransform`)
+const FlattenTransform = require(`relay-compiler/lib/transforms/FlattenTransform`)
+const GenerateTypeNameTransform = require(`relay-compiler/lib/transforms/GenerateTypeNameTransform`)
+const SkipClientExtensionsTransform = require(`relay-compiler/lib/transforms/SkipClientExtensionsTransform`)
+const SkipHandleFieldTransform = require(`relay-compiler/lib/transforms/SkipHandleFieldTransform`)
+const SkipUnreachableNodeTransform = require(`relay-compiler/lib/transforms/SkipUnreachableNodeTransform`)
+const ValidateRequiredArgumentsTransform = require(`relay-compiler/lib/transforms/ValidateRequiredArgumentsTransform`)
+
+const printTransforms = [
+  ClientExtensionsTransform.transform,
+  SkipClientExtensionsTransform.transform,
+  SkipUnreachableNodeTransform.transform,
+  FlattenTransform.transformWithOptions({}),
+  GenerateTypeNameTransform.transform,
+  SkipHandleFieldTransform.transform,
+  FilterDirectivesTransform.transform,
+  // Breaks on nested variables
+  // SkipUnusedVariablesTransform.transform,
+  ValidateRequiredArgumentsTransform.transform,
+]
 
 const {
   ValuesOfCorrectTypeRule,
@@ -36,7 +58,10 @@ const {
   VariablesAreInputTypesRule,
   VariablesInAllowedPositionRule,
   Kind,
+  validate,
+  printSchema,
   print,
+  Source,
 } = require(`graphql`)
 
 type RootQuery = {
@@ -84,12 +109,13 @@ class Runner {
   ) {
     this.base = base
     this.additional = additional
-    this.schema = schema
+    this.graphQLSchema = schema
+    this.relaySchema = Schema.create(new Source(printSchema(schema)))
     this.parentSpan = parentSpan
   }
 
   async compileAll(addError) {
-    let nodes = await this.parseEverything(addError)
+    const nodes = await this.parseEverything(addError)
     const results = await this.write(nodes, addError)
 
     return results
@@ -139,7 +165,7 @@ class Runner {
 
     files = _.uniq(files)
 
-    let parser = new FileParser({ parentSpan: this.parentSpan })
+    const parser = new FileParser({ parentSpan: this.parentSpan })
 
     return await parser.parseFiles(files, addError)
   }
@@ -152,8 +178,8 @@ class Runner {
     const documents = []
     const fragmentMap = new Map()
 
-    for (let [filePath, doc] of nodes.entries()) {
-      let errors = validate(this.schema, doc, validationRules)
+    for (const [filePath, doc] of nodes.entries()) {
+      const errors = validate(this.graphQLSchema, doc, validationRules)
 
       if (errors && errors.length) {
         addError(
@@ -201,13 +227,12 @@ class Runner {
       })
     }
 
-    let compilerContext = new GraphQLCompilerContext(this.schema)
+    let compilerContext = new GraphQLCompilerContext(this.relaySchema)
     try {
       compilerContext = compilerContext.addAll(
         ASTConvert.convertASTDocuments(
-          this.schema,
+          this.relaySchema,
           documents,
-          validationRules,
           RelayParser.transform.bind(RelayParser)
         )
       )
@@ -229,14 +254,10 @@ class Runner {
       return false
     }
 
-    // relay-compiler v1.5.0 added "StripUnusedVariablesTransform" to
-    // printTransforms. Unfortunately it currently doesn't detect variables
-    // in input objects widely used in gatsby, and therefore removing
-    // variable declaration from queries.
-    // As a temporary workaround remove that transform by slicing printTransforms.
-    const printContext = printTransforms
-      .slice(0, -1)
-      .reduce((ctx, transform) => transform(ctx, this.schema), compilerContext)
+    const printContext = printTransforms.reduce(
+      (ctx, transform) => transform(ctx),
+      compilerContext
+    )
 
     const fragments = []
     compilerContext.documents().forEach(node => {
@@ -248,9 +269,9 @@ class Runner {
     compilerContext.documents().forEach((node: { name: string }) => {
       if (node.kind !== `Root`) return
       const { name } = node
-      let filePath = namePathMap.get(name) || ``
+      const filePath = namePathMap.get(name) || ``
       if (compiledNodes.has(filePath)) {
-        let otherNode = compiledNodes.get(filePath)
+        const otherNode = compiledNodes.get(filePath)
 
         addError(
           multipleRootQueriesError(

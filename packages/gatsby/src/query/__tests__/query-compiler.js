@@ -4,6 +4,8 @@ jest.mock(`glob`, () => {
     sync,
   }
 })
+
+const { buildSchema } = require(`graphql`)
 const path = require(`path`)
 const glob = require(`glob`)
 const { resolveThemes, Runner } = require(`../query-compiler`)
@@ -11,12 +13,17 @@ const { resolveThemes, Runner } = require(`../query-compiler`)
 const base = path.resolve(``)
 
 describe(`Runner`, () => {
+  const schema = buildSchema(`
+    type Query {
+      foo: String
+    }
+  `)
   beforeEach(() => {
     glob.sync.mockClear()
   })
 
   it(`returns a file parser instance`, async () => {
-    const runner = new Runner(base, [], {})
+    const runner = new Runner(base, [], schema)
 
     const parser = await runner.parseEverything()
 
@@ -25,9 +32,14 @@ describe(`Runner`, () => {
 
   describe(`expected directories`, () => {
     it(`compiles src directory`, async () => {
-      const runner = new Runner(base, [], {})
+      const runner = new Runner(base, [], schema)
 
-      await runner.parseEverything()
+      const errors = []
+      await runner.compileAll(e => {
+        errors.push(e)
+      })
+
+      expect(errors).toEqual([])
 
       expect(glob.sync).toHaveBeenCalledWith(
         expect.stringContaining(path.join(base, `src`)),
@@ -36,9 +48,14 @@ describe(`Runner`, () => {
     })
 
     it(`compiles fragments directory`, async () => {
-      const runner = new Runner(base, [], {})
+      const runner = new Runner(base, [], schema)
 
-      await runner.parseEverything()
+      const errors = []
+      await runner.compileAll(e => {
+        errors.push(e)
+      })
+
+      expect(errors).toEqual([])
 
       expect(glob.sync).toHaveBeenCalledWith(
         expect.stringContaining(path.join(base, `src`)),
@@ -51,10 +68,15 @@ describe(`Runner`, () => {
       const runner = new Runner(
         base,
         [path.join(base, `node_modules`, theme)],
-        {}
+        schema
       )
 
-      await runner.parseEverything()
+      const errors = []
+      await runner.compileAll(e => {
+        errors.push(e)
+      })
+
+      expect(errors).toEqual([])
 
       expect(glob.sync).toHaveBeenCalledWith(
         expect.stringContaining(path.join(base, `node_modules`, theme)),
