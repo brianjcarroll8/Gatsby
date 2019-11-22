@@ -16,7 +16,7 @@ class NewsLetter extends Component {
           <title>Newsletter</title>
           <meta
             name="description"
-            content="Sign up for the Gatsby newsletter to keep up with the latest from the Gatsby community, hear about new features, tips & tricks, and what people are building."
+            content="SSign up for the Gatsby newsletter to keep up with the latest from the Gatsby community, hear about new features, tips & tricks, and what people are building."
           />
         </Helmet>
         <Container
