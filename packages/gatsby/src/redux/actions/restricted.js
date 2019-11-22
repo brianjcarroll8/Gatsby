@@ -1,9 +1,8 @@
-// @flow
 const { camelCase } = require(`lodash`)
 const report = require(`gatsby-cli/lib/reporter`)
 const { parseTypeDef } = require(`../../schema/types/type-defs`)
 
-import type { Plugin } from "./types"
+// import type { Plugin } from "./types"
 
 const actions = {}
 
@@ -21,9 +20,9 @@ const actions = {}
  * @param {GraphQLSchema} $0.schema GraphQL schema to add
  */
 actions.addThirdPartySchema = (
-  { schema }: { schema: GraphQLSchema },
-  plugin: Plugin,
-  traceId?: string
+  { schema } /*: { schema: GraphQLSchema }*/,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `ADD_THIRD_PARTY_SCHEMA`,
@@ -33,7 +32,7 @@ actions.addThirdPartySchema = (
   }
 }
 
-import type GatsbyGraphQLType from "../../schema/types/type-builders"
+// import type GatsbyGraphQLType from "../../schema/types/type-builders"
 /**
  * Add type definitions to the GraphQL schema.
  *
@@ -176,13 +175,13 @@ import type GatsbyGraphQLType from "../../schema/types/type-builders"
  * }
  */
 actions.createTypes = (
-  types:
+  types /*:
     | string
     | GraphQLOutputType
     | GatsbyGraphQLType
-    | Array<string | GraphQLOutputType | GatsbyGraphQLType>,
-  plugin: Plugin,
-  traceId?: string
+    | Array<string | GraphQLOutputType | GatsbyGraphQLType>*/,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `CREATE_TYPES`,
@@ -195,7 +194,7 @@ actions.createTypes = (
 }
 
 const { reservedExtensionNames } = require(`../../schema/extensions`)
-import type GraphQLFieldExtensionDefinition from "../../schema/extensions"
+// import type GraphQLFieldExtensionDefinition from "../../schema/extensions"
 /**
  * Add a field extension to the GraphQL schema.
  *
@@ -238,9 +237,9 @@ import type GraphQLFieldExtensionDefinition from "../../schema/extensions"
  * }
  */
 actions.createFieldExtension = (
-  extension: GraphQLFieldExtensionDefinition,
-  plugin: Plugin,
-  traceId?: string
+  extension /*: GraphQLFieldExtensionDefinition*/,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => (dispatch, getState) => {
   const { name } = extension || {}
   const { fieldExtensions } = getState().schemaCustomization
@@ -293,14 +292,14 @@ actions.printTypeDefinitions = (
     include,
     exclude,
     withFieldTypes = true,
-  }: {
+  } /*: {
     path?: string,
     include?: { types?: Array<string>, plugins?: Array<string> },
     exclude?: { types?: Array<string>, plugins?: Array<string> },
     withFieldTypes?: boolean,
-  },
-  plugin: Plugin,
-  traceId?: string
+  }*/,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `PRINT_SCHEMA_REQUESTED`,
@@ -346,9 +345,9 @@ actions.printTypeDefinitions = (
  * }
  */
 actions.createResolverContext = (
-  context: object,
-  plugin: Plugin,
-  traceId?: string
+  context /*: object*/,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => dispatch => {
   if (!context || typeof context !== `object`) {
     report.error(

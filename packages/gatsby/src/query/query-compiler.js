@@ -1,12 +1,9 @@
-// @flow
-
 /** Query compiler extracts queries and fragments from all files, validates them
  * and then collocates them with fragments they require. This way fragments
  * have global scope and can be used in any other query or fragment.
  */
 
 const _ = require(`lodash`)
-
 const path = require(`path`)
 const normalize = require(`normalize-path`)
 const glob = require(`glob`)
@@ -45,9 +42,11 @@ const websocketManager = require(`../utils/websocket-manager`)
 
 const overlayErrorID = `graphql-compiler`
 
-export default async function compile({ parentSpan } = {}): Promise<
+export default async function compile({
+  parentSpan,
+} = {}) /* : Promise<
   Map<string, RootQuery>
-> {
+> */ {
   // TODO: swap plugins to themes
   const { program, schema, themes, flattenedPlugins } = store.getState()
 
@@ -286,7 +285,7 @@ const processDefinitions = ({
   addError,
   parentSpan,
 }) => {
-  const processedQueries: Queries = new Map()
+  const processedQueries /*: Queries*/ = new Map()
 
   const fragmentsUsedByFragment = new Map()
 

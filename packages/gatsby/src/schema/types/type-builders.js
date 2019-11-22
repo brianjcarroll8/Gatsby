@@ -1,13 +1,13 @@
 // @flow
 
-import type {
-  ComposeObjectTypeConfig,
-  ComposeInputObjectTypeConfig,
-  ComposeInterfaceTypeConfig,
-  ComposeUnionTypeConfig,
-  ComposeEnumTypeConfig,
-  ComposeScalarTypeConfig,
-} from "graphql-compose"
+// import type {
+//   ComposeObjectTypeConfig,
+//   ComposeInputObjectTypeConfig,
+//   ComposeInterfaceTypeConfig,
+//   ComposeUnionTypeConfig,
+//   ComposeEnumTypeConfig,
+//   ComposeScalarTypeConfig,
+// } from "graphql-compose"
 
 const GatsbyGraphQLTypeKind = {
   OBJECT: `OBJECT`,
@@ -18,31 +18,31 @@ const GatsbyGraphQLTypeKind = {
   SCALAR: `SCALAR`,
 }
 
-export type GatsbyGraphQLType =
-  | {
-      kind: GatsbyGraphQLTypeKind.OBJECT,
-      config: ComposeObjectTypeConfig,
-    }
-  | {
-      kind: GatsbyGraphQLTypeKind.INPUT_OBJECT,
-      config: ComposeInputObjectTypeConfig,
-    }
-  | {
-      kind: GatsbyGraphQLTypeKind.UNION,
-      config: ComposeUnionTypeConfig,
-    }
-  | {
-      kind: GatsbyGraphQLTypeKind.INTERFACE,
-      config: ComposeInterfaceTypeConfig,
-    }
-  | {
-      kind: GatsbyGraphQLTypeKind.ENUM,
-      config: ComposeEnumTypeConfig,
-    }
-  | {
-      kind: GatsbyGraphQLTypeKind.SCALAR,
-      config: ComposeScalarTypeConfig,
-    }
+// export type GatsbyGraphQLType =
+//   | {
+//       kind: GatsbyGraphQLTypeKind.OBJECT,
+//       config: ComposeObjectTypeConfig,
+//     }
+//   | {
+//       kind: GatsbyGraphQLTypeKind.INPUT_OBJECT,
+//       config: ComposeInputObjectTypeConfig,
+//     }
+//   | {
+//       kind: GatsbyGraphQLTypeKind.UNION,
+//       config: ComposeUnionTypeConfig,
+//     }
+//   | {
+//       kind: GatsbyGraphQLTypeKind.INTERFACE,
+//       config: ComposeInterfaceTypeConfig,
+//     }
+//   | {
+//       kind: GatsbyGraphQLTypeKind.ENUM,
+//       config: ComposeEnumTypeConfig,
+//     }
+//   | {
+//       kind: GatsbyGraphQLTypeKind.SCALAR,
+//       config: ComposeScalarTypeConfig,
+//     }
 
 const buildObjectType = config => {
   return {

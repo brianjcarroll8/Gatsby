@@ -1,5 +1,3 @@
-/* @flow */
-
 const path = require(`path`)
 const report = require(`gatsby-cli/lib/reporter`)
 const buildHTML = require(`./build-html`)
@@ -17,13 +15,13 @@ const appDataUtil = require(`../utils/app-data`)
 const WorkerPool = require(`../utils/worker/pool`)
 const { structureWebpackErrors } = require(`../utils/webpack-error-utils`)
 
-type BuildArgs = {
-  directory: string,
-  sitePackageJson: object,
-  prefixPaths: boolean,
-  noUglify: boolean,
-  openTracingConfigFile: string,
-}
+// type BuildArgs = {
+//   directory: string,
+//   sitePackageJson: object,
+//   prefixPaths: boolean,
+//   noUglify: boolean,
+//   openTracingConfigFile: string,
+// }
 
 const waitJobsFinished = () =>
   new Promise((resolve, reject) => {
@@ -37,7 +35,7 @@ const waitJobsFinished = () =>
     onEndJob()
   })
 
-module.exports = async function build(program: BuildArgs) {
+module.exports = async function build(program /*: BuildArgs*/) {
   const publicDir = path.join(program.directory, `public`)
   initTracer(program.openTracingConfigFile)
   const buildActivity = report.phantomActivity(`build`)

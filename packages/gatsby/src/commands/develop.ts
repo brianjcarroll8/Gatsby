@@ -1,17 +1,16 @@
-/* @flow */
-
 const url = require(`url`)
 const glob = require(`glob`)
 const fs = require(`fs`)
 const openurl = require(`better-opn`)
 const chokidar = require(`chokidar`)
-const express = require(`express`)
+
+import express from "express"
+import got from "got"
 const graphqlHTTP = require(`express-graphql`)
 const graphqlPlayground = require(`graphql-playground-middleware-express`)
   .default
 const graphiqlExplorer = require(`gatsby-graphiql-explorer`)
 const { formatError } = require(`graphql`)
-const got = require(`got`)
 const webpack = require(`webpack`)
 const webpackConfig = require(`../utils/webpack.config`)
 const bootstrap = require(`../bootstrap`)
@@ -47,6 +46,27 @@ const {
   structureWebpackErrors,
 } = require(`../utils/webpack-error-utils`)
 
+type Cert = {
+  keyPath: string
+  certPath: string
+  key: string
+  cert: string
+}
+
+type Program = {
+  useYarn: boolean
+  open: boolean
+  openTracingConfigFile: string
+  port: number
+  host: string
+  [`cert-file`]?: string
+  [`key-file`]?: string
+  directory: string
+  https?: boolean
+  sitePackageJson: { name: string } // TODO make this into package json spec
+  ssl?: Cert
+}
+
 // const isInteractive = process.stdout.isTTY
 
 // Watch the static directory and copy files to public as they're added or
@@ -61,7 +81,7 @@ onExit(() => {
 })
 
 const waitJobsFinished = () =>
-  new Promise((resolve, reject) => {
+  new Promise(resolve => {
     const onEndJob = () => {
       if (store.getState().jobs.active.length === 0) {
         resolve()
@@ -72,7 +92,7 @@ const waitJobsFinished = () =>
     onEndJob()
   })
 
-async function startServer(program) {
+async function startServer(program: Program) {
   const indexHTMLActivity = report.phantomActivity(`building index.html`, {})
   indexHTMLActivity.start()
   const directory = program.directory
@@ -172,7 +192,7 @@ async function startServer(program) {
           context: {},
           customContext: schemaCustomization.context,
         }),
-        customFormatErrorFn(err) {
+        customFormatErrorFn(err: Error) {
           return {
             ...formatError(err),
             stack: err.stack ? err.stack.split(`\n`) : [],
@@ -281,12 +301,12 @@ async function startServer(program) {
   // This fixes "Unexpected token < in JSON at position 0" runtime
   // errors after restarting development server and
   // cause automatic hard refresh in the browser.
-  app.use(/.*\.hot-update\.json$/i, (req, res) => {
+  app.use(/.*\.hot-update\.json$/i, (_, res) => {
     res.status(404).end()
   })
 
   // Render an HTML page and serve it.
-  app.use((req, res, next) => {
+  app.use((_, res) => {
     res.sendFile(directoryPath(`public/index.html`), err => {
       if (err) {
         res.status(500).end()
@@ -306,19 +326,23 @@ async function startServer(program) {
   websocketManager.init({ server, directory: program.directory })
   const socket = websocketManager.getSocket()
 
-  const listener = server.listen(program.port, program.host, err => {
-    if (err) {
-      if (err.code === `EADDRINUSE`) {
-        // eslint-disable-next-line max-len
-        report.panic(
-          `Unable to start Gatsby on port ${program.port} as there's already a process listening on that port.`
-        )
-        return
-      }
+  const listener = server.listen(
+    program.port,
+    program.host,
+    (err?: Error & { code: string }) => {
+      if (err) {
+        if (err.code === `EADDRINUSE`) {
+          // eslint-disable-next-line max-len
+          report.panic(
+            `Unable to start Gatsby on port ${program.port} as there's already a process listening on that port.`
+          )
+          return
+        }
 
-      report.panic(`There was a problem starting the development server`, err)
+        report.panic(`There was a problem starting the development server`, err)
+      }
     }
-  })
+  )
 
   // Register watcher that rebuilds index.html every time html.js changes.
   const watchGlobs = [`src/html.js`, `plugins/**/gatsby-ssr.js`].map(path =>
@@ -333,7 +357,7 @@ async function startServer(program) {
   return { compiler, listener, webpackActivity }
 }
 
-module.exports = async (program: any) => {
+module.exports = async (program: Program) => {
   initTracer(program.openTracingConfigFile)
   report.pendingActivity({ id: `webpack-develop` })
   telemetry.trackCli(`DEVELOP_START`)
@@ -400,15 +424,15 @@ module.exports = async (program: any) => {
 
   let { compiler, webpackActivity } = await startServer(program)
 
-  function prepareUrls(protocol, host, port) {
-    const formatUrl = hostname =>
+  function prepareUrls(protocol: "http" | "https", host: string, port: number) {
+    const formatUrl = (hostname: string) =>
       url.format({
         protocol,
         hostname,
         port,
         pathname: `/`,
       })
-    const prettyPrintUrl = hostname =>
+    const prettyPrintUrl = (hostname: string) =>
       url.format({
         protocol,
         hostname,
@@ -458,7 +482,10 @@ module.exports = async (program: any) => {
     }
   }
 
-  function printInstructions(appName, urls, useYarn) {
+  function printInstructions(
+    appName: string,
+    urls: any // TODO
+  ) {
     console.log()
     console.log(`You can now view ${chalk.bold(appName)} in the browser.`)
     console.log()
@@ -508,7 +535,10 @@ module.exports = async (program: any) => {
   }
 
   function printDeprecationWarnings() {
-    const deprecatedApis = [`boundActionCreators`, `pathContext`]
+    const deprecatedApis: (`boundActionCreators` | `pathContext`)[] = [
+      `boundActionCreators`,
+      `pathContext`,
+    ]
     const fixMap = {
       boundActionCreators: {
         newName: `actions`,
@@ -519,15 +549,17 @@ module.exports = async (program: any) => {
         docsLink: `https://gatsby.dev/pathContext`,
       },
     }
-    const deprecatedLocations = {}
-    deprecatedApis.forEach(api => (deprecatedLocations[api] = []))
+    const deprecatedLocations = {
+      boundActionCreators: [] as string[],
+      pathContext: [] as string[],
+    }
 
     glob
       .sync(`{,!(node_modules|public)/**/}*.js`, { nodir: true })
-      .forEach(file => {
+      .forEach((file: string) => {
         const fileText = fs.readFileSync(file)
-        const matchingApis = deprecatedApis.filter(api =>
-          fileText.includes(api)
+        const matchingApis = deprecatedApis.filter(
+          api => fileText.indexOf(api) !== -1
         )
         matchingApis.forEach(api => deprecatedLocations[api].push(file))
       })
@@ -554,7 +586,10 @@ module.exports = async (program: any) => {
   //   console.log(`set invalid`, args, this)
   // })
 
-  compiler.hooks.watchRun.tapAsync(`log compiling`, function(args, done) {
+  compiler.hooks.watchRun.tapAsync(`log compiling`, function(
+    _: any,
+    done: () => void
+  ) {
     if (webpackActivity) {
       webpackActivity.end()
     }
@@ -570,8 +605,8 @@ module.exports = async (program: any) => {
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.hooks.done.tapAsync(`print gatsby instructions`, function(
-    stats,
-    done
+    stats: any, // TODO webpack stats
+    done: () => void
   ) {
     // We have switched off the default Webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
@@ -585,10 +620,10 @@ module.exports = async (program: any) => {
     const isSuccessful = !messages.errors.length
 
     if (isSuccessful && isFirstCompile) {
-      printInstructions(program.sitePackageJson.name, urls, program.useYarn)
+      printInstructions(program.sitePackageJson.name, urls)
       printDeprecationWarnings()
       if (program.open) {
-        Promise.resolve(openurl(urls.localUrlForBrowser)).catch(err =>
+        Promise.resolve(openurl(urls.localUrlForBrowser)).catch(() =>
           console.log(
             `${chalk.yellow(
               `warn`

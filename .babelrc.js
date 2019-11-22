@@ -9,5 +9,6 @@ if (process.env.NODE_ENV !== `test`) {
 module.exports = {
   sourceMaps: true,
   presets: ["babel-preset-gatsby-package"],
+  plugins: [["@babel/plugin-transform-typescript", { isTSX: true }]],
   ignore,
 }

@@ -1,4 +1,3 @@
-// @flow
 const Joi = require(`@hapi/joi`)
 const chalk = require(`chalk`)
 const _ = require(`lodash`)
@@ -61,32 +60,32 @@ const findChildren = initialChildren => {
   return children
 }
 
-import type { Plugin } from "./types"
+// import type { Plugin } from "./types"
 
-type Job = {
-  id: string,
-}
-type PageInput = {
-  path: string,
-  component: string,
-  context?: Object,
-}
+// type Job = {
+//   id: string,
+// }
+// type PageInput = {
+//   path: string,
+//   component: string,
+//   context?: Object,
+// }
 
-type Page = {
-  path: string,
-  matchPath: ?string,
-  component: string,
-  context: Object,
-  internalComponentName: string,
-  componentChunkName: string,
-  updatedAt: number,
-}
+// type Page = {
+//   path: string,
+//   matchPath: ?string,
+//   component: string,
+//   context: Object,
+//   internalComponentName: string,
+//   componentChunkName: string,
+//   updatedAt: number,
+// }
 
-type ActionOptions = {
-  traceId: ?string,
-  parentSpan: ?Object,
-  followsSpan: ?Object,
-}
+// type ActionOptions = {
+//   traceId: ?string,
+//   parentSpan: ?Object,
+//   followsSpan: ?Object,
+// }
 
 /**
  * Delete a page
@@ -96,7 +95,7 @@ type ActionOptions = {
  * @example
  * deletePage(page)
  */
-actions.deletePage = (page: PageInput) => {
+actions.deletePage = (page /*: PageInput*/) => {
   return {
     type: `DELETE_PAGE`,
     payload: page,
@@ -133,9 +132,9 @@ const fileOkCache = {}
  * })
  */
 actions.createPage = (
-  page: PageInput,
-  plugin?: Plugin,
-  actionOptions?: ActionOptions
+  page /*: PageInput*/,
+  plugin /*?: Plugin*/,
+  actionOptions /*?: ActionOptions*/
 ) => {
   let name = `The plugin "${plugin.name}"`
   if (plugin.name === `default-site-plugin`) {
@@ -350,7 +349,7 @@ ${reservedFields.map(f => `  * "${f}"`).join(`\n`)}
     internalComponentName = `Component${pascalCase(page.path)}`
   }
 
-  let internalPage: Page = {
+  let internalPage /*: Page*/ = {
     internalComponentName,
     path: page.path,
     matchPath: page.matchPath,
@@ -426,7 +425,7 @@ ${reservedFields.map(f => `  * "${f}"`).join(`\n`)}
     fileOkCache[internalPage.component] = true
   }
 
-  const oldPage: Page = store.getState().pages.get(internalPage.path)
+  const oldPage /*: Page*/ = store.getState().pages.get(internalPage.path)
   const contextModified =
     !!oldPage && !_.isEqual(oldPage.context, internalPage.context)
 
@@ -460,7 +459,11 @@ ${reservedFields.map(f => `  * "${f}"`).join(`\n`)}
  * @example
  * deleteNode({node: node})
  */
-actions.deleteNode = (options: any, plugin: Plugin, args: any) => {
+actions.deleteNode = (
+  options /*: any*/,
+  plugin /*: Plugin*/,
+  args /*: any*/
+) => {
   let id
 
   // Check if using old method signature. Warn about incorrect usage but get
@@ -536,7 +539,7 @@ actions.deleteNode = (options: any, plugin: Plugin, args: any) => {
  * @example
  * deleteNodes([`node1`, `node2`])
  */
-actions.deleteNodes = (nodes: any[], plugin: Plugin) => {
+actions.deleteNodes = (nodes /*: any[]*/, plugin /*: Plugin*/) => {
   let msg =
     `The "deleteNodes" action is now deprecated and will be removed in ` +
     `Gatsby v3. Please use "deleteNode" instead.`
@@ -645,9 +648,9 @@ const typeOwners = {}
  * })
  */
 const createNode = (
-  node: any,
-  plugin?: Plugin,
-  actionOptions?: ActionOptions = {}
+  node /*: any*/,
+  plugin /*?: Plugin*/,
+  actionOptions /*?: ActionOptions = {}*/
 ) => {
   if (!_.isObject(node)) {
     return console.log(
@@ -869,7 +872,7 @@ actions.createNode = (...args) => dispatch => {
  * @example
  * touchNode({ nodeId: `a-node-id` })
  */
-actions.touchNode = (options: any, plugin?: Plugin) => {
+actions.touchNode = (options /*: any*/, plugin /*?: Plugin*/) => {
   let nodeId = _.get(options, `nodeId`)
 
   // Check if using old method signature. Warn about incorrect usage
@@ -897,13 +900,13 @@ actions.touchNode = (options: any, plugin?: Plugin) => {
   }
 }
 
-type CreateNodeInput = {
-  node: Object,
-  fieldName?: string,
-  fieldValue?: string,
-  name?: string,
-  value: any,
-}
+// type CreateNodeInput = {
+//   node: Object,
+//   fieldName?: string,
+//   fieldValue?: string,
+//   name?: string,
+//   value: any,
+// }
 /**
  * Extend another node. The new node field is placed under the `fields`
  * key on the extended node object.
@@ -927,9 +930,9 @@ type CreateNodeInput = {
  * // The field value is now accessible at node.fields.happiness
  */
 actions.createNodeField = (
-  { node, name, value, fieldName, fieldValue }: CreateNodeInput,
-  plugin: Plugin,
-  actionOptions?: ActionOptions
+  { node, name, value, fieldName, fieldValue } /*: CreateNodeInput*/,
+  plugin /*: Plugin*/,
+  actionOptions /*?: ActionOptions*/
 ) => {
   if (fieldName) {
     console.warn(
@@ -1002,8 +1005,8 @@ actions.createNodeField = (
  * createParentChildLink({ parent: parentNode, child: childNode })
  */
 actions.createParentChildLink = (
-  { parent, child }: { parent: any, child: any },
-  plugin?: Plugin
+  { parent, child } /*: { parent: any, child: any }*/,
+  plugin /*?: Plugin*/
 ) => {
   // Update parent
   parent.children.push(child.id)
@@ -1025,7 +1028,10 @@ actions.createParentChildLink = (
  *
  * @param {Object} config partial webpack config, to be merged into the current one
  */
-actions.setWebpackConfig = (config: Object, plugin?: ?Plugin = null) => {
+actions.setWebpackConfig = (
+  config /*: Object*/,
+  plugin /*?: ?Plugin*/ = null
+) => {
   return {
     type: `SET_WEBPACK_CONFIG`,
     plugin,
@@ -1042,7 +1048,10 @@ actions.setWebpackConfig = (config: Object, plugin?: ?Plugin = null) => {
  *
  * @param {Object} config complete webpack config
  */
-actions.replaceWebpackConfig = (config: Object, plugin?: ?Plugin = null) => {
+actions.replaceWebpackConfig = (
+  config /*: Object*/,
+  plugin /*?: ?Plugin*/ = null
+) => {
   return {
     type: `REPLACE_WEBPACK_CONFIG`,
     plugin,
@@ -1061,7 +1070,10 @@ actions.replaceWebpackConfig = (config: Object, plugin?: ?Plugin = null) => {
  *   }
  * })
  */
-actions.setBabelOptions = (options: Object, plugin?: ?Plugin = null) => {
+actions.setBabelOptions = (
+  options /*: Object*/,
+  plugin /*?: ?Plugin*/ = null
+) => {
   // Validate
   let name = `The plugin "${plugin.name}"`
   if (plugin.name === `default-site-plugin`) {
@@ -1103,7 +1115,10 @@ actions.setBabelOptions = (options: Object, plugin?: ?Plugin = null) => {
  *   },
  * })
  */
-actions.setBabelPlugin = (config: Object, plugin?: ?Plugin = null) => {
+actions.setBabelPlugin = (
+  config /*: Object*/,
+  plugin /*?: ?Plugin*/ = null
+) => {
   // Validate
   let name = `The plugin "${plugin.name}"`
   if (plugin.name === `default-site-plugin`) {
@@ -1139,7 +1154,10 @@ actions.setBabelPlugin = (config: Object, plugin?: ?Plugin = null) => {
  *   },
  * })
  */
-actions.setBabelPreset = (config: Object, plugin?: ?Plugin = null) => {
+actions.setBabelPreset = (
+  config /*: Object*/,
+  plugin /*?: ?Plugin*/ = null
+) => {
   // Validate
   let name = `The plugin "${plugin.name}"`
   if (plugin.name === `default-site-plugin`) {
@@ -1174,7 +1192,7 @@ actions.setBabelPreset = (config: Object, plugin?: ?Plugin = null) => {
  * @example
  * createJob({ id: `write file id: 123`, fileName: `something.jpeg` })
  */
-actions.createJob = (job: Job, plugin?: ?Plugin = null) => {
+actions.createJob = (job /*: Job*/, plugin /*?: ?Plugin*/ = null) => {
   return {
     type: `CREATE_JOB`,
     plugin,
@@ -1191,7 +1209,7 @@ actions.createJob = (job: Job, plugin?: ?Plugin = null) => {
  * @example
  * setJob({ id: `write file id: 123`, progress: 50 })
  */
-actions.setJob = (job: Job, plugin?: ?Plugin = null) => {
+actions.setJob = (job /*: Job*/, plugin /*?: ?Plugin*/ = null) => {
   return {
     type: `SET_JOB`,
     plugin,
@@ -1208,7 +1226,7 @@ actions.setJob = (job: Job, plugin?: ?Plugin = null) => {
  * @example
  * endJob({ id: `write file id: 123` })
  */
-actions.endJob = (job: Job, plugin?: ?Plugin = null) => {
+actions.endJob = (job /*: Job*/, plugin /*?: ?Plugin*/ = null) => {
   return {
     type: `END_JOB`,
     plugin,
@@ -1225,8 +1243,8 @@ actions.endJob = (job: Job, plugin?: ?Plugin = null) => {
  * setPluginStatus({ lastFetched: Date.now() })
  */
 actions.setPluginStatus = (
-  status: { [key: string]: mixed },
-  plugin: Plugin
+  status /*: { [key: string]: mixed }*/,
+  plugin /*: Plugin*/
 ) => {
   return {
     type: `SET_PLUGIN_STATUS`,
@@ -1306,8 +1324,8 @@ actions.createPageDependency = (
     path,
     nodeId,
     connection,
-  }: { path: string, nodeId: string, connection: string },
-  plugin: string = ``
+  } /*: { path: string, nodeId: string, connection: string }*/,
+  plugin /*: string = ``*/
 ) => {
   console.warn(
     `Calling "createPageDependency" directly from actions in deprecated. Use "createPageDependency" from "gatsby/dist/redux/actions/add-page-dependency".`

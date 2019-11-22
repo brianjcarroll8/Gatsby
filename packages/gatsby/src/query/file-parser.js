@@ -1,4 +1,3 @@
-// @flow
 const fs = require(`fs-extra`)
 const crypto = require(`crypto`)
 const _ = require(`lodash`)
@@ -15,7 +14,7 @@ const {
 
 const report = require(`gatsby-cli/lib/reporter`)
 
-import type { DocumentNode } from "graphql"
+// import type { DocumentNode } from "graphql"
 import { babelParseToAst } from "../utils/babel-parse-to-ast"
 import { codeFrameColumns } from "@babel/code-frame"
 
@@ -116,21 +115,21 @@ const warnForGlobalTag = file =>
       file
   )
 
-type GraphQLDocumentInFile = {
-  filePath: string,
-  doc: DocumentNode,
-  templateLoc: string,
-  text: string,
-  hash: string,
-  isHook: boolean,
-  isStaticQuery: boolean,
-}
+// type GraphQLDocumentInFile = {
+//   filePath: string,
+//   doc: DocumentNode,
+//   templateLoc: string,
+//   text: string,
+//   hash: string,
+//   isHook: boolean,
+//   isStaticQuery: boolean,
+// }
 
 async function findGraphQLTags(
   file,
   text,
   { parentSpan, addError } = {}
-): Promise<Array<GraphQLDocumentInFile>> {
+) /*: Promise<Array<GraphQLDocumentInFile>>*/ {
   return new Promise((resolve, reject) => {
     parseToAst(file, text, { parentSpan, addError })
       .then(ast => {
@@ -365,7 +364,7 @@ export default class FileParser {
     this.parentSpan = parentSpan
   }
 
-  async parseFile(file: string, addError): Promise<?DocumentNode> {
+  async parseFile(file /*: string*/, addError) /*: Promise<?DocumentNode>*/ {
     let text
     try {
       text = await fs.readFile(file, `utf8`)
@@ -488,10 +487,10 @@ export default class FileParser {
   }
 
   async parseFiles(
-    files: Array<string>,
+    files /*: Array<string>*/,
     addError
-  ): Promise<Array<DocumentNode>> {
-    const documents = []
+  ) /*: Promise<Array<DocumentNode>> */ {
+    const documents = new Map()
 
     return Promise.all(
       files.map(file =>

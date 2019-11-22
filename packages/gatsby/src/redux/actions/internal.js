@@ -1,5 +1,4 @@
-// @flow
-import type { Plugin } from "./types"
+// import type { Plugin } from "./types"
 
 const actions = {}
 
@@ -17,8 +16,8 @@ actions.createPageDependency = (
     path,
     nodeId,
     connection,
-  }: { path: string, nodeId: string, connection: string },
-  plugin: string = ``
+  } /* { path: string, nodeId: string, connection: string }*/,
+  plugin /*: string = ``*/
 ) => {
   return {
     type: `CREATE_COMPONENT_DEPENDENCY`,
@@ -37,7 +36,7 @@ actions.createPageDependency = (
  * @param {Array} paths the paths to delete.
  * @private
  */
-actions.deleteComponentsDependencies = (paths: string[]) => {
+actions.deleteComponentsDependencies = (paths /*: string[]*/) => {
   return {
     type: `DELETE_COMPONENTS_DEPENDENCIES`,
     payload: {
@@ -51,13 +50,12 @@ actions.deleteComponentsDependencies = (paths: string[]) => {
  * this to store the query with its component.
  * @private
  */
-actions.replaceComponentQuery = ({
-  query,
-  componentPath,
-}: {
+actions.replaceComponentQuery = (
+  { query, componentPath } /*: {
   query: string,
   componentPath: string,
-}) => {
+}*/
+) => {
   return {
     type: `REPLACE_COMPONENT_QUERY`,
     payload: {
@@ -72,7 +70,7 @@ actions.replaceComponentQuery = ({
  * components, it calls this to store the query with its component.
  * @private
  */
-actions.replaceStaticQuery = (args: any, plugin?: ?Plugin = null) => {
+actions.replaceStaticQuery = (args /*: any*/, plugin /*?: ?Plugin*/ = null) => {
   return {
     type: `REPLACE_STATIC_QUERY`,
     plugin,
@@ -93,8 +91,8 @@ actions.replaceStaticQuery = (args: any, plugin?: ?Plugin = null) => {
  */
 actions.queryExtracted = (
   { componentPath, query },
-  plugin: Plugin,
-  traceId?: string
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `QUERY_EXTRACTED`,
@@ -116,8 +114,8 @@ actions.queryExtracted = (
  */
 actions.queryExtractionGraphQLError = (
   { componentPath, error },
-  plugin: Plugin,
-  traceId?: string
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `QUERY_EXTRACTION_GRAPHQL_ERROR`,
@@ -139,8 +137,8 @@ actions.queryExtractionGraphQLError = (
  */
 actions.queryExtractedBabelSuccess = (
   { componentPath },
-  plugin: Plugin,
-  traceId?: string
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `QUERY_EXTRACTION_BABEL_SUCCESS`,
@@ -162,8 +160,8 @@ actions.queryExtractedBabelSuccess = (
  */
 actions.queryExtractionBabelError = (
   { componentPath, error },
-  plugin: Plugin,
-  traceId?: string
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `QUERY_EXTRACTION_BABEL_ERROR`,
@@ -179,7 +177,11 @@ actions.queryExtractionBabelError = (
  * @param {string} Program status
  * @private
  */
-actions.setProgramStatus = (status, plugin: Plugin, traceId?: string) => {
+actions.setProgramStatus = (
+  status,
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
+) => {
   return {
     type: `SET_PROGRAM_STATUS`,
     plugin,
@@ -196,8 +198,8 @@ actions.setProgramStatus = (status, plugin: Plugin, traceId?: string) => {
  */
 actions.pageQueryRun = (
   { path, componentPath, isPage },
-  plugin: Plugin,
-  traceId?: string
+  plugin /*: Plugin*/,
+  traceId /*?: string*/
 ) => {
   return {
     type: `PAGE_QUERY_RUN`,

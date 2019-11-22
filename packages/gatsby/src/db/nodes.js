@@ -1,25 +1,24 @@
-/* @flow */
 const _ = require(`lodash`)
 const { store } = require(`../redux`)
 
-interface NodeStore {
-  getNodes: () => Array<any>;
-  getNode: (id: string) => any | undefined;
-  getNodesByType: (type: string) => Array<any>;
-  getTypes: () => Array<string>;
-  hasNodeChanged: (id: string, digest: string) => boolean;
-  getNodeAndSavePathDependency: (id: string, path: string) => any | undefined;
-  runQuery: (args: {
-    gqlType: GraphQLType,
-    queryArgs: Object,
-    firstOnly: boolean,
-    resolvedFields: Object,
-    nodeTypeNames: Array<string>,
-  }) => any | undefined;
-}
+// interface NodeStore {
+//   getNodes: () => Array<any>;
+//   getNode: (id: string) => any | undefined;
+//   getNodesByType: (type: string) => Array<any>;
+//   getTypes: () => Array<string>;
+//   hasNodeChanged: (id: string, digest: string) => boolean;
+//   getNodeAndSavePathDependency: (id: string, path: string) => any | undefined;
+//   runQuery: (args: {
+//     gqlType: GraphQLType,
+//     queryArgs: Object,
+//     firstOnly: boolean,
+//     resolvedFields: Object,
+//     nodeTypeNames: Array<string>,
+//   }) => any | undefined;
+// }
 
 const backend = process.env.GATSBY_DB_NODES || `redux`
-let nodesDb: NodeStore
+let nodesDb /*: NodeStore*/
 let runQuery
 switch (backend) {
   case `redux`:

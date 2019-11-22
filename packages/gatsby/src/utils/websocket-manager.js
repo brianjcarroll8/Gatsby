@@ -1,5 +1,3 @@
-// @flow
-
 const path = require(`path`)
 const { store } = require(`../redux`)
 const fs = require(`fs`)
@@ -9,12 +7,12 @@ const telemetry = require(`gatsby-telemetry`)
 const url = require(`url`)
 const { createHash } = require(`crypto`)
 
-type QueryResult = {
-  id: string,
-  result: object,
-}
+// type QueryResult = {
+//   id: string,
+//   result: object,
+// }
 
-type QueryResultsMap = Map<string, QueryResult>
+// type QueryResultsMap = Map<string, QueryResult>
 
 const denormalize = path => {
   if (path === undefined) {
@@ -35,9 +33,9 @@ const denormalize = path => {
  * @param {string} directory Root directory of current project.
  */
 const getCachedPageData = async (
-  pagePath: string,
-  directory: string
-): QueryResult => {
+  pagePath /*: string*/,
+  directory /*: string*/
+) /*: QueryResult*/ => {
   const { program, pages } = store.getState()
   const publicDir = path.join(program.directory, `public`)
   if (pages.has(denormalize(pagePath)) || pages.has(pagePath)) {
@@ -78,9 +76,9 @@ const hashPaths = paths => {
  * @param {string} directory Root directory of current project.
  */
 const getCachedStaticQueryResults = (
-  resultsMap: QueryResultsMap,
-  directory: string
-): QueryResultsMap => {
+  resultsMap /*: QueryResultsMap*/,
+  directory /*: string*/
+) /*: QueryResultsMap*/ => {
   const cachedStaticQueryResults = new Map()
   const { staticQueryComponents } = store.getState()
   staticQueryComponents.forEach(staticQueryComponent => {
@@ -108,15 +106,15 @@ const getCachedStaticQueryResults = (
   return cachedStaticQueryResults
 }
 
-const getRoomNameFromPath = (path: string): string => `path-${path}`
+const getRoomNameFromPath = (path /*: string*/) => `path-${path}`
 
 class WebsocketManager {
-  pageResults: QueryResultsMap
-  staticQueryResults: QueryResultsMap
-  errors: Map<string, QueryResult>
-  isInitialised: boolean
-  activePaths: Set<string>
-  programDir: string
+  // pageResults: QueryResultsMap
+  // staticQueryResults: QueryResultsMap
+  // errors: Map<string, QueryResult>
+  // isInitialised: boolean
+  // activePaths: Set<string>
+  // programDir: string
 
   constructor() {
     this.isInitialised = false
@@ -251,7 +249,7 @@ class WebsocketManager {
     return this.isInitialised && this.websocket
   }
 
-  emitStaticQueryData(data: QueryResult) {
+  emitStaticQueryData(data /*: QueryResult*/) {
     this.staticQueryResults.set(data.id, data)
     if (this.isInitialised) {
       this.websocket.send({ type: `staticQueryResult`, payload: data })
@@ -271,7 +269,7 @@ class WebsocketManager {
     }
   }
 
-  emitPageData(data: QueryResult) {
+  emitPageData(data /*: QueryResult*/) {
     data.id = normalizePagePath(data.id)
     this.pageResults.set(data.id, data)
     if (this.isInitialised) {
@@ -291,7 +289,7 @@ class WebsocketManager {
       }
     }
   }
-  emitError(id: string, message?: string) {
+  emitError(id /*: string*/, message /*?: string*/) {
     if (message) {
       this.errors.set(id, message)
     } else {

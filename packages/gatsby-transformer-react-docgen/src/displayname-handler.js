@@ -1,5 +1,3 @@
-/* @flow */
-
 const path = require(`path`)
 const { namedTypes: types } = require(`ast-types`)
 const { utils } = require(`react-docgen`)
@@ -12,7 +10,7 @@ const {
 
 const DEFAULT_NAME = `UnknownComponent`
 
-function getNameFromPath(path: NodePath): ?string {
+function getNameFromPath(path /* : NodePath */) /*: ?string */ {
   var node = path.node
   switch (node.type) {
     case types.Identifier.name:
@@ -33,9 +31,9 @@ function getNameFromPath(path: NodePath): ?string {
   }
 }
 
-function getStaticDisplayName(path: NodePath): ?string {
+function getStaticDisplayName(path /*: NodePath*/) /*: ?string*/ {
   let displayName = null
-  const staticMember: ?NodePath = getMemberValuePath(path, `displayName`)
+  const staticMember /*: ?NodePath*/ = getMemberValuePath(path, `displayName`)
   if (staticMember && types.Literal.check(staticMember.node)) {
     displayName = getNameFromPath(staticMember)
   }
@@ -43,7 +41,7 @@ function getStaticDisplayName(path: NodePath): ?string {
   return displayName || null
 }
 
-function getNodeIdentifier(path: NodePath): ?string {
+function getNodeIdentifier(path /*: NodePath*/) /*: ?string*/ {
   let displayName = null
   if (
     types.FunctionExpression.check(path.node) ||
@@ -57,7 +55,7 @@ function getNodeIdentifier(path: NodePath): ?string {
   return displayName || null
 }
 
-function getVariableIdentifier(path: NodePath): ?string {
+function getVariableIdentifier(path /*: NodePath*/) /*: ?string*/ {
   let displayName = null
   let searchPath = path
 
@@ -79,7 +77,7 @@ function getVariableIdentifier(path: NodePath): ?string {
   return displayName || null
 }
 
-function getNameFromFilePath(filePath: string = ``): ?string {
+function getNameFromFilePath(filePath /*: string = ``*/) /*: ?string*/ {
   let displayName = null
 
   const filename = path.basename(filePath, path.extname(filePath))
@@ -98,13 +96,13 @@ function getNameFromFilePath(filePath: string = ``): ?string {
 }
 
 export function createDisplayNameHandler(
-  filePath: string
-): (documentation: Documentation, path: NodePath) => void {
+  filePath /*: string*/
+) /*: (documentation: Documentation, path: NodePath) => void */ {
   return function displayNameHandler(
-    documentation: Documentation,
-    path: NodePath
-  ): void {
-    let displayName: ?string = [
+    documentation /*: Documentation*/,
+    path /*: NodePath*/
+  ) /*: void*/ {
+    let displayName /*: ?string*/ = [
       getStaticDisplayName,
       getNodeIdentifier,
       getVariableIdentifier,

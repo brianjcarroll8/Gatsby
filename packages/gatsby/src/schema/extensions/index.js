@@ -1,4 +1,3 @@
-// @flow
 const {
   GraphQLDirective,
   DirectiveLocation,
@@ -8,18 +7,18 @@ const {
 const { link, fileByPath } = require(`../resolvers`)
 const { getDateResolver } = require(`../types/date`)
 
-import type { GraphQLFieldConfigArgumentMap, GraphQLFieldConfig } from "graphql"
-import type { ComposeFieldConfig, ComposeOutputType } from "graphql-compose"
+// import type { GraphQLFieldConfigArgumentMap, GraphQLFieldConfig } from "graphql"
+// import type { ComposeFieldConfig, ComposeOutputType } from "graphql-compose"
 
-export interface GraphQLFieldExtensionDefinition {
-  name: string;
-  type?: ComposeOutputType;
-  args?: GraphQLFieldConfigArgumentMap;
-  extend(
-    args: GraphQLFieldConfigArgumentMap,
-    prevFieldConfig: GraphQLFieldConfig
-  ): $Shape<ComposeFieldConfig>;
-}
+// export interface GraphQLFieldExtensionDefinition {
+//   name: string;
+//   type?: ComposeOutputType;
+//   args?: GraphQLFieldConfigArgumentMap;
+//   extend(
+//     args: GraphQLFieldConfigArgumentMap,
+//     prevFieldConfig: GraphQLFieldConfig
+//   ): $Shape<ComposeFieldConfig>;
+// }
 
 const inferExtensionName = `infer`
 const dontInferExtensionName = `dontInfer`

@@ -1,6 +1,5 @@
-// @flow
-type Plugin = {
-  name: string,
-}
+// type Plugin = {
+//   name: string,
+// }
 
-export type { Plugin }
+// export type { Plugin }

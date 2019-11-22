@@ -188,6 +188,12 @@ jobs:
       - run: yarn lint:other
       - run: yarn check-repo-fields
 
+  typecheck:
+    executor: node
+    steps:
+      - <<: *attach_to_bootstrap
+      - run: yarn test:check
+
   unit_tests_node8:
     executor:
       name: node
@@ -453,6 +459,9 @@ workflows:
     jobs:
       - windows_unit_tests
       - bootstrap
+      - typecheck:
+          requires:
+            - bootstrap
       - lint:
           requires:
             - bootstrap

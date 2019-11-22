@@ -1,9 +1,7 @@
-// @flow
-
 const _ = require(`lodash`)
 const {
   isAbstractType,
-  GraphQLOutputType,
+  // GraphQLOutputType,
   GraphQLUnionType,
   GraphQLList,
   getNamedType,
@@ -13,7 +11,7 @@ const {
 const invariant = require(`invariant`)
 const reporter = require(`gatsby-cli/lib/reporter`)
 
-type TypeOrTypeName = string | GraphQLOutputType
+// type TypeOrTypeName = string | GraphQLOutputType
 
 /**
  * Optional page dependency information.
@@ -22,42 +20,42 @@ type TypeOrTypeName = string | GraphQLOutputType
  * @property {string} path The path of the page that depends on the retrieved nodes' data
  * @property {string} [connectionType] Mark this dependency as a connection
  */
-interface PageDependencies {
-  path: string;
-  connectionType?: string;
-}
+// interface PageDependencies {
+//   path: string;
+//   connectionType?: string;
+// }
 
-interface QueryArguments {
-  type: TypeOrTypeName;
-  query: { filter: Object, sort?: Object };
-  firstOnly?: boolean;
-}
+// interface QueryArguments {
+//   type: TypeOrTypeName;
+//   query: { filter: Object, sort?: Object };
+//   firstOnly?: boolean;
+// }
 
-export interface NodeModel {
-  getNodeById(
-    { id: string, type?: TypeOrTypeName },
-    pageDependencies?: PageDependencies
-  ): any | null;
-  getNodesByIds(
-    { ids: Array<string>, type?: TypeOrTypeName },
-    pageDependencies?: PageDependencies
-  ): Array<any>;
-  getAllNodes(
-    { type?: TypeOrTypeName },
-    pageDependencies?: PageDependencies
-  ): Array<any>;
-  runQuery(
-    args: QueryArguments,
-    pageDependencies?: PageDependencies
-  ): Promise<any>;
-  getTypes(): Array<string>;
-  trackPageDependencies<nodeOrNodes: Node | Node[]>(
-    result: nodeOrNodes,
-    pageDependencies?: PageDependencies
-  ): nodesOrNodes;
-  findRootNodeAncestor(obj: any, predicate: () => boolean): Node | null;
-  trackInlineObjectsInRootNode(node: Node, sanitize: boolean): Node;
-}
+// export interface NodeModel {
+//   getNodeById(
+//     { id: string, type?: TypeOrTypeName },
+//     pageDependencies?: PageDependencies
+//   ): any | null;
+//   getNodesByIds(
+//     { ids: Array<string>, type?: TypeOrTypeName },
+//     pageDependencies?: PageDependencies
+//   ): Array<any>;
+//   getAllNodes(
+//     { type?: TypeOrTypeName },
+//     pageDependencies?: PageDependencies
+//   ): Array<any>;
+//   runQuery(
+//     args: QueryArguments,
+//     pageDependencies?: PageDependencies
+//   ): Promise<any>;
+//   getTypes(): Array<string>;
+//   trackPageDependencies<nodeOrNodes: Node | Node[]>(
+//     result: nodeOrNodes,
+//     pageDependencies?: PageDependencies
+//   ): nodesOrNodes;
+//   findRootNodeAncestor(obj: any, predicate: () => boolean): Node | null;
+//   trackInlineObjectsInRootNode(node: Node, sanitize: boolean): Node;
+// }
 
 class LocalNodeModel {
   constructor({ schema, schemaComposer, nodeStore, createPageDependency }) {
