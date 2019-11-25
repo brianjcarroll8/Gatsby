@@ -19,8 +19,8 @@ exports.onRenderBody = (
   { crossOrigin = `anonymous` } = {}
 ) => {
   const cache = loadCache()
-  
-  const pathnameWithSlash = pathname.endsWith('/') ? pathname : `${pathname}/`
+
+  const pathnameWithSlash = pathname.endsWith(`/`) ? pathname : `${pathname}/`
   if (!cache.assets[pathnameWithSlash]) return
 
   const props = getLinkProps({ crossOrigin, pathname })
