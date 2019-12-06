@@ -15,15 +15,17 @@ It supports features like push notifications and background synchronization.
 
 ## Using service workers in Gatsby with `gatsby-plugin-offline`
 
-Gatsby provides an awesome plugin interface to create and load a service worker into your site: [gatsby-plugin-offline](https://www.npmjs.com/package/gatsby-plugin-offline).
+Gatsby provides a plugin to create and load a service worker into your site: [gatsby-plugin-offline](/packages/gatsby-plugin-offline).
 
-We recommend using this plugin together with the [manifest plugin](https://www.npmjs.com/package/gatsby-plugin-manifest). (Don’t forget to list the offline plugin after the manifest plugin so that the manifest file can be included in the service worker).
+## Installing and using `gatsby-plugin-offline`
 
-## Installing `gatsby-plugin-offline`
+Install the plugin
 
-`npm install --save gatsby-plugin-offline`
+```shell
+npm install --save gatsby-plugin-offline
+```
 
-Add this plugin to your `gatsby-config.js`
+Add the plugin to your `gatsby-config.js`
 
 ```javascript:title=gatsby-config.js
 {
@@ -34,12 +36,40 @@ Add this plugin to your `gatsby-config.js`
         ...
       }
     },
-    'gatsby-plugin-offline'
+    'gatsby-plugin-offline' // highlight-line
   ]
 }
 ```
 
-That's all you need to add offline support to your Gatsby site.
+The recommended usage for `gatsby-plugiin-offline` is together with the [manifest plugin](/packages/gatsby-plugin-manifest). The offline plugin should be listed after the manifest plugin in the plugins array so that the manifest file can be included in the service worker.
+
+### Configuring options for the offline plugin
+
+The offline plugin is what will register a service worker that gets loaded in the client. The service worker will create an [app shell](https://developers.google.com/web/fundamentals/architecture/app-shell) which is essentially separate components of your application (e.g. header, footer, sidebar, etc.) that are instantly available from a service worker while dynamic content is fetched in the background. This creates a great end user experience, as the application is able to instantly render pieces of the layout as data and other JavaScript load in the background.
+
+You can provide options to the offline plugin to add other features like custom service worker code or precached pages by the service worker.
+
+```javascript:title=gatsby-config.js
+{
+  plugins: [
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        ...
+      }
+    },
+    {
+      resolve: `gatsby-plugin-offline`,
+      options: {
+        appendScript: require.resolve(`src/custom-sw-code.js`), // highlight-line
+        precachePages: [`/about-us/`, `/projects/*`], // highlight-line
+      }
+    },
+  ]
+}
+```
+
+You can read about the specific of these options in the plugin's README.
 
 Note: Service worker registers only in production builds (`gatsby build`).
 
@@ -62,9 +92,9 @@ export const onServiceWorkerUpdateReady = () => {
 
 ## Using a custom service worker in Gatsby
 
-You can add a custom service worker if your use case requires something that `gatsby-plugin-offline` doesn't support.
+You can add a custom service worker if your use case requires something that `gatsby-plugin-offline` doesn't support, or you don't want the behavior provided by the plugin.
 
-Add a file called `sw.js` in the `static` folder.
+In order to add your own service worker without using the plugin, add a file called `sw.js` in the `static` folder.
 
 Use the [`registerServiceWorker`](/docs/browser-apis/#registerServiceWorker) browser API in your `gatsby-browser.js` file.
 
@@ -72,7 +102,7 @@ Use the [`registerServiceWorker`](/docs/browser-apis/#registerServiceWorker) bro
 export const registerServiceWorker = () => true
 ```
 
-That's all! Gatsby will register your custom service worker.
+By returning true from the `registerServiceWorker` API, Gatsby will look for the `sw.js` file and register the custom service worker from your file.
 
 ## Removing the service worker
 
@@ -80,5 +110,6 @@ If you would like to fully remove the service worker from your site, you can use
 
 ## References
 
+- [gatsby-plugin-offline README](/packages/gatsby-plugin-offline)
 - [Service Workers: an Introduction](https://developers.google.com/web/fundamentals/primers/service-workers/)
 - [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
