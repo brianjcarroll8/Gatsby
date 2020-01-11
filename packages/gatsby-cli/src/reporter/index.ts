@@ -1,15 +1,40 @@
-// @flow
+import semver from "semver"
+import { isCI } from "gatsby-core-utils"
+import signalExit from "signal-exit"
+import reporterActions from "./redux/actions"
 
-const semver = require(`semver`)
-const { isCI } = require(`gatsby-core-utils`)
-const signalExit = require(`signal-exit`)
-const reporterActions = require(`./redux/actions`)
+import loggerIPC from "./loggers/ipc"
+import loggerJSON from "./loggers/json"
+import loggerYurnalist from "./loggers/yurnalist"
+import loggerINK from "./loggers/ink"
 
-const { LogLevels, ActivityStatuses, ActivityTypes } = require(`./constants`)
+import util from "util"
+import { stripIndent } from "common-tags"
+import chalk from "chalk"
+import { trackError } from "gatsby-telemetry"
+import * as opentracing from "opentracing"
+
+import { getErrorFormatter } from "./errors"
+import { getStore } from "./redux"
+import constructError from "../structured-errors/construct-error"
+
+import { LogLevels, ActivityStatuses, ActivityTypes } from "./constants"
+import {
+  IActivityTracker,
+  IActivityArgs,
+  IReporter,
+  StatusText,
+  IPhantomActivityTracker,
+  IStructuredErrorDetails,
+  IProgressTracker,
+  StructuredError,
+} from "./ts-types"
+
+const tracer = opentracing.globalTracer()
 
 let inkExists = false
 try {
-  inkExists = require.resolve(`ink`)
+  inkExists = !!require.resolve(`ink`)
   // eslint-disable-next-line no-empty
 } catch (err) {}
 
@@ -28,71 +53,29 @@ if (!process.env.GATSBY_LOGGER) {
 // if child process - use ipc logger
 if (process.send) {
   // process.env.FORCE_COLOR = `0`
-
-  require(`./loggers/ipc`)
+  loggerIPC.activate()
 }
 
 if (process.env.GATSBY_LOGGER.includes(`json`)) {
-  require(`./loggers/json`)
+  loggerJSON.activate()
 } else if (process.env.GATSBY_LOGGER.includes(`yurnalist`)) {
-  require(`./loggers/yurnalist`)
+  loggerYurnalist.activate()
 } else {
-  require(`./loggers/ink`)
+  loggerINK.activate()
 }
-
-const util = require(`util`)
-const { stripIndent } = require(`common-tags`)
-const chalk = require(`chalk`)
-const { trackError } = require(`gatsby-telemetry`)
-const tracer = require(`opentracing`).globalTracer()
-
-const { getErrorFormatter } = require(`./errors`)
-const { getStore } = require(`./redux`)
-const constructError = require(`../structured-errors/construct-error`)
 
 const errorFormatter = getErrorFormatter()
 
-import type { ActivityTracker, ActivityArgs, Reporter } from "./types"
-
-const addMessage = level => text => reporterActions.createLog({ level, text })
+const addMessage = (level: typeof LogLevels) => (text: string): object =>
+  reporterActions.createLog({ level, text })
 
 let isVerbose = false
-
-const interuptActivities = () => {
-  const { activities } = getStore().getState().logs
-  Object.keys(activities).forEach(activityId => {
-    const activity = activities[activityId]
-    if (
-      activity.status === ActivityStatuses.InProgress ||
-      activity.status === ActivityStatuses.NotStarted
-    ) {
-      reporter.completeActivity(activityId, ActivityStatuses.Interrupted)
-    }
-  })
-}
-
-const prematureEnd = () => {
-  // hack so at least one activity is surely failed, so
-  // we are guaranteed to generate FAILED status
-  // if none of activity did explicitly fail
-  reporterActions.createPendingActivity({
-    id: `panic`,
-    status: ActivityStatuses.Failed,
-  })
-
-  interuptActivities()
-}
-
-signalExit((code, signal) => {
-  if (code !== 0 && signal !== `SIGINT` && signal !== `SIGTERM`) prematureEnd()
-  else interuptActivities()
-})
 
 /**
  * Reporter module.
  * @module reporter
  */
-const reporter: Reporter = {
+const reporter: IReporter = {
   /**
    * Strip initial indentation template function.
    */
@@ -109,7 +92,7 @@ const reporter: Reporter = {
    * Turn off colors in error output.
    * @param {boolean} [isNoColor=false]
    */
-  setNoColor(isNoColor = false) {
+  setNoColor(isNoColor = false): void {
     if (isNoColor) {
       errorFormatter.withoutColors()
     }
@@ -128,27 +111,30 @@ const reporter: Reporter = {
    * Log arguments and exit process with status 1.
    * @param {*} args
    */
-  panic(...args) {
-    const error = reporter.error(...args)
+  panic(errorMeta: string | object, err?: Record<string, any>) {
+    const error = reporter.error(errorMeta, err)
     trackError(`GENERAL_PANIC`, { error })
-    prematureEnd()
+    prematureEnd() // eslint-disable-line @typescript-eslint/no-use-before-define
     process.exit(1)
   },
 
-  panicOnBuild(...args) {
-    const error = reporter.error(...args)
+  panicOnBuild(
+    errorMeta: string | object,
+    err?: Record<string, any>
+  ): StructuredError | StructuredError[] {
+    const error = reporter.error(errorMeta, err)
     trackError(`BUILD_PANIC`, { error })
     if (process.env.gatsby_executing_command === `build`) {
-      prematureEnd()
+      prematureEnd() // eslint-disable-line @typescript-eslint/no-use-before-define
       process.exit(1)
     }
     return error
   },
 
-  error(errorMeta, error) {
-    let details = {}
+  error(errorMeta: any, error?: Error): StructuredError | StructuredError[] {
+    let details: IStructuredErrorDetails = {}
     // Many paths to retain backcompat :scream:
-    if (arguments.length === 2) {
+    if (error) {
       if (Array.isArray(error)) {
         return error.map(errorItem => this.error(errorMeta, errorItem))
       }
@@ -189,11 +175,11 @@ const reporter: Reporter = {
    * Set prefix on uptime.
    * @param {string} prefix - A string to prefix uptime with.
    */
-  uptime(prefix) {
+  uptime(prefix: string): void {
     this.verbose(`${prefix}: ${(process.uptime() * 1000).toFixed(3)}ms`)
   },
 
-  verbose: text => {
+  verbose: (text): void => {
     if (isVerbose) {
       reporterActions.createLog({
         level: LogLevels.Debug,
@@ -221,8 +207,8 @@ const reporter: Reporter = {
    */
   activityTimer(
     text: string,
-    activityArgs: ActivityArgs = {}
-  ): ActivityTracker {
+    activityArgs: IActivityArgs = {}
+  ): IActivityTracker {
     let { parentSpan, id } = activityArgs
     const spanArgs = parentSpan ? { childOf: parentSpan } : {}
     if (!id) {
@@ -232,20 +218,20 @@ const reporter: Reporter = {
     const span = tracer.startSpan(text, spanArgs)
 
     return {
-      start: () => {
+      start(): void {
         reporterActions.startActivity({
           id,
           text,
           type: ActivityTypes.Spinner,
         })
       },
-      setStatus: statusText => {
+      setStatus(statusText: StatusText): void {
         reporterActions.setActivityStatusText({
           id,
           statusText,
         })
       },
-      panicOnBuild(...args) {
+      panicOnBuild(...args: Array<any>): void {
         span.finish()
 
         reporterActions.setActivityErrored({
@@ -254,7 +240,7 @@ const reporter: Reporter = {
 
         return reporter.panicOnBuild(...args)
       },
-      panic(...args) {
+      panic(...args): void {
         span.finish()
 
         reporterActions.endActivity({
@@ -264,7 +250,7 @@ const reporter: Reporter = {
 
         return reporter.panic(...args)
       },
-      end() {
+      end(): void {
         span.finish()
 
         reporterActions.endActivity({
@@ -292,8 +278,8 @@ const reporter: Reporter = {
    */
   phantomActivity(
     text: string,
-    activityArgs: ActivityArgs = {}
-  ): ActivityTracker {
+    activityArgs: IActivityArgs = {}
+  ): IPhantomActivityTracker {
     let { parentSpan, id } = activityArgs
     const spanArgs = parentSpan ? { childOf: parentSpan } : {}
     if (!id) {
@@ -303,14 +289,14 @@ const reporter: Reporter = {
     const span = tracer.startSpan(text, spanArgs)
 
     return {
-      start: () => {
+      start(): void {
         reporterActions.startActivity({
           id,
           text,
           type: ActivityTypes.Hidden,
         })
       },
-      end() {
+      end(): void {
         span.finish()
 
         reporterActions.endActivity({
@@ -334,8 +320,8 @@ const reporter: Reporter = {
     text: string,
     total = 0,
     start = 0,
-    activityArgs: ActivityArgs = {}
-  ): ActivityTracker {
+    activityArgs: IActivityArgs = {}
+  ): IProgressTracker {
     let { parentSpan, id } = activityArgs
     const spanArgs = parentSpan ? { childOf: parentSpan } : {}
     if (!id) {
@@ -348,7 +334,7 @@ const reporter: Reporter = {
     let unflushedTotal = 0
     const progressUpdateDelay = Math.round(1000 / 10) // 10 fps *shrug*
 
-    const updateProgress = forced => {
+    const updateProgress = (forced?: boolean): void => {
       const t = Date.now()
       if (!forced && t - lastUpdateTime <= progressUpdateDelay) return
 
@@ -364,7 +350,7 @@ const reporter: Reporter = {
     }
 
     return {
-      start: () => {
+      start(): void {
         reporterActions.startActivity({
           id,
           text,
@@ -373,17 +359,17 @@ const reporter: Reporter = {
           total,
         })
       },
-      setStatus: statusText => {
+      setStatus(statusText: StatusText): void {
         reporterActions.setActivityStatusText({
           id,
           statusText,
         })
       },
-      tick: (increment = 1) => {
+      tick(increment = 1): void {
         unflushedProgress += increment // Have to manually track this :/
         updateProgress()
       },
-      panicOnBuild(...args) {
+      panicOnBuild(...args): void {
         span.finish()
 
         reporterActions.setActivityErrored({
@@ -392,7 +378,7 @@ const reporter: Reporter = {
 
         return reporter.panicOnBuild(...args)
       },
-      panic(...args) {
+      panic(...args): void {
         span.finish()
 
         reporterActions.endActivity({
@@ -402,7 +388,7 @@ const reporter: Reporter = {
 
         return reporter.panic(...args)
       },
-      done: () => {
+      done(): void {
         updateProgress(true)
         span.finish()
         reporterActions.endActivity({
@@ -410,7 +396,7 @@ const reporter: Reporter = {
           status: ActivityStatuses.Success,
         })
       },
-      set total(value) {
+      updateTotal(value: number): void {
         unflushedTotal = value
         updateProgress()
       },
@@ -422,9 +408,43 @@ const reporter: Reporter = {
   _setStage() {},
 }
 
-console.log = (...args) => reporter.log(util.format(...args))
-console.warn = (...args) => reporter.warn(util.format(...args))
-console.info = (...args) => reporter.info(util.format(...args))
-console.error = (...args) => reporter.error(util.format(...args))
+console.log = (format: any, ...param: any[]): void =>
+  reporter.log(util.format(format, ...param))
+console.warn = (format: any, ...param: any[]): void =>
+  reporter.warn(util.format(format, ...param))
+console.info = (format: any, ...param: any[]): void =>
+  reporter.info(util.format(format, ...param))
+console.error = (format: any, ...param: any[]): void =>
+  reporter.error(util.format(format, ...param))
 
-module.exports = reporter
+const interuptActivities = (): void => {
+  const { activities } = getStore().getState().logs
+  Object.keys(activities).forEach(activityId => {
+    const activity = activities[activityId]
+    if (
+      activity.status === ActivityStatuses.InProgress ||
+      activity.status === ActivityStatuses.NotStarted
+    ) {
+      reporter.completeActivity(activityId, ActivityStatuses.Interrupted)
+    }
+  })
+}
+
+const prematureEnd = (): void => {
+  // hack so at least one activity is surely failed, so
+  // we are guaranteed to generate FAILED status
+  // if none of activity did explicitly fail
+  reporterActions.createPendingActivity({
+    id: `panic`,
+    status: ActivityStatuses.Failed,
+  })
+
+  interuptActivities()
+}
+
+signalExit((code: number, signal: string): void => {
+  if (code !== 0 && signal !== `SIGINT` && signal !== `SIGTERM`) prematureEnd()
+  else interuptActivities()
+})
+
+export default reporter

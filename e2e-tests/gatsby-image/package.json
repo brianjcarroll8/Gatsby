@@ -8,7 +8,7 @@
     "gatsby": "^2.0.118",
     "gatsby-image": "^2.0.29",
     "gatsby-plugin-manifest": "^2.0.17",
-    "gatsby-plugin-offline": "^2.0.23",
+    "gatsby-plugin-offline": "3.0.31-dev-1578770337803",
     "gatsby-plugin-react-helmet": "^3.0.6",
     "gatsby-plugin-sharp": "^2.0.20",
     "gatsby-source-filesystem": "^2.0.20",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
-    "gatsby-cypress": "^0.1.7",
+    "gatsby-cypress": "0.2.21-dev-1578770337803",
     "is-ci": "^2.0.0",
     "prettier": "^1.14.3",
     "start-server-and-test": "^1.7.1"

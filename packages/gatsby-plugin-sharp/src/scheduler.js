@@ -141,7 +141,7 @@ const scheduleJob = async (
 
   pendingImagesCounter++
   if (bar) {
-    bar.total = pendingImagesCounter
+    bar.updateTotal(pendingImagesCounter)
   }
 
   executeJobs(boundActionCreators)

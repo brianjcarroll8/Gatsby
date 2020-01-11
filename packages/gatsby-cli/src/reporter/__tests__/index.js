@@ -1,4 +1,4 @@
-const reporter = require(`../index.js`)
+import reporter from "../"
 const reporterActions = require(`../redux/actions`)
 
 // TODO: report.error now DOES return something. Get rid of this spying mocking stuff

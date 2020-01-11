@@ -335,7 +335,7 @@ module.exports = ({
   }
 
   totalJobs += 1
-  bar.total = totalJobs
+  bar.updateTotal(totalJobs)
 
   const fileDownloadPromise = pushTask({
     url,
