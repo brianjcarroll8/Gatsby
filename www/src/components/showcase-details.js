@@ -91,6 +91,7 @@ const SourceLink = ({ ...props }) => (
   </a>
 )
 
+<<<<<<< Updated upstream
 const ShowcaseDetails = ({ parent, data, isModal, categories }) => (
   <StaticQuery
     query={graphql`
@@ -100,6 +101,23 @@ const ShowcaseDetails = ({ parent, data, isModal, categories }) => (
             featured: { eq: true }
             main_url: { ne: null }
             fields: { hasScreenshot: { eq: true } }
+=======
+function usePrevAndNextSite(item) {
+  const { allSitesYaml } = useStaticQuery(graphql`
+    query {
+      allSitesYaml(
+        filter: {
+          main_url: { ne: null }
+          fields: { hasScreenshot: { eq: true } }
+        }
+      ) {
+        nodes {
+          id
+          url
+          title
+          fields {
+            slug
+>>>>>>> Stashed changes
           }
         ) {
           edges {

@@ -1,7 +1,11 @@
 {
   "name": "gatsby-plugin-benchmark-reporting",
   "description": "Gatsby Benchmark Reporting",
+<<<<<<< Updated upstream
   "version": "0.0.1",
+=======
+  "version": "0.0.5",
+>>>>>>> Stashed changes
   "author": "Peter van der Zee <pvdz@github>",
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"

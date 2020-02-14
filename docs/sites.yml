@@ -9543,3 +9543,264 @@
   built_by: Andrico Karoulla
   built_by_url: https://andri.co
   featured: false
+- title: AutoloadIT
+  main_url: https://autoloadit.com/
+  url: https://autoloadit.com/
+  description: >
+    The world's leading Enterprise Automotive imaging solution
+  categories:
+    - Business
+    - Landing Page
+  built_by: Pagepro
+  built_by_url: https://pagepro.co
+  featured: false
+- title: Tools of Golf
+  main_url: https://toolsof.golf
+  url: https://toolsof.golf/titleist-915-d2-driver
+  description: >
+    Tools of Golf is a community dedicated to golf nerds and gear heads.
+  categories:
+    - Sports
+    - Data
+    - Documentation
+  built_by: Peter Hironaka
+  built_by_url: https://peterhironaka.com
+  featured: false
+- title: sung.codes
+  main_url: https://sung.codes/
+  source_url: https://github.com/dance2die/sung.codes
+  url: https://sung.codes/
+  description: >
+    Blog by Sung M. Kim (a.k.a. dance2die)
+  categories:
+    - Blog
+    - Landing Page
+  built_by: Sung M. Kim
+  built_by_url: https://github.com/dance2die
+  featured: false
+- title: Choose Tap
+  main_url: https://www.choosetap.com.au/
+  url: https://www.choosetap.com.au/
+  featured: false
+  description: >
+    Choose Tap aims to improve the health and wellbeing of communities and the environment by promoting tap water as the best choice of hydration for all Australians.
+  built_by: Hardhat
+  built_by_url: https://www.hardhat.com.au
+  categories:
+    - Nonprofit
+    - Community
+- title: Akash Rajpurohit
+  main_url: https://akashwho.codes/
+  url: https://akashwho.codes/
+  description: >
+    Personal portfolio website of Akash Rajpurohit made using Gatsby v2, where I  write short blogs related to software development and share my experiences.
+  categories:
+    - Portfolio
+    - Blog
+  built_by: Akash Rajpurohit
+  built_by_url: https://github.com/AkashRajpurohit
+  featured: false
+- title: See Kids Dream
+  url: "https://seekidsdream.org/"
+  main_url: "https://seekidsdream.org/"
+  description: >
+    A not-for-profit organization dedicated to empower youth with the skills, motivation and confidence.
+  categories:
+    - Nonprofit
+    - Education
+    - Learning
+  built_by: CapTech Consulting
+  built_by_url: https://www.captechconsulting.com/
+  featured: false
+- title: Locale Central
+  url: https://localecentral.io/
+  main_url: https://localecentral.io/
+  description: >
+    Locale Central is a web & mobile data collection app that makes it easy to record accurate data out on the field.
+  categories:
+    - Technology
+  built_by: KiwiSprout
+  built_by_url: https://kiwisprout.nz/
+  featured: false
+- title: Cathy O'Shea
+  url: https://cathyoshea.co.nz/
+  main_url: https://cathyoshea.co.nz/
+  categories:
+    - Portfolio
+    - Real Estate
+  built_by: KiwiSprout
+  built_by_url: https://kiwisprout.nz/
+  featured: false
+- title: DG Recruit
+  url: https://dgrecruit.com
+  main_url: https://dgrecruit.com
+  description: >
+    DG Recruit is a NYC recruitment agency
+  categories:
+    - Agency
+    - WordPress
+  built_by: Waverly Lab
+  built_by_url: https://waverlylab.com
+  featured: false
+- title: Smile
+  url: https://reasontosmile.com
+  main_url: https://reasontosmile.com
+  description: >
+    Smile is an online store for buying CBD products that keep you balanced and happy
+  categories:
+    - eCommerce
+    - WordPress
+  built_by: Waverly Lab
+  built_by_url: https://waverlylab.com
+- title: Bold Oak Design
+  url: https://boldoak.design/
+  main_url: https://boldoak.design/
+  description: >
+    A Milwaukee-based web design and development studio.
+  categories:
+    - Blog
+    - Business
+    - Freelance
+    - Portfolio
+    - Programming
+    - Technology
+    - Web Development
+  featured: false
+- title: Lydia Rose Eiche
+  url: https://lydiaroseeiche.com/
+  main_url: https://lydiaroseeiche.com/
+  description: >
+    Lydia Rose Eiche is a soprano, opera singer, and actress based in Milwaukee.
+  categories:
+    - Music
+    - Portfolio
+  built_by: Bold Oak Design
+  built_by_url: https://boldoak.design/
+  featured: false
+- title: Chris Otto
+  url: https://chrisotto.dev/
+  main_url: https://chrisotto.dev/
+  source_url: https://github.com/chrisotto6/chrisottodev
+  description: >
+    Blog, portfolio and website for Chris Otto.
+  categories:
+    - Blog
+    - JavaScript
+    - Landing Page
+    - Portfolio
+    - Programming
+    - Technology
+    - Web Development
+  built_by: Chris Otto
+  built_by_url: https://github.com/chrisotto6
+  featured: false
+- title: Roboto Studio
+  url: https://roboto.studio
+  main_url: https://roboto.studio
+  description: >
+    Faster than a speeding bullet Website Development based in sunny old Nottingham
+  categories:
+    - Agency
+    - Blog
+    - Business
+    - Design
+    - Featured
+    - Freelance
+    - Web Development
+  featured: true
+- title: Viraj Chavan | Full Stack Software Engineer
+  url: http://virajc.tech
+  main_url: http://virajc.tech
+  source_url: https://github.com/virajvchavan/portfolio
+  description: >
+    Portfolio and blog of a full stack software engineer from India
+  categories:
+    - Portfolio
+    - Blog
+    - Web Development
+  built_by: Viraj V Chavan
+  built_by_url: https://twitter.com/VirajVChavan
+  featured: false
+- title: Nexweave
+  url: https://www.nexweave.com
+  main_url: https://www.nexweave.com
+  description: >
+    Nexweave is a SaaS platform built by a team of experienced product, design & technology professionals in India. Nexweave allows brands to create personalized & interactive video experiences at scale. We would love for our site to be featured at the gatsby showcase since we have long been appreciating the flexibility and speed of the sites we have created using the same.
+  categories:
+    - Video
+    - API
+    - User Experience
+    - Marketing
+    - Design
+    - Data
+    - Technology
+    - Media
+    - Consulting
+  built_by: Kashaf S
+  built_by_url: https://www.linkedin.com/in/kashaf-shaikh-925117178
+  featured: false
+- title: Daniel Balloch
+  url: https://danielballoch.com
+  main_url: https://danielballoch.com
+  source_url: https://github.com/danielballoch/danielballoch
+  description: >
+    Hey, I'm Daniel and this is my portfolio site. Made with Gatsby, React, GraphQL, Styled Emotion & Netlify. Install & local host instructions: 1. git clone https://github.com/danielballoch/danielballoch.git 2. npm install. 3. gatsby develop. Keep in mind I'm still learning myself, so these may not be best practises. If anyone's curious as to how something works flick me a message or if you have advice for me I'd love to hear it, otherwise happy coding!
+  categories:
+    - Portfolio
+    - Business
+    - Design
+    - Freelance
+    - Web Development
+  built_by: Daniel Balloch
+  built_by_url: https://danielballoch.com
+- title: The Rift Metz
+  url: http://theriftmetz.com/
+  main_url: http://theriftmetz.com/
+  description: >
+    The Rift is a gaming bar based in Metz (France).
+  categories:
+    - Landing Page
+    - Entertainment
+    - Design
+    - Blog
+    - Food
+  built_by: Hugo Torzuoli
+  built_by_url: https://github.com/HZooly
+  featured: false
+- title: Built with Workers
+  url: https://workers.cloudflare.com/built-with/
+  main_url: https://workers.cloudflare.com/built-with/
+  description: >
+    Showcasing websites & projects built with Cloudflare Workers
+  categories:
+    - Portfolio
+    - JavaScript
+    - Web Development
+  built_by: Workers who work at Cloudflare
+  built_by_url: https://github.com/cloudflare/built-with-workers/graphs/contributors
+- title: WebAnaya Solutions
+  url: https://www.webanaya.com
+  main_url: https://www.webanaya.com
+  description: >
+    Full Stack Web Solutions Provider.
+  categories:
+    - Agency
+    - Web Development
+    - API
+    - Blog
+  built_by: Durgesh Gupta
+  built_by_url: https://durgeshgupta.com
+  featured: false
+- title: adam.ai
+  url: https://adam.ai/
+  main_url: https://adam.ai/
+  description: >
+    Are you ready to make your meetings more productive? Our intelligent meeting management tool can help!
+  categories:
+    - Business
+    - Landing Page
+    - Productivity
+    - Technology
+  built_by: Hazem Osama
+  built_by_url: https://github.com/hazem3500
+  featured: false

@@ -44,6 +44,46 @@ class BenchMeta {
       this.timestamps[key] = Math.floor(this.timestamps[key])
     }
 
+<<<<<<< Updated upstream
+=======
+    // For the time being, our target benchmarks are part of the main repo
+    // And we will want to know what version of the repo we're testing with
+    const gitHash = execToStr(`git rev-parse HEAD`)
+
+    const nodejsVersion = process.version
+
+    const gatsbyCliVersion = execToStr(`gatsby --version`)
+
+    const gatsbyVersion = require(`gatsby/package.json`).version
+
+    const sharpVersion = fs.existsSync(`node_modules/sharp/package.json`)
+      ? require(`sharp/package.json`).version
+      : `none`
+
+    const webpackVersion = execToStr(`node_modules/.bin/webpack --version`)
+
+    const publicJsSize = glob(`public/*.js`).reduce(
+      (t, file) => t + fs.statSync(file).size,
+      0
+    )
+
+    const jpgCount = execToInt(
+      `find public .cache  -type f -iname "*.jpg" -or -iname "*.jpeg" | wc -l`
+    )
+
+    const pngCount = execToInt(
+      `find public .cache  -type f -iname "*.png" | wc -l`
+    )
+
+    const gifCount = execToInt(
+      `find public .cache  -type f -iname "*.gif" | wc -l`
+    )
+
+    const otherCount = execToInt(
+      `find public .cache  -type f -iname "*.bmp" -or -iname "*.tif" -or -iname "*.webp" -or -iname "*.svg" | wc -l`
+    )
+
+>>>>>>> Stashed changes
     const pageCount = glob(`**/**.json`, {
       cwd: `./public/page-data`,
       nocase: true,
