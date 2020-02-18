@@ -9,7 +9,6 @@ import { breakpointGutter } from "../utils/styles"
 import Banner from "../components/banner"
 import Navigation from "../components/navigation"
 import MobileNavigation from "../components/navigation-mobile"
-import PageWithSidebar from "../components/page-with-sidebar"
 import SiteMetadata from "../components/site-metadata"
 import SkipNavLink from "../components/skip-nav-link"
 import "../assets/fonts/futura"
@@ -17,12 +16,7 @@ import { defaultLang } from "../utils/i18n"
 
 export const LocaleContext = React.createContext(defaultLang)
 
-export default function DefaultLayout({
-  location,
-  locale,
-  enableScrollSync,
-  children,
-}) {
+export default function DefaultLayout({ location, locale, children }) {
   return (
     <LocaleContext.Provider value={locale || defaultLang}>
       <Global styles={globalStyles} />
@@ -43,11 +37,7 @@ export default function DefaultLayout({
           },
         }}
       >
-        <PageWithSidebar
-          location={location}
-          enableScrollSync={enableScrollSync}
-          renderContent={() => children}
-        />
+        {children}
       </div>
       <MobileNavigation />
     </LocaleContext.Provider>

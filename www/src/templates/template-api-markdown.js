@@ -4,13 +4,14 @@ import React from "react"
 import { Helmet } from "react-helmet"
 import { graphql } from "gatsby"
 import { MDXRenderer } from "gatsby-plugin-mdx"
-import theme from "../gatsby-plugin-theme-ui"
+import { mediaQueries } from "gatsby-design-tokens/dist/theme-gatsbyjs-org"
 
 // API Rendering Stuff
 import { sortBy } from "lodash-es"
 
 import usePrevAndNext from "../utils/use-prev-and-next"
 import Layout from "../components/layout"
+import PageWithSidebar from "../components/page-with-sidebar"
 import MarkdownPageFooter from "../components/markdown-page-footer"
 import DocSearchContent from "../components/docsearch-content"
 import FooterLinks from "../components/shared/footer-links"
@@ -97,44 +98,48 @@ export default function APITemplate({ data, location, pageContext }) {
         <meta name="twitter:data1" content={`${page.timeToRead} min read`} />
       </Helmet>
       <Layout location={location}>
-        <DocSearchContent>
-          <Container
-            overrideCSS={{
-              pb: 0,
-              [theme.mediaQueries.lg]: {
-                pt: 9,
-              },
-            }}
-          >
-            <Breadcrumb location={location} />
-            <h1 id={page.fields.anchor} sx={{ mt: 0 }}>
-              {page.frontmatter.title}
-            </h1>
-          </Container>
-          <Container
-            overrideCSS={{
-              pt: 0,
-              position: `static`,
-              [theme.mediaQueries.lg]: {
-                pb: 9,
-              },
-            }}
-          >
-            <div>
-              <MDXRenderer slug={page.fields.slug}>{page.body}</MDXRenderer>
-              <h2>{page.frontmatter.contentsHeading || "APIs"}</h2>
-              <APIContents docs={mergedFuncs} />
-              <h2>Reference</h2>
-              <APIReference
-                docs={mergedFuncs}
-                showTopLevelSignatures={page.frontmatter.showTopLevelSignatures}
-              />
-              <PrevAndNext sx={{ mt: 9 }} prev={prev} next={next} />
-              <MarkdownPageFooter page={page} />
-            </div>
-          </Container>
-        </DocSearchContent>
-        <FooterLinks />
+        <PageWithSidebar location={location}>
+          <DocSearchContent>
+            <Container
+              overrideCSS={{
+                pb: 0,
+                [mediaQueries.lg]: {
+                  pt: 9,
+                },
+              }}
+            >
+              <Breadcrumb location={location} />
+              <h1 id={page.fields.anchor} sx={{ mt: 0 }}>
+                {page.frontmatter.title}
+              </h1>
+            </Container>
+            <Container
+              overrideCSS={{
+                pt: 0,
+                position: `static`,
+                [mediaQueries.lg]: {
+                  pb: 9,
+                },
+              }}
+            >
+              <div>
+                <MDXRenderer slug={page.fields.slug}>{page.body}</MDXRenderer>
+                <h2>{page.frontmatter.contentsHeading || "APIs"}</h2>
+                <APIContents docs={mergedFuncs} />
+                <h2>Reference</h2>
+                <APIReference
+                  docs={mergedFuncs}
+                  showTopLevelSignatures={
+                    page.frontmatter.showTopLevelSignatures
+                  }
+                />
+                <PrevAndNext sx={{ mt: 9 }} prev={prev} next={next} />
+                <MarkdownPageFooter page={page} />
+              </div>
+            </Container>
+          </DocSearchContent>
+          <FooterLinks />
+        </PageWithSidebar>
       </Layout>
     </React.Fragment>
   )

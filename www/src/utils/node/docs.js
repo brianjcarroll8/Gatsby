@@ -58,7 +58,6 @@ exports.createPages = async ({ graphql, actions }) => {
             draft
             canonicalLink
             publishedAt
-            issue
             tags
             jsdoc
             apiCalls
@@ -123,8 +122,14 @@ exports.createPages = async ({ graphql, actions }) => {
       component: slash(blogPostTemplate),
       context: {
         slug: node.fields.slug,
-        prev,
-        next,
+        prev: prev && {
+          title: prev.frontmatter.title,
+          link: prev.fields.slug,
+        },
+        next: next && {
+          title: next.frontmatter.title,
+          link: next.fields.slug,
+        },
       },
     })
   })

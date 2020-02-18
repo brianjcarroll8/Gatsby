@@ -5,37 +5,36 @@ import { useItemList } from "../utils/sidebar/item-list"
 
 import StickyResponsiveSidebar from "./sidebar/sticky-responsive-sidebar"
 
-export default ({ location, enableScrollSync, renderContent }) => {
+export default ({ children, enableScrollSync, location }) => {
   const itemList = useItemList(location.pathname)
   if (!itemList) {
-    return renderContent()
-  } else {
-    return (
-      <Fragment>
-        <div
-          sx={{
-            pl: [
-              null,
-              null,
-              null,
-              t => t.sizes.sidebarWidth.default,
-              t => t.sizes.sidebarWidth.large,
-            ],
-          }}
-        >
-          {renderContent()}
-        </div>
-        <StickyResponsiveSidebar
-          enableScrollSync={enableScrollSync}
-          itemList={itemList.items}
-          title={itemList.title}
-          sidebarKey={itemList.key}
-          disableExpandAll={itemList.disableExpandAll}
-          disableAccordions={itemList.disableAccordions}
-          key={location.pathname}
-          location={location}
-        />
-      </Fragment>
-    )
+    return children
   }
+  return (
+    <Fragment>
+      <div
+        sx={{
+          pl: [
+            null,
+            null,
+            null,
+            t => t.sizes.sidebarWidth.default,
+            t => t.sizes.sidebarWidth.large,
+          ],
+        }}
+      >
+        {children}
+      </div>
+      <StickyResponsiveSidebar
+        enableScrollSync={enableScrollSync}
+        itemList={itemList.items}
+        title={itemList.title}
+        sidebarKey={itemList.key}
+        disableExpandAll={itemList.disableExpandAll}
+        disableAccordions={itemList.disableAccordions}
+        key={location.pathname}
+        location={location}
+      />
+    </Fragment>
+  )
 }
