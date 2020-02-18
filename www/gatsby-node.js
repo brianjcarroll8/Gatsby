@@ -138,7 +138,8 @@ exports.onCreateWebpackConfig = ({ actions, plugins }) => {
 }
 
 // Patch `DocumentationJs` type to handle custom `@availableIn` jsdoc tag
-exports.createResolvers = ({ createResolvers }) => {
+exports.createResolvers = helpers => {
+  const { createResolvers } = helpers
   createResolvers({
     DocumentationJs: {
       availableIn: {
@@ -163,4 +164,11 @@ exports.createResolvers = ({ createResolvers }) => {
       },
     },
   })
+
+  await Promise.all(sections.map(section => {
+    if (section.createResolvers) {
+      section.createResolvers(helpers)
+    }
+  })
+  )
 }
