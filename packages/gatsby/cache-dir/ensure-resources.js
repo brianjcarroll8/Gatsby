@@ -1,81 +1,45 @@
-import React from "react"
+import React, { useEffect, useRef, useState, useTransition } from "react"
 import loader from "./loader"
-import shallowCompare from "shallow-compare"
 
-class EnsureResources extends React.Component {
-  constructor(props) {
-    super()
-    const { location, pageResources } = props
-    this.state = {
-      location: { ...location },
-      pageResources: pageResources || loader.loadPageSync(location.pathname),
-    }
-  }
+function EnsureResources(props) {
+  const [location, setLocation] = useState({ ...props.location })
+  const initialPageResources = useRef(() =>
+    loader.loadPageSync(location.pathname)
+  )
+  const [pageResources, setPageResources] = useState(
+    initialPageResources.current
+  )
+  const [startTransition, isPending] = useTransition()
 
-  static getDerivedStateFromProps({ location }, prevState) {
-    if (prevState.location.href !== location.href) {
+  useEffect(() => {
+    if (location.href !== props.location.href) {
       const pageResources = loader.loadPageSync(location.pathname)
-      return {
-        pageResources,
-        location: { ...location },
-      }
+      setPageResources(pageResources)
     }
 
-    return {
-      location: { ...location },
-    }
-  }
+    setLocation({ ...props.location })
+  }, [props.location])
 
-  loadResources(rawPath) {
-    loader.loadPage(rawPath).then(pageResources => {
-      if (pageResources && pageResources.status !== `error`) {
-        this.setState({
-          location: { ...window.location },
-          pageResources,
-        })
-      } else {
-        window.history.replaceState({}, ``, location.href)
-        window.location = rawPath
-      }
+  useEffect(() => {
+    if (pageResources) return
+
+    console.log(`transitioning?`)
+    startTransition(() => {
+      loader.loadPage(location.pathname).then(pageResources => {
+        if (pageResources && pageResources.status !== `error`) {
+          setPageResources(pageResources)
+          setLocation({ ...window.location })
+        } else {
+          window.history.replaceState({}, ``, location.href)
+          window.location = location.pathname
+        }
+      })
     })
-  }
+  }, [pageResources])
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // Always return false if we're missing resources.
-    if (!nextState.pageResources) {
-      this.loadResources(nextProps.location.pathname)
-      return false
-    }
+  console.log(isPending)
 
-    // Check if the component or json have changed.
-    if (this.state.pageResources !== nextState.pageResources) {
-      return true
-    }
-    if (
-      this.state.pageResources.component !== nextState.pageResources.component
-    ) {
-      return true
-    }
-
-    if (this.state.pageResources.json !== nextState.pageResources.json) {
-      return true
-    }
-    // Check if location has changed on a page using internal routing
-    // via matchPath configuration.
-    if (
-      this.state.location.key !== nextState.location.key &&
-      nextState.pageResources.page &&
-      (nextState.pageResources.page.matchPath ||
-        nextState.pageResources.page.path)
-    ) {
-      return true
-    }
-    return shallowCompare(this, nextProps, nextState)
-  }
-
-  render() {
-    return this.props.children(this.state)
-  }
+  return props.children({ location, pageResources })
 }
 
-export default EnsureResources
+export default React.memo(EnsureResources)

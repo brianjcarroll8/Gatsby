@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Suspense } from "react"
 import { Router, Location, BaseContext } from "@reach/router"
 import { ScrollContext } from "gatsby-react-router-scroll"
 
@@ -52,12 +52,11 @@ const RouteHandler = props => (
   </BaseContext.Provider>
 )
 
-class LocationHandler extends React.Component {
-  render() {
-    const { location } = this.props
-
-    if (!loader.isPageNotFound(location.pathname)) {
-      return (
+function LocationHandler(props) {
+  const { location } = props
+  if (!loader.isPageNotFound(location.pathname)) {
+    return (
+      <Suspense fallback={<div />}>
         <EnsureResources location={location}>
           {locationAndPageResources => (
             <RouteUpdates location={location}>
@@ -75,7 +74,7 @@ class LocationHandler extends React.Component {
                       locationAndPageResources.pageResources.page.matchPath ||
                         locationAndPageResources.pageResources.page.path
                     )}
-                    {...this.props}
+                    {...props}
                     {...locationAndPageResources}
                   />
                 </Router>
@@ -83,35 +82,35 @@ class LocationHandler extends React.Component {
             </RouteUpdates>
           )}
         </EnsureResources>
-      )
-    }
-
-    const dev404PageResources = loader.loadPageSync(`/dev-404-page`)
-    const real404PageResources = loader.loadPageSync(`/404.html`)
-    let custom404
-    if (real404PageResources) {
-      custom404 = (
-        <PageQueryStore {...this.props} pageResources={real404PageResources} />
-      )
-    }
-
-    return (
-      <RouteUpdates location={location}>
-        <Router
-          basepath={__BASE_PATH__}
-          location={location}
-          id="gatsby-focus-wrapper"
-        >
-          <RouteHandler
-            path={location.pathname}
-            location={location}
-            pageResources={dev404PageResources}
-            custom404={custom404}
-          />
-        </Router>
-      </RouteUpdates>
+      </Suspense>
     )
   }
+
+  const dev404PageResources = loader.loadPageSync(`/dev-404-page`)
+  const real404PageResources = loader.loadPageSync(`/404.html`)
+  let custom404
+  if (real404PageResources) {
+    custom404 = (
+      <PageQueryStore {...this.props} pageResources={real404PageResources} />
+    )
+  }
+
+  return (
+    <RouteUpdates location={location}>
+      <Router
+        basepath={__BASE_PATH__}
+        location={location}
+        id="gatsby-focus-wrapper"
+      >
+        <RouteHandler
+          path={location.pathname}
+          location={location}
+          pageResources={dev404PageResources}
+          custom404={custom404}
+        />
+      </Router>
+    </RouteUpdates>
+  )
 }
 
 const Root = () => (

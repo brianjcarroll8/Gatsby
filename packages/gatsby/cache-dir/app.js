@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, StrictMode } from "react"
 import ReactDOM from "react-dom"
 import domReady from "@mikaelkristiansson/domready"
 
@@ -50,11 +50,11 @@ apiRunnerAsync(`onClientEntry`).then(() => {
 
   const rootElement = document.getElementById(`___gatsby`)
 
-  const renderer = apiRunner(
-    `replaceHydrateFunction`,
-    undefined,
-    ReactDOM.render
-  )[0]
+  // const renderer = apiRunner(
+  //   `replaceHydrateFunction`,
+  //   undefined,
+  //   ReactDOM.createRoot(rootElement).render
+  // )[0]
 
   Promise.all([
     loader.loadPage(`/dev-404-page/`),
@@ -63,10 +63,20 @@ apiRunnerAsync(`onClientEntry`).then(() => {
   ]).then(() => {
     const preferDefault = m => (m && m.default) || m
     let Root = preferDefault(require(`./root`))
-    domReady(() => {
-      renderer(<Root />, rootElement, () => {
+
+    function RootWithOnRenderHook() {
+      useEffect(() => {
         apiRunner(`onInitialClientRender`)
-      })
+      }, [])
+
+      return (
+        <StrictMode>
+          <Root />
+        </StrictMode>
+      )
+    }
+    domReady(() => {
+      ReactDOM.createRoot(rootElement).render(<RootWithOnRenderHook />)
     })
   })
 })

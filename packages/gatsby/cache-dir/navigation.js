@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import loader from "./loader"
 import redirects from "./redirects.json"
@@ -158,15 +158,12 @@ function init() {
   maybeRedirect(window.location.pathname)
 }
 
-class RouteAnnouncer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.announcementRef = React.createRef()
-  }
+function RouteAnnouncer(props) {
+  const announcementRef = useRef()
 
-  componentDidUpdate(prevProps, nextProps) {
+  useEffect(() => {
     requestAnimationFrame(() => {
-      let pageName = `new page at ${this.props.location.pathname}`
+      let pageName = `new page at ${props.location.pathname}`
       if (document.title) {
         pageName = document.title
       }
@@ -177,70 +174,50 @@ class RouteAnnouncer extends React.Component {
         pageName = pageHeadings[0].textContent
       }
       const newAnnouncement = `Navigated to ${pageName}`
-      const oldAnnouncement = this.announcementRef.current.innerText
+      const oldAnnouncement = announcementRef.current.innerText
       if (oldAnnouncement !== newAnnouncement) {
-        this.announcementRef.current.innerText = newAnnouncement
+        announcementRef.current.innerText = newAnnouncement
       }
     })
-  }
+  }, [props.location.pathname])
 
-  render() {
-    return (
-      <div
-        id="gatsby-announcer"
-        style={{
-          position: `absolute`,
-          top: 0,
-          width: 1,
-          height: 1,
-          padding: 0,
-          overflow: `hidden`,
-          clip: `rect(0, 0, 0, 0)`,
-          whiteSpace: `nowrap`,
-          border: 0,
-        }}
-        aria-live="assertive"
-        aria-atomic="true"
-        ref={this.announcementRef}
-      ></div>
-    )
-  }
+  return (
+    <div
+      id="gatsby-announcer"
+      style={{
+        position: `absolute`,
+        top: 0,
+        width: 1,
+        height: 1,
+        padding: 0,
+        overflow: `hidden`,
+        clip: `rect(0, 0, 0, 0)`,
+        whiteSpace: `nowrap`,
+        border: 0,
+      }}
+      aria-live="assertive"
+      aria-atomic="true"
+      ref={announcementRef}
+    />
+  )
 }
 
 // Fire on(Pre)RouteUpdate APIs
-class RouteUpdates extends React.Component {
-  constructor(props) {
-    super(props)
+function RouteUpdates(props) {
+  useEffect(() => {
     onPreRouteUpdate(props.location, null)
-  }
+  }, [])
 
-  componentDidMount() {
-    onRouteUpdate(this.props.location, null)
-  }
+  useEffect(() => {
+    onRouteUpdate(props.location, null)
+  }, [props.location])
 
-  componentDidUpdate(prevProps, prevState, shouldFireRouteUpdate) {
-    if (shouldFireRouteUpdate) {
-      onRouteUpdate(this.props.location, prevProps.location)
-    }
-  }
-
-  getSnapshotBeforeUpdate(prevProps) {
-    if (this.props.location.pathname !== prevProps.location.pathname) {
-      onPreRouteUpdate(this.props.location, prevProps.location)
-      return true
-    }
-
-    return false
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.props.children}
-        <RouteAnnouncer location={location} />
-      </React.Fragment>
-    )
-  }
+  return (
+    <>
+      {props.children}
+      <RouteAnnouncer location={props.location} />
+    </>
+  )
 }
 
 RouteUpdates.propTypes = {

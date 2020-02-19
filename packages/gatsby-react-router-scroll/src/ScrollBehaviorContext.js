@@ -3,6 +3,10 @@ import ScrollBehavior from "scroll-behavior"
 import PropTypes from "prop-types"
 import { globalHistory as history } from "@reach/router/lib/history"
 
+history.listen(hist => {
+  hist.location.action = hist.action
+})
+
 import SessionStorage from "./StateStorage"
 
 const propTypes = {
@@ -48,12 +52,14 @@ class ScrollContext extends React.Component {
     // The "scroll-behavior" package expects the "action" to be on the location
     // object so let's copy it over.
 
+    console.log(this.props)
+
     // Temp hack while awaiting https://github.com/reach/router/issues/119
-    if (window.__navigatingToLink) {
-      location.action = `PUSH`
-    } else {
-      location.action = `POP`
-    }
+    // if (window.__navigatingToLink) {
+    //   location.action = `PUSH`
+    // } else {
+    //   location.action = `POP`
+    // }
 
     this.scrollBehavior.updateScroll(prevRouterProps, { history, location })
   }
