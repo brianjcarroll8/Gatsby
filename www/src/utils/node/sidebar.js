@@ -61,9 +61,6 @@ exports.createResolvers = ({ createResolvers, loadNodeContent }) => {
         resolve: async (source, args, context, info) => {
           const result = await context.nodeModel.runQuery(
             {
-              query: {
-                // sort: { fields: [`frontmatter___date`], order: `DESC` },
-              },
               type: `MarkdownRemark`,
             },
             {
@@ -89,13 +86,13 @@ exports.createResolvers = ({ createResolvers, loadNodeContent }) => {
             )
           }
 
-          const allMdx = await context.nodeModel.runQuery(
+          const pages = await context.nodeModel.runQuery(
             {
               query: {
                 filter: {
                   fields: {
                     section: {
-                      in: ["docs", "contributing", "tutorial"],
+                      in: [`docs`, `contributing`, `tutorial`],
                     },
                   },
                 },
@@ -106,10 +103,6 @@ exports.createResolvers = ({ createResolvers, loadNodeContent }) => {
               connectionType: `Mdx`,
             }
           )
-          const pages = allMdx.nodes
-
-          // const result = require(`./b.json`).data
-          // const pages = result.allMdx.nodes
 
           const sidebarFileNode = await context.nodeModel.runQuery({
             query: {
@@ -133,13 +126,7 @@ exports.createResolvers = ({ createResolvers, loadNodeContent }) => {
             itemListByLocale[locale] = itemList
           })
 
-          // const pagesMap = keyBy(pages)
-
-          return {
-            itemListByLocale,
-            // parsedSidebarContent,
-            // allMdx,
-          }
+          return itemListByLocale
         },
       },
     },

@@ -138,27 +138,33 @@ function DocsTemplate({ data, location }) {
 
 export default DocsTemplate
 
+export const fragment = graphql`
+  fragment MarkdownPageMdx on Mdx {
+    body
+    excerpt
+    timeToRead
+    tableOfContents
+    fields {
+      slug
+      locale
+      anchor
+    }
+    frontmatter {
+      title
+      description
+      overview
+      issue
+      disableTableOfContents
+      tableOfContentsDepth
+    }
+    ...MarkdownPageFooterMdx
+  }
+`
+
 export const pageQuery = graphql`
   query($slug: String!, $locale: String!) {
     mdx(fields: { slug: { eq: $slug }, locale: { eq: $locale } }) {
-      body
-      excerpt
-      timeToRead
-      tableOfContents
-      fields {
-        slug
-        locale
-        anchor
-      }
-      frontmatter {
-        title
-        description
-        overview
-        issue
-        disableTableOfContents
-        tableOfContentsDepth
-      }
-      ...MarkdownPageFooterMdx
+      ...MarkdownPageMdx
     }
   }
 `

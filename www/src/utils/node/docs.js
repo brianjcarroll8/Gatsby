@@ -38,6 +38,12 @@ exports.createPages = async ({ graphql, actions }) => {
   const localPackageTemplate = path.resolve(
     `src/templates/template-docs-local-packages.js`
   )
+  const docsSectionTemplates = {
+    // docs: path.resolve(`src/templates/template-docs-markdown-docs.js`),
+    tutorial: path.resolve(
+      `src/templates/sections/template-docs-markdown-tutorial.js`
+    ),
+  }
 
   const { data, errors } = await graphql(`
     query {
@@ -52,6 +58,7 @@ exports.createPages = async ({ graphql, actions }) => {
             locale
             package
             released
+            section
           }
           frontmatter {
             title
@@ -174,6 +181,7 @@ exports.createPages = async ({ graphql, actions }) => {
   docPages.forEach(node => {
     const slug = _.get(node, `fields.slug`)
     const locale = _.get(node, `fields.locale`)
+    const section = _.get(node, `fields.section`)
     if (!slug) return
 
     if (!_.includes(slug, `/blog/`)) {
@@ -201,7 +209,7 @@ exports.createPages = async ({ graphql, actions }) => {
         // Docs template
         createPage({
           path: localizedPath(locale, node.fields.slug),
-          component: slash(docsTemplate),
+          component: slash(docsSectionTemplates[section] || docsTemplate),
           context: {
             slug: node.fields.slug,
             locale,

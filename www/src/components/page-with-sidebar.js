@@ -6,7 +6,7 @@ import { useItemList } from "../utils/sidebar/item-list"
 import StickyResponsiveSidebar from "./sidebar/sticky-responsive-sidebar"
 
 export default ({ children, enableScrollSync, location }) => {
-  const itemList = useItemList(location.pathname)
+  const itemList = useItemList()
   if (!itemList) {
     return children
   }

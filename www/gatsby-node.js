@@ -11,7 +11,16 @@ const starters = require(`./src/utils/node/starters.js`)
 const creators = require(`./src/utils/node/creators.js`)
 const packages = require(`./src/utils/node/packages.js`)
 const features = require(`./src/utils/node/features.js`)
-const sections = [docs, showcase, starters, creators, packages, features]
+const sidebar = require(`./src/utils/node/sidebar.js`)
+const sections = [
+  docs,
+  showcase,
+  starters,
+  creators,
+  packages,
+  features,
+  sidebar,
+]
 
 exports.createPages = async helpers => {
   const { actions } = helpers
@@ -29,12 +38,18 @@ exports.createPages = async helpers => {
     })
   })
 
-  await Promise.all(sections.map(section => section.createPages(helpers)))
+  await Promise.all(
+    sections
+      .filter(section => section.createPages)
+      .map(section => section.createPages(helpers))
+  )
 }
 
 // Create slugs for files, set released status for blog posts.
 exports.onCreateNode = helpers => {
-  sections.forEach(section => section.onCreateNode(helpers))
+  sections
+    .filter(section => section.onCreateNode)
+    .forEach(section => section.onCreateNode(helpers))
 }
 
 exports.onPostBuild = () => {
@@ -165,10 +180,9 @@ exports.createResolvers = helpers => {
     },
   })
 
-  await Promise.all(sections.map(section => {
-    if (section.createResolvers) {
+  sections
+    .filter(section => section.createResolvers)
+    .forEach(section => {
       section.createResolvers(helpers)
-    }
-  })
-  )
+    })
 }

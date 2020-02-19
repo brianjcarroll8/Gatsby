@@ -38,7 +38,7 @@ function findDoc(doc) {
 }
 
 export default function usePrevAndNext(path) {
-  const itemList = useItemList(path)
+  const itemList = useItemList()
   const flattenedList = flattenList(itemList.items)
   // TODO locale
   const index = flattenedList.findIndex(findDoc, { link: path })

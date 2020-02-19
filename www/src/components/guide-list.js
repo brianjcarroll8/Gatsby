@@ -18,7 +18,7 @@ const childItemsBySlug = (hierarchy, slug) => {
 }
 
 const GuideList = ({ slug }) => {
-  const itemList = useItemList(slug)
+  const itemList = useItemList()
   const subitemsForPage = childItemsBySlug(itemList.items, slug) || []
   const subitemList = subitemsForPage.map((subitem, i) => (
     <li key={i}>

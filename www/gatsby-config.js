@@ -130,6 +130,13 @@ module.exports = {
       },
     },
     {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `sidebars`,
+        path: `${__dirname}/src/data/sidebars`,
+      },
+    },
+    {
       resolve: `gatsby-plugin-mdx`,
       options: {
         extensions: [`.md`, `.mdx`],
@@ -213,7 +220,7 @@ module.exports = {
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
           // convert images using http to https in plugin library READMEs
-          `gatsby-remark-http-to-https`
+          `gatsby-remark-http-to-https`,
         ],
       },
     },

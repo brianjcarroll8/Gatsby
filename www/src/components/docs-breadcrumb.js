@@ -33,7 +33,7 @@ const BreadcrumbNav = ({ children, mobile = false }) => (
 )
 
 const Breadcrumb = ({ location }) => {
-  const itemList = useItemList(location.pathname)
+  const itemList = useItemList()
   // provide escape if no itemList is provided so breadcrumb isn't rendered
   if (itemList === undefined) return null
 
