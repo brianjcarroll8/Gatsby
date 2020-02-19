@@ -1,4 +1,4 @@
-import React, { Suspense } from "react"
+import React from "react"
 import { Router, Location, BaseContext } from "@reach/router"
 import { ScrollContext } from "gatsby-react-router-scroll"
 
@@ -56,33 +56,31 @@ function LocationHandler(props) {
   const { location } = props
   if (!loader.isPageNotFound(location.pathname)) {
     return (
-      <Suspense fallback={<div />}>
-        <EnsureResources location={location}>
-          {locationAndPageResources => (
-            <RouteUpdates location={location}>
-              <ScrollContext
+      <EnsureResources location={location}>
+        {locationAndPageResources => (
+          <RouteUpdates location={location}>
+            <ScrollContext
+              location={location}
+              shouldUpdateScroll={shouldUpdateScroll}
+            >
+              <Router
+                basepath={__BASE_PATH__}
                 location={location}
-                shouldUpdateScroll={shouldUpdateScroll}
+                id="gatsby-focus-wrapper"
               >
-                <Router
-                  basepath={__BASE_PATH__}
-                  location={location}
-                  id="gatsby-focus-wrapper"
-                >
-                  <RouteHandler
-                    path={encodeURI(
-                      locationAndPageResources.pageResources.page.matchPath ||
-                        locationAndPageResources.pageResources.page.path
-                    )}
-                    {...props}
-                    {...locationAndPageResources}
-                  />
-                </Router>
-              </ScrollContext>
-            </RouteUpdates>
-          )}
-        </EnsureResources>
-      </Suspense>
+                <RouteHandler
+                  path={encodeURI(
+                    locationAndPageResources.pageResources.page.matchPath ||
+                      locationAndPageResources.pageResources.page.path
+                  )}
+                  {...props}
+                  {...locationAndPageResources}
+                />
+              </Router>
+            </ScrollContext>
+          </RouteUpdates>
+        )}
+      </EnsureResources>
     )
   }
 

@@ -162,23 +162,21 @@ function RouteAnnouncer(props) {
   const announcementRef = useRef()
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      let pageName = `new page at ${props.location.pathname}`
-      if (document.title) {
-        pageName = document.title
-      }
-      const pageHeadings = document
-        .getElementById(`gatsby-focus-wrapper`)
-        .getElementsByTagName(`h1`)
-      if (pageHeadings && pageHeadings.length) {
-        pageName = pageHeadings[0].textContent
-      }
-      const newAnnouncement = `Navigated to ${pageName}`
-      const oldAnnouncement = announcementRef.current.innerText
-      if (oldAnnouncement !== newAnnouncement) {
-        announcementRef.current.innerText = newAnnouncement
-      }
-    })
+    let pageName = `new page at ${props.location.pathname}`
+    if (document.title) {
+      pageName = document.title
+    }
+    const pageHeadings = document
+      .getElementById(`gatsby-focus-wrapper`)
+      .getElementsByTagName(`h1`)
+    if (pageHeadings && pageHeadings.length) {
+      pageName = pageHeadings[0].textContent
+    }
+    const newAnnouncement = `Navigated to ${pageName}`
+    const oldAnnouncement = announcementRef.current.innerText
+    if (oldAnnouncement !== newAnnouncement) {
+      announcementRef.current.innerText = newAnnouncement
+    }
   }, [props.location.pathname])
 
   return (

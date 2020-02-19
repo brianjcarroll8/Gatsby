@@ -49,18 +49,6 @@ class ScrollContext extends React.Component {
       location: prevProps.location,
     }
 
-    // The "scroll-behavior" package expects the "action" to be on the location
-    // object so let's copy it over.
-
-    console.log(this.props)
-
-    // Temp hack while awaiting https://github.com/reach/router/issues/119
-    // if (window.__navigatingToLink) {
-    //   location.action = `PUSH`
-    // } else {
-    //   location.action = `POP`
-    // }
-
     this.scrollBehavior.updateScroll(prevRouterProps, { history, location })
   }
 

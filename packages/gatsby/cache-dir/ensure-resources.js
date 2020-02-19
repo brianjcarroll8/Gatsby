@@ -13,7 +13,7 @@ function EnsureResources(props) {
 
   useEffect(() => {
     if (location.href !== props.location.href) {
-      const pageResources = loader.loadPageSync(location.pathname)
+      const pageResources = loader.loadPageSync(props.location.pathname)
       setPageResources(pageResources)
     }
 
@@ -23,10 +23,10 @@ function EnsureResources(props) {
   useEffect(() => {
     if (pageResources) return
 
-    console.log(`transitioning?`)
     startTransition(() => {
       loader.loadPage(location.pathname).then(pageResources => {
         if (pageResources && pageResources.status !== `error`) {
+          console.log("updates???")
           setPageResources(pageResources)
           setLocation({ ...window.location })
         } else {
@@ -36,8 +36,6 @@ function EnsureResources(props) {
       })
     })
   }, [pageResources])
-
-  console.log(isPending)
 
   return props.children({ location, pageResources })
 }
