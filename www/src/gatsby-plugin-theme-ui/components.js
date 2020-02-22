@@ -14,8 +14,8 @@ import MdxLink from "../components/mdx-link"
 import Breakout from "../components/breakout"
 import VisuallyHidden from "../components/visually-hidden"
 import Events from "../components/events/events"
-import StubList from "../components/stub-list"
 const GuideList = loadable(() => import("../components/guide-list"))
+const StubList = loadable(() => import("../components/stub-list"))
 
 export default {
   GuideList,
