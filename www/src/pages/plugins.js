@@ -2,6 +2,7 @@
 import { jsx } from "theme-ui"
 import React, { Component } from "react"
 import { Helmet } from "react-helmet"
+import { Trans } from "@lingui/macro"
 
 import Container from "../components/container"
 import Rotator from "../components/rotator"
@@ -116,14 +117,19 @@ class Plugins extends Component {
                   textAlign: `center`,
                 }}
               >
-                Please use the search bar to find plugins that will make your
-                blazing fast site even more awesome. If you
-                {`'`}d like to create your own plugin, see the
-                {` `}
-                <Link to="/docs/creating-plugins/">Plugin Authoring</Link> page
-                in the docs! To learn more about Gatsby plugins, visit the
-                {` `}
-                <Link to="/docs/plugins">plugins doc page</Link>.
+                <Trans>
+                  Please use the search bar to find plugins that will make your
+                  blazing fast site even more awesome. If you
+                  {`'`}d like to create your own plugin, see the
+                  {` `}
+                  <Link to="/docs/creating-plugins/">
+                    Plugin Authoring
+                  </Link>{" "}
+                  page in the docs! To learn more about Gatsby plugins, visit
+                  the
+                  {` `}
+                  <Link to="/docs/plugins">plugins doc page</Link>.
+                </Trans>
               </p>
             </div>
             <FooterLinks />

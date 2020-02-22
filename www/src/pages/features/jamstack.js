@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui"
 import { graphql } from "gatsby"
+import { Trans } from "@lingui/macro"
 
 import Button from "../../components/button"
 import Layout from "../../components/layout"
@@ -18,10 +19,12 @@ import PageWithSidebar from "../../components/page-with-sidebar"
 
 const FeaturesHeader = () => (
   <section>
-    <h1 id="introduction" sx={{ mt: 0 }}>
-      JAMstack
-    </h1>
-    <p>Compare popular JAMstack technologies on this page.</p>
+    <Trans>
+      <h1 id="introduction" sx={{ mt: 0 }}>
+        JAMstack
+      </h1>
+      <p>Compare popular JAMstack technologies on this page.</p>
+    </Trans>
     <LegendTable />
   </section>
 )
@@ -45,12 +48,14 @@ const JamstackFeaturesPage = ({ data, location }) => {
           <main id={`reach-skip-nav`}>
             <Breadcrumb location={location} />
             <FeaturesHeader />
-            <h3>Comparison</h3>
-            <p>
-              To see a filtered view of Gatsby with specific JAMstack
-              technologies, choose the technologies to compare and then press
-              Compare:
-            </p>
+            <Trans>
+              <h3>Comparison</h3>
+              <p>
+                To see a filtered view of Gatsby with specific JAMstack
+                technologies, choose the technologies to compare and then press
+                Compare:
+              </p>
+            </Trans>
 
             <div
               sx={{

@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "theme-ui"
 import { graphql } from "gatsby"
+import { Trans } from "@lingui/macro"
 
 import Button from "../../components/button"
 import Layout from "../../components/layout"
@@ -18,10 +19,12 @@ import useComparisonState from "../../hooks/use-comparison-state"
 
 const FeaturesHeader = () => (
   <section>
-    <h1 id="introduction" style={{ marginTop: 0 }}>
-      CMS
-    </h1>
-    <p>Compare popular CMS options on this page.</p>
+    <Trans>
+      <h1 id="introduction" style={{ marginTop: 0 }}>
+        CMS
+      </h1>
+      <p>Compare popular CMS options on this page.</p>
+    </Trans>
   </section>
 )
 
@@ -42,12 +45,14 @@ const CmsFeaturesPage = ({ data, location }) => {
           <main id={`reach-skip-nav`}>
             <Breadcrumb location={location} />
             <FeaturesHeader />
-            <h3>Comparison</h3>
-            <p>
-              To see a filtered view of Gatsby compared with specific CMS
-              technologies, choose the technologies to compare and then press
-              Compare:
-            </p>
+            <Trans>
+              <h3>Comparison</h3>
+              <p>
+                To see a filtered view of Gatsby compared with specific CMS
+                technologies, choose the technologies to compare and then press
+                Compare:
+              </p>
+            </Trans>
             <div sx={{ pb: 10 }}>
               <div
                 sx={{

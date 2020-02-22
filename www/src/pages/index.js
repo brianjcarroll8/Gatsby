@@ -3,6 +3,7 @@ import { jsx } from "theme-ui"
 import React from "react"
 import { graphql } from "gatsby"
 import { Helmet } from "react-helmet"
+import { Trans } from "@lingui/macro"
 import ArrowForwardIcon from "react-icons/lib/md/arrow-forward"
 
 import Layout from "../components/layout"
@@ -117,9 +118,13 @@ class IndexRoute extends React.Component {
           <div css={{ flex: `1 1 100%` }}>
             <Container withSidebar={false}>
               <section css={{ textAlign: `center` }}>
-                <h1 sx={{ fontWeight: `heading`, mt: 0 }}>Curious yet?</h1>
+                <h1 sx={{ fontWeight: `heading`, mt: 0 }}>
+                  <Trans>Curious yet?</Trans>
+                </h1>
                 <FuturaParagraph>
-                  It only takes a few minutes to get up and running!
+                  <Trans>
+                    It only takes a few minutes to get up and running!
+                  </Trans>
                 </FuturaParagraph>
                 <Button
                   secondary
@@ -129,7 +134,7 @@ class IndexRoute extends React.Component {
                   overrideCSS={{ mt: 5 }}
                   icon={<ArrowForwardIcon />}
                 >
-                  Get Started
+                  <Trans>Get Started</Trans>
                 </Button>
               </section>
             </Container>
