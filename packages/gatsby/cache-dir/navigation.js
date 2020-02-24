@@ -159,11 +159,6 @@ function init() {
 }
 
 class RouteAnnouncer extends React.Component {
-  constructor(props) {
-    super(props)
-    this.announcementRef = React.createRef()
-  }
-
   componentDidUpdate(prevProps, nextProps) {
     requestAnimationFrame(() => {
       let pageName = `new page at ${this.props.location.pathname}`
@@ -176,34 +171,17 @@ class RouteAnnouncer extends React.Component {
       if (pageHeadings && pageHeadings.length) {
         pageName = pageHeadings[0].textContent
       }
+      const announcementNode = document.getElementById(`gatsby-announcer`)
       const newAnnouncement = `Navigated to ${pageName}`
-      const oldAnnouncement = this.announcementRef.current.innerText
+      const oldAnnouncement = announcementNode.current.innerText
       if (oldAnnouncement !== newAnnouncement) {
-        this.announcementRef.current.innerText = newAnnouncement
+        announcementNode.current.innerText = newAnnouncement
       }
     })
   }
 
   render() {
-    return (
-      <div
-        id="gatsby-announcer"
-        style={{
-          position: `absolute`,
-          top: 0,
-          width: 1,
-          height: 1,
-          padding: 0,
-          overflow: `hidden`,
-          clip: `rect(0, 0, 0, 0)`,
-          whiteSpace: `nowrap`,
-          border: 0,
-        }}
-        aria-live="assertive"
-        aria-atomic="true"
-        ref={this.announcementRef}
-      ></div>
-    )
+    return null
   }
 }
 
