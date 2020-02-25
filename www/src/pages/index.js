@@ -129,7 +129,7 @@ class IndexRoute extends React.Component {
                   overrideCSS={{ mt: 5 }}
                   icon={<ArrowForwardIcon />}
                 >
-                  Get Started
+                  Get Started!
                 </Button>
               </section>
             </Container>
