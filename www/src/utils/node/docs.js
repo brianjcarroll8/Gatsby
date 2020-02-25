@@ -6,6 +6,7 @@ const url = require(`url`)
 const moment = require(`moment`)
 const langs = require(`../../../i18n.json`)
 const { getPrevAndNext } = require(`../get-prev-and-next.js`)
+const { getNavFields } = require(`../get-nav-fields`)
 const { localizedPath } = require(`../i18n.js`)
 
 // convert a string like `/some/long/path/name-of-docs/` to `name-of-docs`
@@ -173,6 +174,7 @@ exports.createPages = async ({ graphql, actions }) => {
   // Create docs pages.
   const docPages = data.allMdx.nodes
   docPages.forEach(node => {
+    // TODO replace with localizedSlug
     const slug = _.get(node, `fields.slug`)
     const locale = _.get(node, `fields.locale`)
     if (!slug) return
@@ -220,6 +222,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
   let slug
   let locale
+  let localizedSlug
   if (node.internal.type === `File`) {
     const parsedFilePath = path.parse(node.relativePath)
     // TODO add locale data for non-MDX files
@@ -239,6 +242,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     if (fileNode.sourceInstanceName === `docs`) {
       slug = docSlugFromPath(parsedFilePath)
       locale = "en"
+      localizedSlug = slug
 
       // Set released status and `published at` for blog posts.
       if (_.includes(parsedFilePath.dir, `blog`)) {
@@ -266,6 +270,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
           name: `excerpt`,
           value: node.frontmatter.excerpt || node.excerpt,
         })
+      } else {
+        const navFields = getNavFields(slug)
+        _.forEach(navFields, (value, name) => {
+          createNodeField({ node, name, value })
+        })
       }
     }
 
@@ -275,6 +284,12 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
         // gatsby-source-filesystem and gatsby-source-git differ
         slug = docSlugFromPath(path.parse(fileNode.relativePath.substring(5)))
         locale = code
+        localizedSlug = localizedPath(locale, slug)
+        const navFields = getNavFields(slug)
+        // FIXME localize these values
+        _.forEach(navFields, (value, name) => {
+          createNodeField({ node, name, value })
+        })
       }
     }
 
@@ -297,6 +312,9 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     }
     if (locale) {
       createNodeField({ node, name: `locale`, value: locale })
+    }
+    if (localizedSlug) {
+      createNodeField({ node, name: `localizedSlug`, value: localizedSlug })
     }
   } else if (node.internal.type === `AuthorYaml`) {
     slug = `/contributors/${slugify(node.id, {

@@ -77,6 +77,11 @@ module.exports = {
   mapping: {
     "MarkdownRemark.frontmatter.author": `AuthorYaml`,
     "Mdx.frontmatter.author": `AuthorYaml`,
+    // FIXME replace with localized slug
+    "Mdx.fields.prev": `Mdx.fields.slug`,
+    "Mdx.fields.next": `Mdx.fields.slug`,
+    "Mdx.fields.parents": `Mdx.fields.slug`,
+    "Mdx.fields.items": `Mdx.fields.slug`,
   },
   plugins: [
     `gatsby-plugin-theme-ui`,
@@ -213,7 +218,7 @@ module.exports = {
           `gatsby-remark-copy-linked-files`,
           `gatsby-remark-smartypants`,
           // convert images using http to https in plugin library READMEs
-          `gatsby-remark-http-to-https`
+          `gatsby-remark-http-to-https`,
         ],
       },
     },
