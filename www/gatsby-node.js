@@ -5,6 +5,8 @@ const startersRedirects = require(`./starter-redirects.json`)
 const yaml = require(`js-yaml`)
 const redirects = yaml.load(fs.readFileSync(`./redirects.yaml`))
 
+// force cache invalidation
+
 const docs = require(`./src/utils/node/docs.js`)
 const showcase = require(`./src/utils/node/showcase.js`)
 const starters = require(`./src/utils/node/starters.js`)
