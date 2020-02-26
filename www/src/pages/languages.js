@@ -20,17 +20,16 @@ export default function Languages({ location }) {
           <p>
             The Gatsby documentation is available in the languages listed below.
           </p>
-          <ul sx={{ listStyleType: `none` }}>
+          <ul sx={{ listStyleType: `none`, width: `100%` }}>
             {langs.map(({ code, name, localName }) => {
               return (
-                <li>
+                <li sx={{ width: `100%`, m: 0 }}>
                   <Link
                     to={`/${code}/languages/`}
                     sx={{
                       width: `100%`,
-                      border: `2px transparent solid`,
                       borderRadius: 3,
-                      p: 2,
+                      p: 3,
                     }}
                   >
                     <strong>{localName}</strong> / {name}
