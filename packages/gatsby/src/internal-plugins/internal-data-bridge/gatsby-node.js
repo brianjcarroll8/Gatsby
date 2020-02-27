@@ -80,6 +80,7 @@ exports.sourceNodes = ({ createContentDigest, actions, store }) => {
   // Add site node.
   const buildTime = moment()
     .subtract(process.uptime(), `seconds`)
+    .startOf(`minute`)
     .toJSON()
 
   const createGatsbyConfigNode = (config = {}) => {
