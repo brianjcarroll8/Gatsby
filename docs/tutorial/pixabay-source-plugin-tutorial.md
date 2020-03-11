@@ -1,5 +1,5 @@
 ---
-title: "Creating an Image Source Plugin"
+title: "Creating a Pixabay Image Source Plugin"
 ---
 
 ## What this tutorial covers
