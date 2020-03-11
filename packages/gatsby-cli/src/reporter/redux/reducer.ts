@@ -1,13 +1,20 @@
-const { Actions } = require(`../constants`)
+import { Actions, ActivityStatuses } from "../constants"
+import { AnyAction } from "redux"
 
-module.exports = (
-  state = {
+interface IState {
+  messages: string[]
+  activities: Record<string, Record<string, string>>
+  status: ActivityStatuses | ""
+}
+
+export const reducer = (
+  state: IState = {
     messages: [],
     activities: {},
     status: ``,
   },
-  action
-) => {
+  action: AnyAction
+): IState => {
   switch (action.type) {
     case Actions.SetStatus: {
       return {

@@ -1,5 +1,5 @@
 const Redux = require(`redux`)
-const reducer = require(`./reducer`)
+const { reducer } = require(`./reducer`)
 
 const { ActivityTypes, Actions } = require(`../constants`)
 
