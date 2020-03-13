@@ -1,7 +1,7 @@
 const apiRunnerNode = require(`./api-runner-node`)
 const { store } = require(`../redux`)
 
-module.exports = async ({ refresh = false, parentSpan }) => {
+module.exports = async ({ refresh = false, parentSpan, webhookBody }) => {
   if (refresh) {
     store.dispatch({ type: `CLEAR_SCHEMA_CUSTOMIZATION` })
   }
@@ -10,5 +10,6 @@ module.exports = async ({ refresh = false, parentSpan }) => {
     traceId: !refresh
       ? `initial-createSchemaCustomization`
       : `refresh-createSchemaCustomization`,
+    webhookBody,
   })
 }

@@ -207,6 +207,7 @@ async function startServer(program: IProgram): Promise<IServer> {
     activity.start()
     await createSchemaCustomization({
       refresh: true,
+      webhookBody: req.body,
     })
     activity.end()
     activity = report.activityTimer(`Refreshing source data`, {})
