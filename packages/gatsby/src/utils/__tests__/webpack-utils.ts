@@ -1,4 +1,5 @@
 import { createUtils } from "../webpack-utils"
+import { IProgram } from "../../commands/types"
 
 jest.mock(`babel-preset-gatsby/package.json`, () => {
   return {
@@ -6,13 +7,17 @@ jest.mock(`babel-preset-gatsby/package.json`, () => {
   }
 })
 
+jest.mock("../browserslist", () => {
+  return {
+    getBrowsersList: () => [],
+  }
+})
+
 let config
-beforeAll(async () => {
-  config = await createUtils({
+beforeAll(() => {
+  config = createUtils({
     stage: `develop`,
-    program: {
-      browserslist: [],
-    },
+    program: {} as IProgram,
   })
 })
 

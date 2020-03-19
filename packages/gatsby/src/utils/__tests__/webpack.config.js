@@ -13,6 +13,12 @@ jest.mock(`fs-extra`, () => {
       .mockImplementation((...args) => readFileSync(...args)),
   }
 })
+jest.mock(`../browserslist`, () => {
+  return {
+    getBrowsersList: () => [],
+  }
+})
+
 const { DefinePlugin } = require(`webpack`)
 const { readFileSync } = require(`fs-extra`)
 const webpackConfig = require(`../webpack.config`)

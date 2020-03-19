@@ -37,7 +37,7 @@ module.exports = async (
   // We combine develop & develop-html stages for purposes of generating the
   // webpack config.
   const stage = suppliedStage
-  const { rules, loaders, plugins } = await createUtils({ stage, program })
+  const { rules, loaders, plugins } = createUtils({ stage, program })
 
   const { assetPrefix, pathPrefix } = store.getState().config
 

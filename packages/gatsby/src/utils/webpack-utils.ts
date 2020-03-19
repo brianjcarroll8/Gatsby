@@ -11,6 +11,8 @@ const GatsbyWebpackStatsExtractor = require(`./gatsby-webpack-stats-extractor`)
 const GatsbyWebpackEslintGraphqlSchemaReload = require(`./gatsby-webpack-eslint-graphql-schema-reload-plugin`)
 
 import { builtinPlugins } from "./webpack-plugins"
+import { IProgram } from "../commands/types"
+import { getBrowsersList } from "./browserslist"
 const eslintConfig = require(`./eslint-config`)
 
 type LoaderResolver<T = {}> = (options?: T) => Loader
@@ -118,16 +120,16 @@ export interface IWebpackUtils {
 /**
  * A factory method that produces an atoms namespace
  */
-export const createUtils = async ({
+export const createUtils = ({
   stage,
   program,
 }: {
   stage: Stage
-  program: any
-}): Promise<IWebpackUtils> => {
+  program: IProgram
+}): IWebpackUtils => {
   const assetRelativeRoot = `static/`
   const vendorRegex = /(node_modules|bower_components)/
-  const supportedBrowsers = program.browserslist
+  const supportedBrowsers = getBrowsersList(program.directory)
 
   const PRODUCTION = !stage.includes(`develop`)
 
