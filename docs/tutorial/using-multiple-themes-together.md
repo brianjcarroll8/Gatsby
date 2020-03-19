@@ -522,6 +522,7 @@ export default ({ children, title, ...props }) => {
 
 ## Other resources
 
+- [Example site on using multiple themes](/examples/using-multiple-themes)
 - [Gatsby Themes Reference Guide](/docs/themes/)
 - [Egghead.io Course: Gatsby Theme Authoring (free)](https://egghead.io/courses/gatsby-theme-authoring)
 - [Setting up yarn workspaces for Gatsby theme development](/blog/2019-05-22-setting-up-yarn-workspaces-for-theme-development/#reach-skip-nav)
