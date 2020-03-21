@@ -355,6 +355,7 @@ module.exports = {
         nodeTypes: [`StartersYaml`],
       },
     },
+    `gatsby-plugin-perf-budgets`,
     // `gatsby-plugin-subfont`,
   ].concat(dynamicPlugins),
 }
