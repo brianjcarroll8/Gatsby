@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`works 1`] = `
+Set {
+  "/Users/blainekasten/Sites/gdimension/src/pages/__404.js",
+  "/Users/blainekasten/Sites/gdimension/src/pages/index.js",
+  "/Users/blainekasten/Sites/gdimension/src/pages/page-2.js",
+  "/Users/blainekasten/Sites/gdimension/src/pages/page-3.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/react/index.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/gatsby/cache-dir/commonjs/gatsby-browser-entry.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.production.min.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.development.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/prop-types/index.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/gatsby-link/index.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/react-is/index.js",
+  "/Users/blainekasten/Sites/gdimension/node_modules/@reach/router/index.js",
+}
+`;
