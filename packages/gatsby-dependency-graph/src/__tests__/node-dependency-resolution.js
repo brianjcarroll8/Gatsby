@@ -1,10 +1,10 @@
-const { readDependencies } = require("../read-dependencies")
-const { join } = require("path")
+const { readDependencies } = require(`../read-dependencies`)
+const { join } = require(`path`)
 
-const root = join(__dirname, "../..")
+const root = join(__dirname, `../..`)
 
-it("resolves node deps", async () => {
-  const tree = await readDependencies(root, "node_modules/react")
+it(`resolves node deps`, async () => {
+  const tree = await readDependencies(root, `node_modules/react`)
   let deps = []
 
   const originalLog = console.log
