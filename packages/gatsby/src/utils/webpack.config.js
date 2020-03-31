@@ -389,6 +389,9 @@ module.exports = async (
           require.resolve(`@babel/runtime/package.json`)
         ),
         "core-js": path.dirname(require.resolve(`core-js/package.json`)),
+        "@pmmmwh/react-refresh-webpack-plugin": path.dirname(
+          require.resolve(`@pmmmwh/react-refresh-webpack-plugin/package.json`)
+        ),
         // TODO: Remove entire block when we make fast-refresh the default
         ...(process.env.GATSBY_HOT_LOADER !== `fast-refresh`
           ? {
