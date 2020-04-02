@@ -1,6 +1,4 @@
-const supportedExtensions = [`ts`, `tsx`, `js`, `jsx`]
-
-function hasExtension(path) {
+export function hasExtension(path: string): boolean {
   try {
     const parts = path.split(`/`)
     const lastPart = parts[parts.length - 1]
@@ -13,14 +11,12 @@ function hasExtension(path) {
   }
 }
 
-function getExtension(path) {
+export function getExtension(path: string): string {
   if (hasExtension(path)) {
     const parts = path.split(`.`)
     const lastPart = parts[parts.length - 1]
 
     return lastPart
   }
+  return ""
 }
-
-exports.hasExtension = hasExtension
-exports.getExtension = getExtension
