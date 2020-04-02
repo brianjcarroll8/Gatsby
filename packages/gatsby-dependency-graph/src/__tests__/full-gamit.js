@@ -3,8 +3,18 @@ import { deriveGraph } from "../"
 
 const ROOT = join(__dirname, `../../../../../gdimension`)
 
-it(`works`, async () => {
-  const graph = await deriveGraph(ROOT, { depth: 4 })
+jest.setTimeout(99999999)
+describe(`gatsby-dependency-graph`, () => {
+  let graph
+  beforeAll(async () => {
+    graph = await deriveGraph(ROOT)
+  })
 
-  expect(graph).toMatchSnapshot()
+  it(`tracks components`, () => {
+    expect(Array.from(graph.components.values()).sort()).toMatchSnapshot()
+  })
+
+  it(`tracks pages`, () => {
+    expect(Array.from(graph.pages.values()).sort()).toMatchSnapshot()
+  })
 })

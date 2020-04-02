@@ -33,7 +33,7 @@ exports.extractDependencies = async (root, componentPath, js) => {
       sourceType: `unambiguous`,
       plugins: [
         `jsx`,
-        getExtension(componentPath) === `ts` ? `typescript` : `flow`,
+        /tsx?/.test(getExtension(componentPath)) ? `typescript` : `flow`,
       ],
     })
 

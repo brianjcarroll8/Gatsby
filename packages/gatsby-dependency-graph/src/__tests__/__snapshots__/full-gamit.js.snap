@@ -1,18 +1,106 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`works 1`] = `
-Set {
-  "/Users/blainekasten/Sites/gdimension/src/pages/__404.js",
-  "/Users/blainekasten/Sites/gdimension/src/pages/index.js",
-  "/Users/blainekasten/Sites/gdimension/src/pages/page-2.js",
-  "/Users/blainekasten/Sites/gdimension/src/pages/page-3.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/react/index.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/gatsby/cache-dir/commonjs/gatsby-browser-entry.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.production.min.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.development.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/prop-types/index.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/gatsby-link/index.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/react-is/index.js",
-  "/Users/blainekasten/Sites/gdimension/node_modules/@reach/router/index.js",
-}
+exports[`gatsby-dependency-graph tracks components 1`] = `
+Array [
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/node_modules/react/index.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.production.min.js",
+      "/Users/blainekasten/Sites/gdimension/node_modules/react/cjs/react.development.js",
+    ],
+    "relativePath": "/node_modules/react/index.js",
+    "size": 190,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/components/layout",
+    "dependencies": Array [],
+    "relativePath": "/src/components/layout",
+    "size": 1149,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/components/Header",
+    "dependencies": Array [],
+    "relativePath": "/src/components/Header",
+    "size": 1246,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/components/Main",
+    "dependencies": Array [],
+    "relativePath": "/src/components/Main",
+    "size": 6692,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/components/Footer",
+    "dependencies": Array [],
+    "relativePath": "/src/components/Footer",
+    "size": 439,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/node_modules/gatsby/cache-dir/commonjs/gatsby-browser-entry.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/@babel/runtime/helpers/interopRequireWildcard",
+      "/Users/blainekasten/Sites/gdimension/node_modules/@babel/runtime/helpers/interopRequireDefault",
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+      "/Users/blainekasten/Sites/gdimension/node_modules/prop-types",
+      "/Users/blainekasten/Sites/gdimension/node_modules/gatsby-link",
+      "/Users/blainekasten/Sites/gdimension/node_modules/gatsby/cache-dir/commonjs/public-page-renderer",
+      "/Users/blainekasten/Sites/gdimension/node_modules/gatsby/cache-dir/commonjs/loader",
+    ],
+    "relativePath": "/node_modules/gatsby/cache-dir/commonjs/gatsby-browser-entry.js",
+    "size": 3384,
+  },
+]
+`;
+
+exports[`gatsby-dependency-graph tracks pages 1`] = `
+Array [
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/pages/404.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+      "/Users/blainekasten/Sites/gdimension/src/components/layout",
+    ],
+    "relativePath": "/src/pages/404.js",
+    "size": 246,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/pages/__404.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+      "/Users/blainekasten/Sites/gdimension/src/components/layout",
+    ],
+    "relativePath": "/src/pages/__404.js",
+    "size": 246,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/pages/index.tsx",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+      "/Users/blainekasten/Sites/gdimension/src/components/layout",
+      "/Users/blainekasten/Sites/gdimension/src/components/Header",
+      "/Users/blainekasten/Sites/gdimension/src/components/Main",
+      "/Users/blainekasten/Sites/gdimension/src/components/Footer",
+    ],
+    "relativePath": "/src/pages/index.tsx",
+    "size": 2304,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/pages/page-2.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+      "/Users/blainekasten/Sites/gdimension/node_modules/gatsby",
+      "/Users/blainekasten/Sites/gdimension/src/components/layout",
+    ],
+    "relativePath": "/src/pages/page-2.js",
+    "size": 293,
+  },
+  Object {
+    "absolutePath": "/Users/blainekasten/Sites/gdimension/src/pages/page-3.js",
+    "dependencies": Array [
+      "/Users/blainekasten/Sites/gdimension/node_modules/react",
+    ],
+    "relativePath": "/src/pages/page-3.js",
+    "size": 78,
+  },
+]
 `;

@@ -7,16 +7,12 @@ it(`resolves node deps`, async () => {
   const tree = await readDependencies(root, `node_modules/react`)
   let deps = []
 
-  const originalLog = console.log
-  console.log = () => {}
-
   await Promise.all(
     tree.dependencies.map(async dep => {
       const path = dep.split(root)[1]
       deps.push(await readDependencies(root, path))
     })
   )
-  console.log = originalLog
 
   expect(tree).toMatchInlineSnapshot(`
     Object {

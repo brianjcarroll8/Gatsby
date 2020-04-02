@@ -5,7 +5,7 @@ import { findUnresolvedDependencies } from "./scan-for-unresolved-dependencies"
 import { DependencyGraph } from "./types"
 
 type Options = {
-  depth: number
+  depth?: number
 }
 
 export const deriveGraph = async (
@@ -41,23 +41,20 @@ export const deriveGraph = async (
     }
 
     const deps = findUnresolvedDependencies(gdraph, resolvedDependencies)
-    if (deps.length === 0) {
+    if (deps.size === 0) {
       return
     }
 
-    for (let index = 0; index < deps.length; index++) {
-      const node = deps[index]
+    for (let node of deps) {
       for (let index = 0; index < node.dependencies.length; index++) {
         const relativePath = node.dependencies[index]
-        const parts = relativePath.split(ROOT)
+        const part = relativePath.split(ROOT)[1]
 
-        gdraph.components.set(
-          relativePath,
-          await readDependencies(ROOT, parts[1])
-        )
+        const resolvedNode = await readDependencies(ROOT, part)
+        gdraph.components.set(relativePath, resolvedNode)
 
         // Mark the node as dependencies resolved so we don't hit this again.
-        resolvedDependencies.add(node.absolutePath)
+        resolvedDependencies.add(resolvedNode.absolutePath)
       }
     }
 
@@ -71,6 +68,5 @@ export const deriveGraph = async (
 
   await runDependencyResolution()
 
-  console.log(resolvedDependencies)
-  return resolvedDependencies
+  return gdraph
 }
