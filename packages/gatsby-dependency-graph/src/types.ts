@@ -10,3 +10,7 @@ export type DependencyGraph = {
   pages: Map<string, Node>
   components: Map<string, Node>
 }
+
+export type Options = {
+  depth?: number
+}
