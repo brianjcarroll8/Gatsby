@@ -181,6 +181,9 @@ module.exports.create = create
 module.exports.update = create
 module.exports.read = read
 module.exports.destroy = destroy
+module.exports.config = {
+  interface: true,
+}
 
 module.exports.all = async ({ root }) => {
   const configPath = path.join(root, `gatsby-config.js`)
