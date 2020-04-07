@@ -1,0 +1,10 @@
+{
+	"name": "gatsby-theme-course",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
+	"license": "MIT",
+	"peerDependencies": {
+		"gatsby": "^2.6.0"
+	}
+}
