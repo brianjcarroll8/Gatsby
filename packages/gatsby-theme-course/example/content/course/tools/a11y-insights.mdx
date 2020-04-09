@@ -1,0 +1,28 @@
+---
+title: Accessibility Insights
+module: 3
+lesson: 2
+description: How to use the Accessibility Insights browser extension
+---
+
+## Background
+
+[Accessibility Insights](https://accessibilityinsights.io/en/) is an incredibly powerful tool actually created by Microsoft. This is the entire reason Chrome is the browser I recommend for the majority of accessibility testing. It is powered by [axe-core](https://github.com/dequelabs/axe-core), which is the same auditing library leveraged in [Lighthouse](https://developers.google.com/web/tools/lighthouse).
+
+We'll use it to verify tab order and run in-depth assessments of pages. This extension offers really solid scaffolding to walk you through the manual testing that is absolutely vital to determining whether a page is accessible.
+
+## Functionality
+
+To use the extension, you can click the browser extension icon or use the keyboard shortcut (`Shift + Command + K` for Mac, `Control + Shift + K` for Windows).
+As soon as you activate the extension, you'll see some options pop down from the extenstions toolbar in Chrome.
+
+### FastPass
+
+This essentially runs the same audit that Lighthouse does, looking for the types of violations that can be automatically detected.
+
+### Assessment
+
+This is the feature that makes this tool truly shine. If selected, it will open a brand new Chrome window with a list of steps on the left and instructions to follow to verify the accessibility of the current page.
+The very first thing that it does is to run the automated checks that would be run with the FastPass option.
+Then, it runs through sections of WCAG and walks you through verification that there are no accessibility violations. It groups these steps in a slightly different order than presented in the WCAG, but is effective in guiding you in how to test and draw conclusions.
+If you follow all of the steps and mark pass/fail, this generates results that you can export. I recommend doing a full audit of [x page?], exporting the results, and using them when creating issues and PRs.

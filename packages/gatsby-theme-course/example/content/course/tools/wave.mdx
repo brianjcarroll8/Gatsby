@@ -1,0 +1,40 @@
+---
+title: The WAVE Tool
+module: 3
+lesson: 1
+description: How to use the WAVE browser extension
+---
+
+## Background
+
+The [WAVE tool](https://wave.webaim.org/) is an entire suite of accessibility evaluation tools but we are going to focus on the browser extensions, which are available for Chrome and Firefox. These tools are created by [Web Accessibility in Mind (Web AIM)](https://webaim.org/), who are responsible for creating a whole host of amazing resources, tools, and projects that enable people to make accessible web content.
+
+It is built on an API that tracks a [long list of possible accessibility violations](https://wave.webaim.org/api/docs?format=html) that would be evident from looking at a page's HTML and CSS.
+
+We'll use it to verify semantic structure, validate color contrast, and double check any ARIA on the page.
+
+## Functionality
+
+To use the WAVE tool, you can click the browser extension icon or use the keyboard shortcut (`Command + Shift + U` for Mac, `Control + Shift + U` for Windows).
+
+### Automated Audit
+
+As soon as you click the extension icon or enter the shortcut, WAVE runs an automatic audit on the page and opens a sidebar with information. You'll notice that it adds icons to the page with CSS that allow you to visually identify errors, warnings, and features and get more information about them, scoped to the element. If you find the added icons distracting, you can toggle them off with the "Styles" toggle in the WAVE sidebar.
+
+The sidebar defaults to showing a summary of the audit. This shows counts for each of its categories. Right away you'll be able to tell if the page has no accessibility errors, whether it uses any ARIA, and how complex the page's structure is.
+
+[image of sidebar here]
+
+### Details
+
+If you view the details, you'll see a full list of which elements are in each category. So if your site had 3 errors and 10 contrast errors, you'll see each of them in detail listed out. If you click on any item icons in the details list your focus will be directed to where that element is on the page. Additionally if you click the info icon, a longer description of the item will appear in the "reference" tab of the sidebar.
+
+### Errors
+
+### Alerts
+
+### Features
+
+### Structural Elements
+
+### ARIA
