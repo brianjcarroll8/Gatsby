@@ -2,8 +2,7 @@
 import { jsx } from 'theme-ui';
 import ListItem from './list-item';
 
-const List = ({ items }) => {
-	return (
+const List = ({ items }) => (
 		<ul
 			sx={{
 				listStyle: `none`,
@@ -21,6 +20,5 @@ const List = ({ items }) => {
 			))}
 		</ul>
 	);
-};
 
 export default List;

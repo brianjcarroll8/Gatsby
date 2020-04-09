@@ -38,14 +38,14 @@ const CourseNav = ({ currentModule }) => {
 				modLessons.push({
 					slug: lesson.slug,
 					title: lesson.title,
-					type: 'lesson',
+					type: `lesson`,
 					number: lesson.number,
 				});
 			});
 		navItems.push({
 			slug: mod.slug,
 			title: mod.title,
-			type: 'module',
+			type: `module`,
 			number: mod.number,
 			lessons: modLessons,
 		});

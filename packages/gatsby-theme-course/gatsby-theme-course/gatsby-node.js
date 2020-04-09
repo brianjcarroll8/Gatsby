@@ -1,7 +1,7 @@
-const fs = require('fs');
+const fs = require(`fs`);
 const path = require(`path`);
 const mkdirp = require(`mkdirp`);
-const withDefaults = require('./utils/default-options');
+const withDefaults = require(`./utils/default-options`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 const { urlResolve, createContentDigest, graphql } = require(`gatsby-core-utils`);
 // Make sure the data directory exists
@@ -181,7 +181,7 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 	slug = slug.replace(/\/*$/, `/`);
 
 	//landing pages
-	if (name === 'index') {
+	if (name === `index`) {
 		//module
 		if (node.frontmatter.module) {
 			const mdxModuleId = createNodeId(`${node.id} >>> MdxModule`);
@@ -258,7 +258,7 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 // These templates are simply data-fetching wrappers that import components
 const CourseTemplate = require.resolve(`./src/templates/course-query`);
 const ModuleTemplate = require.resolve(`./src/templates/module-query`);
-const LessonTemplate = require.resolve('./src/templates/lesson-query');
+const LessonTemplate = require.resolve(`./src/templates/lesson-query`);
 
 exports.createPages = async ({ graphql, actions, reporter }, themeOptions) => {
 	const { createPage } = actions;

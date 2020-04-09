@@ -5,8 +5,7 @@ import Header from './header';
 import Footer from './footer';
 import CourseNav from './course-nav';
 
-const Layout = ({ children, currentModule = 0 }) => {
-	return (
+const Layout = ({ children, currentModule = 0 }) => (
 		<Container>
 			<SEO />
 			<Header />
@@ -15,6 +14,5 @@ const Layout = ({ children, currentModule = 0 }) => {
 			<Footer />
 		</Container>
 	);
-};
 
 export default Layout;

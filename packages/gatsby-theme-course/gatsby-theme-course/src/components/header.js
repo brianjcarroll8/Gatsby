@@ -16,26 +16,26 @@ const Header = () => {
 	return (
 		<header
 			sx={{
-				display: 'flex',
-				alignItems: 'center',
-				variant: 'styles.header',
+				display: `flex`,
+				alignItems: `center`,
+				variant: `styles.header`,
 			}}
 		>
 			<TLink
 				as={Link}
 				to="/"
 				sx={{
-					variant: 'styles.navlink',
+					variant: `styles.navlink`,
 					p: 2,
 				}}
 			>
 				{data.site.siteMetadata.title}
 			</TLink>
-			<div sx={{ mx: 'auto' }} />
+			<div sx={{ mx: `auto` }} />
 			<TLink
 				href="https://google.com"
 				sx={{
-					variant: 'styles.navlink',
+					variant: `styles.navlink`,
 					p: 2,
 				}}
 			>

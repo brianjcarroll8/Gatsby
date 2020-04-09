@@ -4,8 +4,7 @@ import { MDXRenderer } from 'gatsby-plugin-mdx';
 import Layout from './layout';
 import List from './list';
 
-const Course = ({ data: { course, modules } }) => {
-	return (
+const Course = ({ data: { course, modules } }) => (
 		<Layout>
 			<Heading as="h1">{course.title}</Heading>
 			<MDXRenderer>{course.body}</MDXRenderer>
@@ -13,6 +12,5 @@ const Course = ({ data: { course, modules } }) => {
 			<List items={modules.nodes} />
 		</Layout>
 	);
-};
 
 export default Course;

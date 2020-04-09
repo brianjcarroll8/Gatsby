@@ -2,8 +2,7 @@
 import { jsx, Link as TLink, Heading } from 'theme-ui';
 import { Link } from 'gatsby';
 
-const ListItem = ({ title, slug, number, description }) => {
-	return (
+const ListItem = ({ title, slug, number, description }) => (
 		<li sx={{ variant: `list.item` }}>
 			<TLink as={Link} to={slug}>
 				<Heading as="h3">
@@ -13,6 +12,5 @@ const ListItem = ({ title, slug, number, description }) => {
 			<p>{description}</p>
 		</li>
 	);
-};
 
 export default ListItem;

@@ -3,14 +3,14 @@ import { jsx, Flex, Link as TLink } from 'theme-ui';
 import { useState, useRef } from 'react';
 import { Link } from 'gatsby';
 
-const MenuToggle = ({ title = '', slug = '', items = [], expandByDefault = false }) => {
+const MenuToggle = ({ title = ``, slug = ``, items = [], expandByDefault = false }) => {
 	const [isExpanded, setExpanded] = useState(expandByDefault);
 	const toggleRef = useRef(null);
 	const itemListRef = useRef(null);
 	const clickHandler = () => {
 		setExpanded(!isExpanded);
 		if (isExpanded) {
-			itemListRef.current.querySelector('a').focus();
+			itemListRef.current.querySelector(`a`).focus();
 		}
 	};
 
@@ -23,12 +23,12 @@ const MenuToggle = ({ title = '', slug = '', items = [], expandByDefault = false
 				id={`#${title}-menu`}
 				ref={itemListRef}
 				tabIndex={-1}
-				className={`${isExpanded ? 'expanded' : ''}`}
+				className={`${isExpanded ? `expanded` : ``}`}
 				role="list"
 				sx={{
-					display: 'none',
+					display: `none`,
 					'&.expanded': {
-						display: 'block',
+						display: `block`,
 					},
 				}}
 			>
