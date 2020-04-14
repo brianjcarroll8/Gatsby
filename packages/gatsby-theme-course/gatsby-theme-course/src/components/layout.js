@@ -4,6 +4,7 @@ import SEO from './seo';
 import Header from './header';
 import Footer from './footer';
 import CourseNav from './course-nav';
+import '../styles/code.css'
 
 const Layout = ({ children, currentModule = 0 }) => (
 		<Container>

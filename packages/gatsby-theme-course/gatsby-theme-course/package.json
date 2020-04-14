@@ -9,11 +9,6 @@
 		"react": "^16.13.0",
 		"react-dom": "^16.13.0"
 	},
-	"devDependencies": {
-		"gatsby": "^2.19.42",
-		"react": "^16.13.0",
-		"react-dom": "^16.13.0"
-	},
 	"dependencies": {
 		"@mdx-js/mdx": "^1.5.7",
 		"@theme-ui/presets": "^0.3.0",
@@ -22,7 +17,10 @@
 		"gatsby-plugin-react-helmet": "^3.1.23",
 		"gatsby-plugin-theme-ui": "^0.3.0",
 		"gatsby-source-filesystem": "^2.1.54",
+		"mdx-utils": "^0.2.0",
+		"prism-react-renderer": "^1.0.2",
 		"react-helmet": "^5.2.1",
+		"react-live": "^2.2.2",
 		"theme-ui": "^0.3.1"
 	},
 	"scripts": {

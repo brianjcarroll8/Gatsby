@@ -2,7 +2,7 @@
 title: Accessibility Insights
 module: 3
 lesson: 2
-description: How to use the Accessibility Insights browser extension to perform a manual audit
+description: How to use the Accessibility Insights browser extension
 ---
 
 ## Background
@@ -20,9 +20,39 @@ As soon as you activate the extension, you'll see some options pop down from the
 
 This essentially runs the same audit that Lighthouse does, looking for the types of violations that can be automatically detected.
 
+### Ad-hoc Tools
+
+Accessibility Insights' ad-hoc tools are really similar to some of the functionality you saw with the WAVE tool.
+
+- "Automated Checks" runs a FastPass audit
+- "Landmarks" visually outline landmarks on the page
+- "Headings" visually outline headings on the page
+- "Color" allows you to shift the page into grayscale, which makes color contrast issues more visually obvious.
+- "Tab Stops" visually mark elements on the page as they receive focus when you press tab. This is incredibly useful, since tab order should both follow reading order and HTML element order. This tool makes it glaringly obvious if something doesn't make sense.
+
 ### Assessment
 
 This is the feature that makes this tool truly shine. If selected, it will open a brand new Chrome window with a list of steps on the left and instructions to follow to verify the accessibility of the current page.
 The very first thing that it does is to run the automated checks that would be run with the FastPass option.
 Then, it runs through sections of WCAG and walks you through verification that there are no accessibility violations. It groups these steps in a slightly different order than presented in the WCAG, but is effective in guiding you in how to test and draw conclusions.
-If you follow all of the steps and mark pass/fail, this generates results that you can export. I recommend doing a full audit of [x page?], exporting the results, and using them when creating issues and PRs.
+There is [really wonderful documentation](https://accessibilityinsights.io/docs/en/web/getstarted/assessment) of how to use this tool on the Accessibility Insights website that I won't replicate here, but I highly recommend reading through it in the future.
+If you follow all of the steps and mark pass/fail, this generates results that you can export. I recommend doing a full audit of [x page?], exporting the results, and using them when creating and reviewing issues and PRs.
+Each step will have an "info and examples" button that toggles a pane with more information about what specifically you are testing, what failure looks like, and what success looks like.
+
+### Bonus
+
+This tool can be really powerful if you enable a couple extra features!
+
+1. If you want it to also judge any content presented in iframes in the page (e.g. Twitter embed), you'll trigger this extra option if you run an assessment on a page with embedded content. [INSERT SCREENSHOT HERE]
+1. You can tell it to output FastPass results [directly into GitHub Issues](https://accessibilityinsights.io/docs/en/web/getstarted/issuefiling). You can do this by accessing the Settings panel and selecting "GitHub" under "Issue filing". You can then supply a URL (e.g. [https://github.com/gatsbyjs/gatsby/issues](https://github.com/gatsbyjs/gatsby/issues)) for it to post to. Then, from the "automated checks" panel, you can expand "failed instances" and choose "File Issue" for any of them.
+
+## Exercise
+
+Let's use Accessibility Insights to walk through an assessment of [x] page. Take the next 10 minutes and follow the instructions. Let's see how far we get! I expect that we'll make it at least through the "focus" section.
+If a requirement is not applicable for your page you can select "pass" for that requirement.
+
+<HiddenContentWithAnswer />
+
+## Wrap-up
+
+I think the real power in this tool is that you can access exactly what you need. You can use it to guide testing a particular parameter or particular page. You can use it as a resource to expand your knowledge if you hit an accessiblity violation you're unfamiliar with, and it can act as a portal to link you to even more resources and documentation.
