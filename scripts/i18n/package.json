@@ -6,6 +6,7 @@
     "create": "node ./create.js",
     "run-all": "node ./run-all.js",
     "sync": "node ./sync.js",
+    "sync-lingui": "node ./sync-lingui.js",
     "update-source": "node ./update-source.js"
   },
   "author": "Nat Alison",
