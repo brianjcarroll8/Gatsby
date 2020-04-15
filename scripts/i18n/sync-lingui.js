@@ -3,7 +3,7 @@ const log4js = require(`log4js`)
 const shell = require(`shelljs`)
 const { graphql: baseGraphql } = require(`@octokit/graphql`)
 let logger = log4js.getLogger(`sync-lingui`)
-logger.level = "info"
+logger.level = `info`
 
 require(`dotenv`).config()
 
@@ -64,8 +64,8 @@ async function getRepository(owner, name) {
   return repository
 }
 
-const localesDir = "../../www/src/data/locales"
-const messagesFileName = "messages.po"
+const localesDir = `../../www/src/data/locales`
+const messagesFileName = `messages.po`
 
 async function syncLingui() {
   const langs = JSON.parse(fs.readFileSync(`../../www/i18n.json`))
@@ -80,7 +80,7 @@ async function syncLingui() {
     const transRepoName = `${repoBase}-${code}`
     const transRepoUrl = `${host}/${owner}/${transRepoName}`
     cloneOrUpdateRepo(transRepoName, transRepoUrl)
-    shell.cd("..")
+    shell.cd(`..`)
 
     logger.info(`creating directory for ${code}: ${localesDir}/${code}`)
     fs.mkdirSync(`${localesDir}/${code}`, { recursive: true })
@@ -91,12 +91,12 @@ async function syncLingui() {
         `${localesDir}/${code}/${messagesFileName}`
       )
     } catch (e) {
-      logger.info("Found no messages.po file to extract")
+      logger.info(`Found no messages.po file to extract`)
     }
   }
 
   // Run lingui extract
-  shell.cd("../../www")
+  shell.cd(`../../www`)
   shell.exec(`yarn`)
   shell.exec(`yarn lingui:extract`)
   shell.cd(`../scripts/i18n/${cacheDir}`)
