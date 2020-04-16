@@ -119,7 +119,7 @@
         "babel-preset-gatsby"
       ]
     },
-    "localeDir": "src/data/locales",
+    "localeDir": "public/locales",
     "srcPathDirs": [
       "src/components",
       "src/pages",

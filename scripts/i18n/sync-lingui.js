@@ -1,4 +1,5 @@
 const fs = require(`fs`)
+const Git = require(`simple-git/promise`)
 const log4js = require(`log4js`)
 const shell = require(`shelljs`)
 const { graphql: baseGraphql } = require(`@octokit/graphql`)
@@ -16,6 +17,18 @@ const repoBase = `gatsby`
 // get the git short hash
 function getShortHash(hash) {
   return hash.substr(0, 7)
+}
+
+async function getGitRepo(repoName, repoUrl) {
+  const path = `${cacheDir}/${repoName}`
+  if (!fs.existsSync(path)) {
+    await Git().clone(repoUrl, path)
+    return Git(path)
+  } else {
+    const repo = Git(path)
+    await repo.checkout("master")
+    await repo.pull("origin", "master")
+  }
 }
 
 function cloneOrUpdateRepo(repoName, repoUrl) {
@@ -64,25 +77,21 @@ async function getRepository(owner, name) {
   return repository
 }
 
-const localesDir = `../../www/src/data/locales`
+const localesDir = `../../www/public/locales`
 const messagesFileName = `messages.po`
 
 async function syncLingui() {
   const langs = JSON.parse(fs.readFileSync(`../../www/i18n.json`))
-  if (shell.cd(cacheDir).code !== 0) {
-    logger.debug(`creating ${cacheDir}`)
-    shell.mkdir(cacheDir)
-    shell.cd(cacheDir)
-  }
+  fs.mkdirSync(cacheDir, { recursive: true })
 
   // Clone all the translation repos
   for (const { code } of langs) {
     const transRepoName = `${repoBase}-${code}`
     const transRepoUrl = `${host}/${owner}/${transRepoName}`
-    cloneOrUpdateRepo(transRepoName, transRepoUrl)
-    shell.cd(`..`)
+    await getGitRepo(transRepoName, transRepoUrl)
 
     logger.info(`creating directory for ${code}: ${localesDir}/${code}`)
+    logger.info(`Current diretory: ${process.cwd()}`)
     fs.mkdirSync(`${localesDir}/${code}`, { recursive: true })
     // copy all the messages.po files to the www/public directory
     try {
@@ -99,7 +108,7 @@ async function syncLingui() {
   shell.cd(`../../www`)
   shell.exec(`yarn`)
   shell.exec(`yarn lingui:extract`)
-  shell.cd(`../scripts/i18n/${cacheDir}`)
+  shell.cd(`../scripts/i18n`)
 
   // Copy each of those files back over to the individual repos
   // And create a pull request for each update
