@@ -8,6 +8,8 @@ module.exports = {
 		author: `Madalyn Parker`,
 	},
 	plugins: [
+		`gatsby-plugin-sharp`,
+    `gatsby-remark-images`,
 		{
 			resolve: `gatsby-source-filesystem`,
 			options: {
@@ -22,7 +24,20 @@ module.exports = {
 				name: options.assetPath || `content/assets`,
 			},
 		},
-		`gatsby-plugin-mdx`,
+		{
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1035,
+              sizeByPixelDensity: true,
+            },
+          },
+        ],
+      },
+    },
 		`gatsby-plugin-theme-ui`,
 		`gatsby-plugin-react-helmet`,
 	],

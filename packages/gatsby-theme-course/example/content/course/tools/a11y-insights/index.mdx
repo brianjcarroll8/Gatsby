@@ -14,13 +14,17 @@ We'll use it to verify tab order and run in-depth assessments of pages. This ext
 ## Functionality
 
 To use the extension, you can click the browser extension icon or use the keyboard shortcut (`Shift + Command + K` for Mac, `Control + Shift + K` for Windows).
-As soon as you activate the extension, you'll see some options pop down from the extenstions toolbar in Chrome.
+As soon as you activate the extension, you'll see some options pop down from the extensions toolbar in Chrome.
+
+![primary chrome extension view](./main.png)
 
 ### FastPass
 
 This essentially runs the same audit that Lighthouse does, looking for the types of violations that can be automatically detected.
 
 ### Ad-hoc Tools
+
+![chrome extension ad-hoc tools view](./ad-hoc.png)
 
 Accessibility Insights' ad-hoc tools are really similar to some of the functionality you saw with the WAVE tool.
 
@@ -45,6 +49,7 @@ This tool can be really powerful if you enable a couple extra features!
 
 1. If you want it to also judge any content presented in iframes in the page (e.g. Twitter embed), you'll trigger this extra option if you run an assessment on a page with embedded content. [INSERT SCREENSHOT HERE]
 1. You can tell it to output FastPass results [directly into GitHub Issues](https://accessibilityinsights.io/docs/en/web/getstarted/issuefiling). You can do this by accessing the Settings panel and selecting "GitHub" under "Issue filing". You can then supply a URL (e.g. [https://github.com/gatsbyjs/gatsby/issues](https://github.com/gatsbyjs/gatsby/issues)) for it to post to. Then, from the "automated checks" panel, you can expand "failed instances" and choose "File Issue" for any of them.
+   ![issues settings option](./issues.png)
 
 ## Exercise
 
