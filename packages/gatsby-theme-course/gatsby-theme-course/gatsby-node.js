@@ -40,7 +40,8 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 			slug: String!
 			module: Int!
 			lesson: Int!
-      description: String!
+			description: String!
+			cover: File @fileByRelativePath
 	}`
 	);
 
@@ -51,6 +52,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 			slug: String!
 			body: String!
 			description: String!
+			cover: File @fileByRelativePath
 		}`
 	);
 
@@ -60,6 +62,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 			title: String!
 			body: String!
 			description: String!
+			cover: File @fileByRelativePath
 		}`
 	);
 
@@ -84,6 +87,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 					type: `String!`,
 					resolve: mdxResolverPassthrough(`body`),
 				},
+				cover: {
+					type: `File`
+				}
 			},
 			interfaces: [`Node`, `Module`],
 		})
@@ -113,6 +119,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 				module: {
 					type: `Int!`,
 				},
+				cover: {
+					type: `File`
+				}
 			},
 			interfaces: [`Node`, `Lesson`],
 		})
@@ -133,6 +142,9 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 					type: `String!`,
 					resolve: mdxResolverPassthrough(`body`),
 				},
+				cover: {
+					type: `File`
+				}
 			},
 			interfaces: [`Node`, `Course`],
 		})
@@ -152,12 +164,11 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 	const fileNode = getNode(node.parent);
 	const { sourceInstanceName: source, name } = fileNode;
 
-	//make sure it's part of our course
+	// make sure it's part of our course
 	if (source !== coursePath) {
 		return;
 	}
 
-	//lessons
 	let slug;
 	if (node.frontmatter.slug) {
 		if (path.isAbsolute(node.frontmatter.slug)) {
@@ -180,55 +191,8 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 	// normalize use of trailing slash
 	slug = slug.replace(/\/*$/, `/`);
 
-	//landing pages
-	if (name === `index`) {
-		//module
-		if (node.frontmatter.module) {
-			const mdxModuleId = createNodeId(`${node.id} >>> MdxModule`);
-			const fieldData = {
-				title: node.frontmatter.title,
-				module: node.frontmatter.module,
-				description: node.frontmatter.description,
-				slug: slug,
-			};
-			await createNode({
-				...fieldData,
-				// Required fields.
-				id: mdxModuleId,
-				parent: node.id,
-				children: [],
-				internal: {
-					type: `MdxModule`,
-					contentDigest: createContentDigest(fieldData),
-					content: JSON.stringify(fieldData),
-					description: `Mdx implementation of the Module interface`,
-				},
-			});
-			createParentChildLink({ parent: node, child: getNode(mdxModuleId) });
-		} else {
-			//course landing page
-			const mdxCourseId = createNodeId(`${node.id} >>> MdxCourse`);
-			const fieldData = {
-				title: node.frontmatter.title,
-				description: node.frontmatter.description,
-			};
-			await createNode({
-				...fieldData,
-				// Required fields.
-				id: mdxCourseId,
-				parent: node.id,
-				children: [],
-				internal: {
-					type: `MdxCourse`,
-					contentDigest: createContentDigest(fieldData),
-					content: JSON.stringify(fieldData),
-					description: `Mdx implementation of the Course interface`,
-				},
-			});
-			createParentChildLink({ parent: node, child: getNode(mdxCourseId) });
-		}
-	} else {
-		//this is a lesson
+	if(node.frontmatter.lesson){
+		// this is a lesson
 		const fieldData = {
 			title: node.frontmatter.title,
 			slug,
@@ -252,6 +216,53 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 			},
 		});
 		createParentChildLink({ parent: node, child: getNode(mdxLessonId) });
+	}
+	else {
+		// module
+		if (node.frontmatter.module) {
+			const mdxModuleId = createNodeId(`${node.id} >>> MdxModule`);
+			const fieldData = {
+				title: node.frontmatter.title,
+				module: node.frontmatter.module,
+				description: node.frontmatter.description,
+				slug: slug,
+			};
+			await createNode({
+				...fieldData,
+				// Required fields.
+				id: mdxModuleId,
+				parent: node.id,
+				children: [],
+				internal: {
+					type: `MdxModule`,
+					contentDigest: createContentDigest(fieldData),
+					content: JSON.stringify(fieldData),
+					description: `Mdx implementation of the Module interface`,
+				},
+			});
+			createParentChildLink({ parent: node, child: getNode(mdxModuleId) });
+		} else {
+			// course landing page
+			const mdxCourseId = createNodeId(`${node.id} >>> MdxCourse`);
+			const fieldData = {
+				title: node.frontmatter.title,
+				description: node.frontmatter.description,
+			};
+			await createNode({
+				...fieldData,
+				// Required fields.
+				id: mdxCourseId,
+				parent: node.id,
+				children: [],
+				internal: {
+					type: `MdxCourse`,
+					contentDigest: createContentDigest(fieldData),
+					content: JSON.stringify(fieldData),
+					description: `Mdx implementation of the Course interface`,
+				},
+			});
+			createParentChildLink({ parent: node, child: getNode(mdxCourseId) });
+		}
 	}
 };
 
@@ -304,39 +315,39 @@ exports.createPages = async ({ graphql, actions, reporter }, themeOptions) => {
 
 	const getPrevNext = (module, lesson, index) => {
 		reporter.info(`module: ${module}, lesson: ${lesson}, index: ${index}`);
-		let previous, next;
-		//if current node is module landing page
+		let previous; let next;
+		// if current node is module landing page
 		if (!lesson) {
 			if (module !== 1) {
-				//previous is last lesson of previous module
-				let previousModuleLessons = lessons.filter(node => node.module === module - 1);
+				// previous is last lesson of previous module
+				const previousModuleLessons = lessons.filter(node => node.module === module - 1);
 				previous = previousModuleLessons[previousModuleLessons.length - 1];
 				if (!previous) {
-					//we need the previous module
+					// we need the previous module
 					previous = modules[index - 1];
 				}
 			}
-			//next is the first lesson in module
+			// next is the first lesson in module
 			next = lessons.find(node => node.module === module);
 			if (!next) {
-				//we need the next module
+				// we need the next module
 				next = modules[index + 1];
 			}
 		} else {
-			//if lesson is first lesson in module
+			// if lesson is first lesson in module
 			if (lesson === 1) {
-				//previous is module landing page
+				// previous is module landing page
 				previous = modules.find(node => node.module === module);
 			} else {
-				//previous is previous lesson
+				// previous is previous lesson
 				previous = lessons[index - 1];
 			}
-			//if lesson is last lesson in module
+			// if lesson is last lesson in module
 			if (lessons[index + 1] && lessons[index + 1].lesson === 1) {
-				//next is module landing page for next module
+				// next is module landing page for next module
 				next = modules.find(node => node.module === module + 1);
 			} else {
-				//next is next lesson
+				// next is next lesson
 				next = lessons[index + 1];
 			}
 		}
@@ -348,7 +359,7 @@ exports.createPages = async ({ graphql, actions, reporter }, themeOptions) => {
 
 	// Create a page for each Module
 	modules.forEach((node, index) => {
-		//const next = index === modules.length - 1 ? null : modules[index + 1];
+		// const next = index === modules.length - 1 ? null : modules[index + 1];
 		//	const previous = index === 0 ? null : modules[index - 1];
 		const { previous, next } = getPrevNext(node.module, false, index);
 		createPage({
