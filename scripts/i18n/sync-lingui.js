@@ -26,21 +26,8 @@ async function getGitRepo(repoName, repoUrl) {
     return Git(path)
   } else {
     const repo = Git(path)
-    await repo.checkout("master")
-    await repo.pull("origin", "master")
-  }
-}
-
-function cloneOrUpdateRepo(repoName, repoUrl) {
-  if (shell.ls(repoName).code !== 0) {
-    logger.debug(`cloning ${repoName}`)
-    shell.exec(`git clone ${repoUrl}`)
-    shell.cd(repoName)
-  } else {
-    // if the repo already exists, pull from it
-    shell.cd(repoName)
-    shell.exec(`git checkout master`)
-    shell.exec(`git pull origin master`)
+    await repo.checkout(`master`)
+    await repo.pull(`origin`, `master`)
   }
 }
 
@@ -85,13 +72,13 @@ async function syncLingui() {
   fs.mkdirSync(cacheDir, { recursive: true })
 
   // Clone all the translation repos
+  const repos = {}
   for (const { code } of langs) {
     const transRepoName = `${repoBase}-${code}`
     const transRepoUrl = `${host}/${owner}/${transRepoName}`
-    await getGitRepo(transRepoName, transRepoUrl)
+    repos[code] = await getGitRepo(transRepoName, transRepoUrl)
 
     logger.info(`creating directory for ${code}: ${localesDir}/${code}`)
-    logger.info(`Current diretory: ${process.cwd()}`)
     fs.mkdirSync(`${localesDir}/${code}`, { recursive: true })
     // copy all the messages.po files to the www/public directory
     try {
@@ -118,7 +105,13 @@ async function syncLingui() {
       `${localesDir}/${code}/${messagesFileName}`,
       `${cacheDir}/${transRepoName}/${messagesFileName}`
     )
+    const repo = repos[code]
     // create a new branch, push the changes
+    const branchName = `sync-lingui-hash`
+    await repo.checkout(branchName)
+    await repo.add(messagesFileName)
+    await repo.commit(`Update ${messagesFileName}`)
+    await repo.push(`origin`, branchName, { "--set-upstream": true })
 
     // create a new PR for the updated lingui file
   }
