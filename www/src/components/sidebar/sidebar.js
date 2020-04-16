@@ -100,16 +100,17 @@ function Sidebar({
     activeItemParents
   )
 
+  const initialHash = derivedHash
   // Merge hash in local storage and the derived hash from props
-  const initialHash = (() => {
-    const { openSectionHash = {} } = readLocalStorage(sidebarKey)
-    for (const [key, isOpen] of Object.entries(derivedHash)) {
-      if (isOpen) {
-        openSectionHash[key] = true
-      }
-    }
-    return openSectionHash
-  })()
+  // const initialHash = (() => {
+  //   const { openSectionHash = {} } = readLocalStorage(sidebarKey)
+  //   for (const [key, isOpen] of Object.entries(derivedHash)) {
+  //     if (isOpen) {
+  //       openSectionHash[key] = true
+  //     }
+  //   }
+  //   return openSectionHash
+  // })()
 
   const [openSectionHash, setOpenSectionHash] = React.useState(initialHash)
   const expandAll = Object.values(openSectionHash).every(isOpen => isOpen)
@@ -136,9 +137,9 @@ function Sidebar({
   }
 
   // Write to local storage whenever the open section hash changes
-  React.useEffect(() => {
-    writeLocalStorage(sidebarKey, { openSectionHash })
-  }, [openSectionHash])
+  // React.useEffect(() => {
+  //   writeLocalStorage(sidebarKey, { openSectionHash })
+  // }, [openSectionHash])
 
   return (
     <section
