@@ -71,9 +71,10 @@ function Sidebar({
   location,
   position,
   activeItemHash,
-  disableExpandAll,
+  // disableExpandAll,
   disableAccordions,
 }) {
+  const disableExpandAll = true
   const isSingle = itemList.filter(item => item.level === 0).length === 1
   const scrollRef = React.useRef(null)
 
