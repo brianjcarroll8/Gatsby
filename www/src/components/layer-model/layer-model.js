@@ -5,10 +5,16 @@ import hex2rgba from "hex2rgba"
 
 import { colors } from "gatsby-design-tokens/dist/theme-gatsbyjs-org"
 import LayerIcon from "../../assets/icons/layer-icon"
-import { Trans } from "@lingui/macro"
+import {
+  ContentLayerContent,
+  BuildLayerContent,
+  DataLayerContent,
+  ViewLayerContent,
+  AppLayerContent,
+} from "./layer-content-sections"
 
 const Layer = ({ buttonRef, layer, onClick, selected, index }) => {
-  const { baseColor, title, icon } = layer
+  const { baseColor, title } = layer
 
   return (
     <button
@@ -48,21 +54,45 @@ const Layer = ({ buttonRef, layer, onClick, selected, index }) => {
       >
         <span css={{ height: 40 }}>
           <LayerIcon
-            name={icon}
+            name={title}
             fillColor={selected ? colors[baseColor][70] : colors.grey[50]}
           />
         </span>
-        <span><Trans>{title}</Trans></span>
+        <span>{title}</span>
       </span>
     </button>
   )
 }
 
-const LayerModel = ({
-  layers,
-  displayCodeFullWidth = false,
-  initialLayer = `Content`,
-}) => {
+const layers = [
+  {
+    title: `Content`,
+    baseColor: `orange`,
+    component: ContentLayerContent,
+  },
+  {
+    title: `Build`,
+    baseColor: `purple`,
+    component: BuildLayerContent,
+  },
+  {
+    title: `Data`,
+    baseColor: `magenta`,
+    component: DataLayerContent,
+  },
+  {
+    title: `View`,
+    baseColor: `blue`,
+    component: ViewLayerContent,
+  },
+  {
+    title: `App`,
+    baseColor: `yellow`,
+    component: AppLayerContent,
+  },
+]
+
+const LayerModel = ({ initialLayer = `Content` }) => {
   const [selected, setSelected] = useState(initialLayer)
   const [sourceIndex, setSourceIndex] = useState(0)
   const refs = useRef(layers.map(() => React.createRef()))
@@ -86,14 +116,7 @@ const LayerModel = ({
     }
   }, [selected])
   return (
-        <div
-      sx={{
-        borderRadius: 3,
-        border: t => `1px solid ${t.colors.ui.border}`,
-        padding: 2,
-        marginBottom: 6,
-      }}
-    >
+    <>
       <div
         sx={{
           borderRadius: 3,
@@ -104,7 +127,7 @@ const LayerModel = ({
           role="tablist"
           sx={{
             display: `grid`,
-            gridTemplateColumns: `repeat(${layers.length}, 1fr)`,
+            gridTemplateColumns: `repeat(5, 1fr)`,
             gridGap: 1,
             textAlign: `center`,
           }}
@@ -126,14 +149,9 @@ const LayerModel = ({
       {layers.map(
         (layer, index) =>
           selected === layer.title &&
-          layer.component({
-            sourceIndex,
-            setSourceIndex,
-            index,
-            displayCodeFullWidth,
-          })
+          layer.component({ sourceIndex, setSourceIndex, index })
       )}
-    </div>
+    </>
   )
 }
 

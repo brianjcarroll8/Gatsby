@@ -5,8 +5,7 @@ import HubspotForm from "../components/hubspot-form"
 import Pullquote from "../components/shared/pullquote"
 import EggheadEmbed from "../components/shared/egghead-embed"
 import DateChart from "../components/chart"
-import ComponentModel from "../components/layer-model/component-model"
-import ImageModel from "../components/layer-model/image-model"
+import LayerModel from "../components/layer-model"
 import EmailCaptureForm from "../components/email-capture-form"
 import HorizontalNavList from "../components/horizontal-nav-list"
 import CodeBlock from "../components/code-block"
@@ -24,8 +23,7 @@ export default {
   DateChart,
   Pullquote,
   EggheadEmbed,
-  ComponentModel,
-  ImageModel,
+  LayerModel,
   EmailCaptureForm,
   HorizontalNavList,
   Breakout,
