@@ -4,7 +4,7 @@ const { slash } = require(`gatsby-core-utils`)
 const slugify = require(`slugify`)
 const url = require(`url`)
 const moment = require(`moment`)
-const langs = require(`../../../i18n.json`)
+const { langCodes } = require(`../i18n`)
 const { getPrevAndNext } = require(`../get-prev-and-next.js`)
 const { getNavFields } = require(`../get-nav-fields`)
 const { localizedPath } = require(`../i18n.js`)
@@ -46,7 +46,10 @@ exports.createPages = async ({ graphql, actions }) => {
       allMdx(
         sort: { order: DESC, fields: [frontmatter___date, fields___slug] }
         limit: 10000
-        filter: { fileAbsolutePath: { ne: null } }
+        filter: {
+          fileAbsolutePath: { ne: null }
+          fields: { locale: { eq: "en" } }
+        }
       ) {
         nodes {
           fields {
@@ -184,7 +187,7 @@ exports.createPages = async ({ graphql, actions }) => {
       if (node.frontmatter.jsdoc) {
         // API template
         createPage({
-          path: localizedPath(locale, node.fields.slug),
+          path: `${node.fields.slug}`,
           component: slash(apiTemplate),
           context: {
             slug: node.fields.slug,
@@ -205,7 +208,7 @@ exports.createPages = async ({ graphql, actions }) => {
       } else {
         // Docs template
         createPage({
-          path: localizedPath(locale, node.fields.slug),
+          path: `${node.fields.slug}`,
           component: slash(docsTemplate),
           context: {
             slug: node.fields.slug,
@@ -278,7 +281,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       }
     }
 
-    for (let { code } of langs) {
+    for (let code of langCodes) {
       if (fileNode.sourceInstanceName === `docs-${code}`) {
         // have to remove the beginning "/docs" path because of the way
         // gatsby-source-filesystem and gatsby-source-git differ
@@ -298,6 +301,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       fileNode.sourceInstanceName === `packages` &&
       parsedFilePath.name === `README`
     ) {
+      locale = "en"
       slug = `/packages/${parsedFilePath.dir}/`
       createNodeField({
         node,
