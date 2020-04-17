@@ -56,7 +56,7 @@ export default function Accordion({
   isSingle,
   disableAccordions,
 }) {
-  const uid = `item_${item.link.replace("/", "_")}`
+  const uid = `item${item.link.replace(/\//g, "_")}`
   const isExpanded = openSectionHash[item.title] || disableAccordions
 
   return (
