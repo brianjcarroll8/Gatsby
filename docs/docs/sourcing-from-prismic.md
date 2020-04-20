@@ -84,10 +84,10 @@ module.exports = {
         accessToken: `${process.env.API_KEY}`,
         pages: [
           {
-            type: 'Page',
-            match: '/page/:uid',
+            type: 'Post',
+            match: '/post/:uid',
             path: '/',
-            component: require.resolve('./src/templates/page.js')
+            component: require.resolve('./src/templates/post.js')
           },
           {
             type: 'Homepage',
@@ -106,15 +106,15 @@ The best way to create and test your queries now is to first develop them in the
 
 Because you defined the custom type as `Post` the query after the `prismic` key is called `allPosts` (and `Post`). You can also see the API IDs (from the field names) you created earlier.
 
-With this information you can create your page templates:
+With this information you can create your Post templates:
 
-```js:title=src/templates/page.js
+```js:title=src/templates/post.js
 import React from "react"
 import { graphql } from "gatsby"
 import { RichText } from "prismic-reactjs"
 
 export const query = graphql`
-  query PageQuery($uid: String) {
+  query PostQuery($uid: String) {
     prismic {
       allPosts(uid: $uid){
         edges {
