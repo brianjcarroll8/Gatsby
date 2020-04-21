@@ -10,18 +10,14 @@ const contributingLinksData = yaml.load(
   fs.readFileSync(`./src/data/sidebars/contributing-links.yaml`)
 )
 
-function addSlash(path) {
-  return path[path.length - 1] === "/" ? path : path + "/"
-}
-
-const docLinks = {
+const navLinks = {
   docs: docLinksData,
   tutorial: tutorialLinksData,
   contributing: contributingLinksData,
 }
 
 function isPathEquals(slug, link) {
-  return slug === addSlash(link)
+  return slug === link
 }
 
 function flattenList(itemList) {
@@ -56,31 +52,35 @@ function getPrevAndNext(slug, itemList) {
     return {}
   }
   return {
-    prev: flattenedList[index - 1] && addSlash(flattenedList[index - 1].link),
-    next: flattenedList[index + 1] && addSlash(flattenedList[index + 1].link),
+    prev: flattenedList[index - 1] && flattenedList[index - 1].link,
+    next: flattenedList[index + 1] && flattenedList[index + 1].link,
   }
 }
 
 /**
  * Create fields representing related items to this article in the site navigation
  */
-function getNavFields(slug) {
+function getNavFields(slug, itemList) {
   //
   const section = slug.split("/")[1]
-  const itemList = docLinks[section]
   if (!itemList) {
-    return {}
+    itemList = navLinks[section]
   }
-  const hierarchy = getHierarchy(slug, itemList[0].items)
+  const hierarchy = getHierarchy(slug, itemList)
   if (!hierarchy) {
     return {}
   }
   const [item, ...parentItems] = hierarchy
+
+  const topLevelLink = itemList[0].items[0].link
   return {
     navTitle: item.title,
     breadcrumbTitle: item.breadcrumbTitle || item.title,
-    parents: parentItems ? parentItems.map(item => addSlash(item.link)) : [],
-    items: item.items.map(item => addSlash(item.link)) || [],
+    parent: parentItems[0].link ?? topLevelLink,
+    parents: parentItems
+      ? parentItems.map(item => item.link ?? topLevelLink)
+      : [],
+    children: item.items?.map(item => item.link) ?? [],
     ...getPrevAndNext(slug, itemList),
   }
 }
