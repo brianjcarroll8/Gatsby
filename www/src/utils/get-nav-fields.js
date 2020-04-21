@@ -65,6 +65,9 @@ function getNavFields(slug, itemList) {
   const section = slug.split("/")[1]
   if (!itemList) {
     itemList = navLinks[section]
+    if (!itemList) {
+      return {}
+    }
   }
   const hierarchy = getHierarchy(slug, itemList)
   if (!hierarchy) {
@@ -74,14 +77,14 @@ function getNavFields(slug, itemList) {
 
   // Treat the first item as a "top level link" representing the entire hierarchy
   const topLevelLink = itemList[0].items[0].link
-  const parentItemLinks = parentItems.map(item => item.link ?? topLevelLink)
+  const parentItemLinks = parentItems.map(item => item.link || topLevelLink)
   const isTopLevel = slug === topLevelLink
   return {
     navTitle: item.title,
     breadcrumbTitle: item.breadcrumbTitle || item.title,
     parent: isTopLevel ? undefined : parentItemLinks[0],
     parents: isTopLevel ? [] : parentItemLinks,
-    children: item.items?.map(item => item.link) ?? [],
+    children: item.items ? item.items.map(item => item.link) : [],
     ...getPrevAndNext(slug, itemList),
   }
 }

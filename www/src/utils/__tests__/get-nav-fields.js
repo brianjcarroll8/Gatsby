@@ -94,4 +94,8 @@ describe("getNavFields", () => {
       expect(getNavFields("/motifs/eyes/", items).next).toBeUndefined()
     })
   })
+
+  // it("works with a real item list", () => {
+  //   console.log(getNavFields("/docs/"))
+  // })
 })
