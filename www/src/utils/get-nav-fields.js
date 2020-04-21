@@ -72,14 +72,15 @@ function getNavFields(slug, itemList) {
   }
   const [item, ...parentItems] = hierarchy
 
+  // Treat the first item as a "top level link" representing the entire hierarchy
   const topLevelLink = itemList[0].items[0].link
+  const parentItemLinks = parentItems.map(item => item.link ?? topLevelLink)
+  const isTopLevel = slug === topLevelLink
   return {
     navTitle: item.title,
     breadcrumbTitle: item.breadcrumbTitle || item.title,
-    parent: parentItems[0].link ?? topLevelLink,
-    parents: parentItems
-      ? parentItems.map(item => item.link ?? topLevelLink)
-      : [],
+    parent: isTopLevel ? undefined : parentItemLinks[0],
+    parents: isTopLevel ? [] : parentItemLinks,
     children: item.items?.map(item => item.link) ?? [],
     ...getPrevAndNext(slug, itemList),
   }

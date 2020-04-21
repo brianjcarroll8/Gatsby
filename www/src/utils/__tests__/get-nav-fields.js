@@ -42,7 +42,9 @@ describe("getNavFields", () => {
       expect(getNavFields("/plot-summary/", items).parent).toEqual("/")
     })
 
-    // FIXME decide how we want to do top level links
+    it("does not return a parent for a top level item", () => {
+      expect(getNavFields("/", items).parent).toBeUndefined()
+    })
   })
 
   describe("parents", () => {
@@ -50,6 +52,10 @@ describe("getNavFields", () => {
       expect(
         getNavFields("/characters/daisy-buchanan/", items).parents
       ).toEqual(["/characters/buchanan/", "/characters/", "/"])
+    })
+
+    it("returns an empty array for a top level item", () => {
+      expect(getNavFields("/", items).parents).toEqual([])
     })
   })
 
