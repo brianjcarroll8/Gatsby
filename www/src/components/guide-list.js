@@ -28,15 +28,8 @@ const childItemsBySlug = (
   return result && result.items
 }
 
-const GuideList = ({ slug }) => {
-  const subitemsForPage =
-    childItemsBySlug(
-      docsHierarchy,
-      tutorialHierarchy,
-      contributingHierarchy,
-      slug
-    ) || []
-  const subitemList = subitemsForPage.map((subitem, i) => (
+const GuideList = ({ items = [] }) => {
+  const subitemList = items.map((subitem, i) => (
     <li key={i}>
       <a href={subitem.link}>{subitem.title}</a>
     </li>

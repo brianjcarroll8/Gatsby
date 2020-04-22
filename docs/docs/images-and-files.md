@@ -6,4 +6,4 @@ Gatsby provides multiple solutions for adding images, video, and files to your p
 
 This section will walk you through several common patterns for handling media with Gatsby, where you can learn about the pros and cons of each method.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

@@ -7,4 +7,4 @@ Many times when you want to build a Gatsby project, you'll already have a websit
 
 These guides cover the various scenarios in which you may want to convert a web project to Gatsby. There are other possibilities as well: [file an issue](/contributing/how-to-file-an-issue/) to recommend a guide that the Gatsby community would find helpful.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

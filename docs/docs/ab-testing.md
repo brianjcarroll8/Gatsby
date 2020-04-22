@@ -11,4 +11,4 @@ A/B testing is a data-driven way to figure out what works on your website, and i
 
 That being said, A/B testing software can be prohibitively expensive. Some platforms can run into the thousands per month. The main advantages of conducting A/B tests with Gatsby are performance and price. If you are leveraging Netlify and Google Analytics, you’re able to set up an A/B test with Gatsby for free! When you’re testing different variations of your website, you are not forced to load heavy and inefficient third party scripts.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

@@ -12,4 +12,4 @@ Bonus: read about [Gatsby themes and distributed docs](/blog/2019-07-03-using-th
 
 _(If there isn’t a plugin yet for your favorite option, consider [contributing](/docs/creating-plugins) one!)_
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

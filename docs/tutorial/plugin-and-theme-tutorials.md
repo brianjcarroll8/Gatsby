@@ -10,4 +10,4 @@ To learn more about plugins and themes in general, you may be interested to chec
 
 For a deeper understanding of the differences between plugins, themes, and starters, you can also refer to the related [conceptual guide](/docs/plugins-themes-and-starters/).
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

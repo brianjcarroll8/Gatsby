@@ -22,4 +22,4 @@ Keep in mind that styles aren't applied until the JavaScript loads hence a plugi
 
 This section contains guides for styling your site with some of the most popular CSS-in-JS libraries, including how to set up global styles using each library.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

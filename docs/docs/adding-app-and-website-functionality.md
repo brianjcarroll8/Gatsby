@@ -91,4 +91,4 @@ In a React app, creating pages requires setting up a router. Gatsby instead hand
 
 Generating performant sites with statically rendered assets is a core focus of Gatsby, but it's only one side of the coin. In this section of the docs, you will find a showcase of guides and concepts on how to level up your site to include all the app-like features on top of the static base.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

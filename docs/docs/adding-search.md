@@ -5,7 +5,7 @@ overview: true
 
 See below for a list of guides in this section, or keep reading for an overview on adding search functionality to your site.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />
 
 ## Site search overview
 

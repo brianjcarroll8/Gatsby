@@ -32,16 +32,16 @@ function getItem(item) {
     title: item.fields.navTitle,
     breadcrumbTitle: item.fields.breadcrumbTitle,
     link: item.fields.slug,
+    prev: getItem(item.fields.prev),
+    next: getItem(item.fields.next),
+    parents: item.fields.parents?.map(getItem),
+    children: item.fields.children?.map(getItem),
   }
-}
-
-function getParents(parents) {
-  if (!parents) return null
-  return parents.map(parent => getItem(parent))
 }
 
 function DocsTemplate({ data, location }) {
   const page = data.mdx
+  const item = getItem(page)
   const [urlSegment] = page.fields.slug.split(`/`).slice(1)
   const toc =
     !page.frontmatter.disableTableOfContents && page.tableOfContents.items
@@ -75,10 +75,7 @@ function DocsTemplate({ data, location }) {
             },
           }}
         >
-          <Breadcrumb
-            item={getItem(page)}
-            parents={getParents(page.fields.parents)}
-          />
+          <Breadcrumb item={item} />
           <h1 id={page.fields.anchor} sx={{ mt: 0 }}>
             {page.frontmatter.title}
           </h1>
@@ -129,7 +126,9 @@ function DocsTemplate({ data, location }) {
             }}
           >
             <div>
-              <MDXRenderer slug={page.fields.slug}>{page.body}</MDXRenderer>
+              <MDXRenderer item={item} slug={page.fields.slug}>
+                {page.body}
+              </MDXRenderer>
               {page.frontmatter.issue && (
                 <a
                   href={page.frontmatter.issue}
@@ -140,11 +139,7 @@ function DocsTemplate({ data, location }) {
                 </a>
               )}
               <MarkdownPageFooter page={page} />
-              <PrevAndNext
-                sx={{ mt: 9 }}
-                prev={getItem(page.fields.prev)}
-                next={getItem(page.fields.next)}
-              />
+              <PrevAndNext sx={{ mt: 9 }} prev={item.prev} next={item.next} />
             </div>
           </div>
         </Container>
@@ -172,6 +167,12 @@ export const pageQuery = graphql`
         parents {
           fields {
             breadcrumbTitle
+            slug
+          }
+        }
+        children {
+          fields {
+            navTitle
             slug
           }
         }

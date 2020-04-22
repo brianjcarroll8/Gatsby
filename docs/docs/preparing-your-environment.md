@@ -15,4 +15,4 @@ The [quick start](/docs/quick-start/) is also available for intermediate to adva
 
 > **Note:** If you work for an Enterprise-level company where you are unable to pull from public GitHub repositories, you can [still set up Gatsby](/docs/setting-up-gatsby-without-gatsby-new/).
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

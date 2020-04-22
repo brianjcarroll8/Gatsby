@@ -13,7 +13,7 @@ Through use of [source plugins](/plugins/?=source), Gatsby has support for dozen
 
 The guides in this section will walk through the process of setting up content sourcing from some of the most popular headless CMSes in use today.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />
 
 <!--
   Ordering in this section is driven by Gatsby plugin downloads (/plugins/?=gatsby-source-) & CMS vendor size/adoption.

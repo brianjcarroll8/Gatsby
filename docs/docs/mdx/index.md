@@ -62,6 +62,6 @@ you interleave JSX only when you want to.
 🔥 **Blazingly blazing fast**: MDX has no runtime, all compilation occurs
 during the build stage.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />
 
 [mdx]: https://mdxjs.com

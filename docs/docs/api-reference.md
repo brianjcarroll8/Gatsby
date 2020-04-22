@@ -5,4 +5,4 @@ overview: true
 
 Learn more about Gatsby API methods and options, common files, and customizations.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

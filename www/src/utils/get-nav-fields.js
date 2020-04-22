@@ -46,7 +46,7 @@ function getHierarchy(slug, itemList) {
 
 function getPrevAndNext(slug, itemList) {
   const flattenedList = flattenList(itemList[0].items).filter(
-    item => !item.link.includes("#") // Don't include hashes in the list
+    item => item.link && !item.link.includes("#") // Don't include hashes in the list
   )
   const index = flattenedList.findIndex(item => isPathEquals(slug, item.link))
   if (index === -1) {

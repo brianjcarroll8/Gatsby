@@ -31,4 +31,4 @@ Notice how the query signature exactly matches the returned JSON signature. This
 
 If you want to know more about GraphQL, you can read more about [why Gatsby uses it](/docs/why-gatsby-uses-graphql/) and check out this [conceptual guide](/docs/graphql-concepts/) on querying data with GraphQL.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

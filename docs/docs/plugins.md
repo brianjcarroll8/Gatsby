@@ -10,4 +10,4 @@ Gatsby themes are a type of plugin that include a `gatsby-config.js` file and ad
 
 Here are the guides in the Plugins section of the docs:
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />

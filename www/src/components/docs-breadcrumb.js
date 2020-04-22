@@ -31,16 +31,15 @@ const BreadcrumbNav = ({ children, mobile = false }) => (
   </nav>
 )
 
-const Breadcrumb = ({ item, parents }) => {
+const Breadcrumb = ({ item }) => {
   return (
     <React.Fragment>
       {/* render the default view on desktop sizes with all links displayed */}
       <BreadcrumbNav>
         <Link to="/">Home</Link>
         <Separator />
-        {parents &&
-          parents.reverse().map(item => {
-            const itemTitle = item.breadcrumbTitle
+        {item.parents &&
+          item.parents.reverse().map(item => {
             return (
               <React.Fragment key={item.breadcrumbTitle}>
                 <span>
@@ -53,10 +52,12 @@ const Breadcrumb = ({ item, parents }) => {
         <span aria-current="page">{item.breadcrumbTitle}</span>
       </BreadcrumbNav>
       {/* render a smaller view on mobile viewports with only previous breadcrumb */}
-      {parents[0] && (
+      {item.parents[0] && (
         <BreadcrumbNav mobile>
           <Separator character={<ChevronLeft />} />
-          <Link to={parents[0].link}>{parents[0].breadcrumbTitle}</Link>
+          <Link to={item.parents[0].link}>
+            {item.parents[0].breadcrumbTitle}
+          </Link>
         </BreadcrumbNav>
       )}
     </React.Fragment>

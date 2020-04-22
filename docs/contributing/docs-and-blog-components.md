@@ -36,7 +36,7 @@ title: Headless CMS
 
 Overview information about headless CMSs...
 
-<GuideList slug={props.slug} /> // highlight-line
+<GuideList items={props.item.children} /> // highlight-line
 ```
 
 #### Sample

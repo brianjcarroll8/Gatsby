@@ -13,7 +13,7 @@ Alternately, teams can implement **systems for component discoverability**, such
 
 To avoid copy-pasting and reuse components instead you can use **component-sharing tools** such as [Bit](https://github.com/teambit/bit) to reuse and sync components between websites.
 
-<GuideList slug={props.slug} />
+<GuideList items={props.item.children} />
 
 --
 

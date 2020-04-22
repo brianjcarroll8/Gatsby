@@ -88,7 +88,8 @@ module.exports = {
     "Mdx.fields.prev": `Mdx.fields.slug`,
     "Mdx.fields.next": `Mdx.fields.slug`,
     "Mdx.fields.parents": `Mdx.fields.slug`,
-    "Mdx.fields.items": `Mdx.fields.slug`,
+    "Mdx.fields.parent": `Mdx.fields.slug`,
+    "Mdx.fields.children": `Mdx.fields.slug`,
   },
   plugins: [
     `gatsby-plugin-theme-ui`,
