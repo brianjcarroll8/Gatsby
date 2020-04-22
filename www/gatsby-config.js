@@ -53,7 +53,7 @@ if (process.env.AIRTABLE_API_KEY) {
   })
 }
 
-if (i18nEnabled) {
+if (false) {
   const naughtyFiles = [`docs/docs/data-fetching.md`]
   dynamicPlugins.push(
     ...langCodes.map(code => ({
