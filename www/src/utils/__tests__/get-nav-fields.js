@@ -3,7 +3,13 @@ import { getNavFields } from "../get-nav-fields"
 const itemList = [
   { link: "/" },
   { link: "/plot-summary/" },
-  { link: "/themes/" },
+  {
+    link: "/themes/",
+    items: [
+      { link: "/themes/#the-american-dream" },
+      { link: "/themes/#class-inequality" },
+    ],
+  },
   {
     link: "/characters/",
     items: [
@@ -93,9 +99,10 @@ describe("getNavFields", () => {
       expect(getNavFields("/", items).prev).toBeUndefined()
       expect(getNavFields("/motifs/eyes/", items).next).toBeUndefined()
     })
-  })
 
-  // it("works with a real item list", () => {
-  //   console.log(getNavFields("/docs/"))
-  // })
+    it("ignores hash items", () => {
+      expect(getNavFields("/themes/", items).next).toEqual("/characters/")
+      expect(getNavFields("/characters/", items).prev).toEqual("/themes/")
+    })
+  })
 })
