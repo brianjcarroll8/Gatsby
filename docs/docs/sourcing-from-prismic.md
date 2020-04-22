@@ -1,34 +1,28 @@
 ---
 title: Sourcing from Prismic
 ---
-In this guide, you’ll set up a site with content management using [Prismic](https://prismic.io/).
-We’ll use the Gatsby Hello World starter.
+In this guide, you’ll set up a site with content management using [Prismic](https://prismic.io/) and the [gatsby-starter-hello-world](/starters/gatsbyjs/gatsby-starter-hello-world/).
 
-Prismic is a Headless CMS with a web app for creating and publishing content: the “Writing Room” + a fully-fledged GraphQL API
-It’s suitable for marketers and developers as it offers features like a components-based page builder, image optimization, previewing, scheduling, content versioning, and multi-language support.
+Prismic is a Headless CMS with a web app for creating and publishing content: the “Writing Room” + a fully-fledged GraphQL API. It’s suitable for marketers and developers as it offers features like a components-based page builder, image optimization, previewing, scheduling, content versioning, and multi-language support.
 
-Interesting reads:
-
-[Sample Blog with API-based CMS & Gatsby.js](https://user-guides.prismic.io/en/articles/2933292-sample-blog-with-api-based-cms-gatsby-js).
-
-[Read the official Prismic documentation on Gatsby](https://prismic.io/docs/reactjs/getting-started/prismic-gatsby).
-
-[Prismic Official documentation](https://prismic.io/docs).
-
-
-## Setup
+## Setting up tools. 
 
 ### Prismic
 
-Before initializing your Gatsby project you should sign up on [Prismic.io](https://prismic.io/). The free plan is a perfect fit for personal or smaller projects.
+Before initializing your Gatsby project you should sign up on [Prismic.io](https://prismic.io/). The free plan is a perfect fit for personal or smaller projects. You also have to do the following :
 
-Create a new repository and your first Custom type (Repeatable Type) with the name `Post`, then add some fields. Choose rational names for the `API ID` input while configuring a field, these names will appear in your queries. You should always add the `uid` field in order to have a unique identifier (e.g. for filtering). Then switch to the Content overview and create a new Document with your `Post` type. Fill out the fields and publish it.
+- Create a new repository 
+- Add your first Custom type (Repeatable Type) with the name `Post`
+- Add some fields (uid,date,title,rich text). 
+
+> Choose rational names for the `API ID` input while configuring a field, these names will appear in your queries. You should always add the `uid` field in order to have a unique identifier (e.g. for filtering). Then switch to the content overview and create a new Document with your `Post` type. Fill out the fields and publish it.
+
+Here is a video that helps you set this up : 
 
 https://youtu.be/yrOYLNiYtBQ
 
 You can [set your API as private and generate an access token](https://user-guides.prismic.io/en/articles/1036153-generating-an-access-token). In your Prismic repository head over to `Settings → API & Security`, fill out the `Application name` field (the Callback URL can be left empty), and press `Add this application`.
 
-https://youtu.be/iH0P4KcOeVc
 
 ### Gatsby
 
@@ -43,19 +37,19 @@ Now move into the newly created directory and install the Gatsby plugin for Pris
 
 ```shell
 cd prismic-tutorial
-npm install --save gatsby-source-prismic-graphql
+npm install  gatsby-source-prismic-graphql
 ```
 
 Also install prismic-reactjs to be able to work with Rich Text fields
 
 ```
-npm install --save prismic-reactjs
+npm install  prismic-reactjs
 ```
 
 If you have a private Prismic API, in addition to installing the Prismic plugin, you also have to install the package `dotenv` to securely use your access tokens locally as you should never commit secret API keys to your repository!
 
 ```shell
-npm install --save-dev dotenv
+npm install dotenv
 ```
 
 Create a file called `.env.development` at the root of your project with the following content:
@@ -213,3 +207,12 @@ This was an example meant to help you understand how Prismic works with Gatsby. 
 - Query data from Prismic for repeatable and single pages and dynamically generate pages
 - Deploy the site in Netlify
 - Add Content Relationship links between documents.
+
+## Additional resources 
+
+- [Sample Blog with API-based CMS & Gatsby.js](https://user-guides.prismic.io/en/articles/2933292-sample-blog-with-api-based-cms-gatsby-js).
+
+- [Read the official Prismic documentation on Gatsby](https://prismic.io/docs/reactjs/getting-started/prismic-gatsby).
+
+- [Prismic Official documentation](https://prismic.io/docs).
+
