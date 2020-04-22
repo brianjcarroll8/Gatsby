@@ -74,8 +74,21 @@ const mergeFunctions = (data, context) => {
   return mergedFuncs
 }
 
+function getItem(item) {
+  if (!item) return null
+  return {
+    title: item.fields.navTitle,
+    breadcrumbTitle: item.fields.breadcrumbTitle,
+    link: item.fields.slug,
+  }
+}
+
+function getParents(parents) {
+  if (!parents) return null
+  return parents.map(parent => getItem(parent))
+}
+
 export default function APITemplate({ data, location, pageContext }) {
-  const { next, prev } = pageContext
   const page = data.mdx
 
   // Cleanup graphql data for usage with API rendering components
@@ -103,7 +116,10 @@ export default function APITemplate({ data, location, pageContext }) {
             },
           }}
         >
-          <Breadcrumb location={location} />
+          <Breadcrumb
+            item={getItem(page)}
+            parents={getParents(page.fields.parents)}
+          />
           <h1 id={page.fields.anchor} sx={{ mt: 0 }}>
             {page.frontmatter.title}
           </h1>
@@ -126,7 +142,11 @@ export default function APITemplate({ data, location, pageContext }) {
               docs={mergedFuncs}
               showTopLevelSignatures={page.frontmatter.showTopLevelSignatures}
             />
-            <PrevAndNext sx={{ mt: 9 }} prev={prev} next={next} />
+            <PrevAndNext
+              sx={{ mt: 9 }}
+              prev={getItem(page.fields.prev)}
+              next={getItem(page.fields.next)}
+            />
             <MarkdownPageFooter page={page} />
           </div>
         </Container>
@@ -143,8 +163,29 @@ export const pageQuery = graphql`
       excerpt
       timeToRead
       fields {
+        navTitle
+        breadcrumbTitle
         slug
         anchor
+        parents {
+          fields {
+            navTitle
+            breadcrumbTitle
+            slug
+          }
+        }
+        prev {
+          fields {
+            navTitle
+            slug
+          }
+        }
+        next {
+          fields {
+            navTitle
+            slug
+          }
+        }
       }
       frontmatter {
         title

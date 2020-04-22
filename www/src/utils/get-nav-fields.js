@@ -82,6 +82,7 @@ function getNavFields(slug, itemList) {
   const isTopLevel = slug === topLevelLink
   return {
     navTitle: item.title,
+    // FIXME breadcrumb title for top level page
     breadcrumbTitle: item.breadcrumbTitle || item.title,
     parent: isTopLevel ? undefined : parentItemLinks[0],
     parents: isTopLevel ? [] : parentItemLinks,

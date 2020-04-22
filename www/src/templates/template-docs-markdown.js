@@ -26,7 +26,21 @@ const containerStyles = {
   px: 9,
 }
 
-function DocsTemplate({ data, location, pageContext: { next, prev } }) {
+function getItem(item) {
+  if (!item) return null
+  return {
+    title: item.fields.navTitle,
+    breadcrumbTitle: item.fields.breadcrumbTitle,
+    link: item.fields.slug,
+  }
+}
+
+function getParents(parents) {
+  if (!parents) return null
+  return parents.map(parent => getItem(parent))
+}
+
+function DocsTemplate({ data, location }) {
   const page = data.mdx
   const [urlSegment] = page.fields.slug.split(`/`).slice(1)
   const toc =
@@ -61,7 +75,10 @@ function DocsTemplate({ data, location, pageContext: { next, prev } }) {
             },
           }}
         >
-          <Breadcrumb location={location} />
+          <Breadcrumb
+            item={getItem(page)}
+            parents={getParents(page.fields.parents)}
+          />
           <h1 id={page.fields.anchor} sx={{ mt: 0 }}>
             {page.frontmatter.title}
           </h1>
@@ -123,7 +140,11 @@ function DocsTemplate({ data, location, pageContext: { next, prev } }) {
                 </a>
               )}
               <MarkdownPageFooter page={page} />
-              <PrevAndNext sx={{ mt: 9 }} prev={prev} next={next} />
+              <PrevAndNext
+                sx={{ mt: 9 }}
+                prev={getItem(page.fields.prev)}
+                next={getItem(page.fields.next)}
+              />
             </div>
           </div>
         </Container>
@@ -143,9 +164,29 @@ export const pageQuery = graphql`
       timeToRead
       tableOfContents
       fields {
+        navTitle
+        breadcrumbTitle
         slug
         locale
         anchor
+        parents {
+          fields {
+            breadcrumbTitle
+            slug
+          }
+        }
+        prev {
+          fields {
+            navTitle
+            slug
+          }
+        }
+        next {
+          fields {
+            navTitle
+            slug
+          }
+        }
       }
       frontmatter {
         title

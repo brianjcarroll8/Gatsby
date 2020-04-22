@@ -5,7 +5,6 @@ const slugify = require(`slugify`)
 const url = require(`url`)
 const moment = require(`moment`)
 const { langCodes } = require(`../i18n`)
-const { getPrevAndNext } = require(`../get-prev-and-next.js`)
 const { getNavFields } = require(`../get-nav-fields`)
 const { localizedPath } = require(`../i18n.js`)
 
@@ -183,7 +182,6 @@ exports.createPages = async ({ graphql, actions }) => {
     if (!slug) return
 
     if (!_.includes(slug, `/blog/`)) {
-      const prevAndNext = getPrevAndNext(node.fields.slug)
       if (node.frontmatter.jsdoc) {
         // API template
         createPage({
@@ -193,7 +191,6 @@ exports.createPages = async ({ graphql, actions }) => {
             slug: node.fields.slug,
             jsdoc: node.frontmatter.jsdoc,
             apiCalls: node.frontmatter.apiCalls,
-            ...prevAndNext,
           },
         })
       } else if (node.fields.package) {
