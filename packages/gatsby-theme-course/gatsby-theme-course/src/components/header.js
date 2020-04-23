@@ -19,6 +19,9 @@ const Header = () => {
 				display: `flex`,
 				alignItems: `center`,
 				variant: `styles.header`,
+        gridArea: `header`,
+        padding: 3,
+        borderBottom: theme => `1px solid ${theme.colors.gray[3]}`,
 			}}
 		>
 			<TLink
@@ -27,19 +30,11 @@ const Header = () => {
 				sx={{
 					variant: `styles.navlink`,
 					p: 2,
+          fontWeight: `medium`,
+          fontSize: 2,
 				}}
 			>
 				{data.site.siteMetadata.title}
-			</TLink>
-			<div sx={{ mx: `auto` }} />
-			<TLink
-				href="https://google.com"
-				sx={{
-					variant: `styles.navlink`,
-					p: 2,
-				}}
-			>
-				Google
 			</TLink>
 		</header>
 	);

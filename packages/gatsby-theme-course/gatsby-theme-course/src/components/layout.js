@@ -7,13 +7,18 @@ import CourseNav from './course-nav';
 import '../styles/code.css'
 
 const Layout = ({ children, currentModule = 0 }) => (
-		<Container>
+		<div sx={{ display: `grid`,
+      gridTemplateAreas: `"header header" "course-nav main" "footer footer"`, gridTemplateColumns: `320px 1fr`, gridTemplateRows: `auto` }}>
 			<SEO />
 			<Header />
 			<CourseNav currentModule={currentModule} />
-			<main>{children}</main>
+			<main sx={{ gridArea: `main`, padding: 4 }}>
+        <Container>
+          {children}
+        </Container>
+      </main>
 			<Footer />
-		</Container>
+		</div>
 	);
 
 export default Layout;

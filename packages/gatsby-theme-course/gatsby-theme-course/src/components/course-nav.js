@@ -52,14 +52,15 @@ const CourseNav = ({ currentModule }) => {
 	});
 
 	return (
-		<nav>
-			<ul>
+		<nav sx={{ gridArea: `course-nav`, maxWidth: `sidebar` }}>
+			<ul sx={{ m: 0, padding: 4, display: `grid`, gridRowGap: 4 }}>
 				{navItems.map(navItem => (
 					<MenuToggle
 						title={navItem.title}
 						slug={navItem.slug}
 						items={navItem.lessons}
 						expandByDefault={navItem.number === currentModule}
+            key={navItem.title}
 					/>
 				))}
 			</ul>

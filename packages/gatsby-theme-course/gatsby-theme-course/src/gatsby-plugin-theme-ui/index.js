@@ -18,16 +18,21 @@ const headingStyles = {
 
 export default merge(tailwind, {
 	colors: {
+	  primary: `#663399`,
 		textMuted: tailwind.colors.gray[7],
 		heading: tailwind.colors.black,
 	},
 	sizes: {
-		container: 1024,
+		container: 900,
+    sidebar: 320,
 	},
 	styles: {
 		...headingStyles,
 		a: {
 			textDecoration: `none`,
+      "&:hover,&:focus": {
+        textDecoration: `none`,
+      }
 		},
 	},
 	layout: {
@@ -41,18 +46,24 @@ export default merge(tailwind, {
 			fontFamily: `heading`,
 			fontWeight: `heading`,
 			lineHeight: `heading`,
-			color: `heading`,
 		},
 	},
 	list: {
 		item: {
+		  my: 3,
 			h3: {
 				mb: 0,
+        color: `gray.8`,
+        span: {
+				  color: `primary`,
+          mr: 2,
+        }
 			},
 			p: {
 				mt: 2,
 				fontSize: 1,
 				color: `textMuted`,
+        lineHeight: `snug`,
 			},
 		},
 	},

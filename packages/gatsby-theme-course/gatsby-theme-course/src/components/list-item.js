@@ -6,7 +6,7 @@ const ListItem = ({ title, slug, number, description }) => (
 		<li sx={{ variant: `list.item` }}>
 			<TLink as={Link} to={slug}>
 				<Heading as="h3">
-					{number}: {title}
+					<span>{number}</span> {title}
 				</Heading>
 			</TLink>
 			<p>{description}</p>

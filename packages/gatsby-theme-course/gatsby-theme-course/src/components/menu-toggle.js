@@ -16,7 +16,7 @@ const MenuToggle = ({ title = ``, slug = ``, items = [], expandByDefault = false
 
 	return (
 		<div>
-			<button aria-controls={`#${title}-menu`} onClick={clickHandler} ref={toggleRef} aria-expanded={isExpanded}>
+			<button aria-controls={`#${title}-menu`} onClick={clickHandler} ref={toggleRef} aria-expanded={isExpanded} sx={{ border: `none`, background: `none`, fontWeight: `600`, letterSpacing: `2px`, textTransform: `uppercase`, fontSize: 1, color: `#687690`, mb: 2 }}>
 				{title}
 			</button>
 			<ul
@@ -27,13 +27,23 @@ const MenuToggle = ({ title = ``, slug = ``, items = [], expandByDefault = false
 				role="list"
 				sx={{
 					display: `none`,
+          listStyle: `none`,
+          pl: 3,
+          a: {
+					  color: `gray.9`,
+            fontSize: 1,
+            "&[aria-current='page']": {
+					    color: `primary`,
+              fontWeight: `600`,
+            },
+          },
 					'&.expanded': {
 						display: `block`,
 					},
 				}}
 			>
 				<li>
-					<TLink as={Link} to={slug} role="listitem" class="item-link">
+					<TLink as={Link} to={slug} role="listitem">
 						{title} Overview
 					</TLink>
 				</li>
