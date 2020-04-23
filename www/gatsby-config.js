@@ -53,18 +53,18 @@ if (process.env.AIRTABLE_API_KEY) {
   })
 }
 
-if (false) {
+if (i18nEnabled) {
   const naughtyFiles = [`docs/docs/data-fetching.md`]
   dynamicPlugins.push(
-    ...langCodes.map(code => ({
-      resolve: `gatsby-source-git`,
-      options: {
-        name: `docs-${code}`,
-        remote: `https://github.com/gatsbyjs/gatsby-${code}.git`,
-        branch: `master`,
-        patterns: [`docs/**`, ...naughtyFiles.map(file => `!${file}`)],
-      },
-    })),
+    // ...langCodes.map(code => ({
+    //   resolve: `gatsby-source-git`,
+    //   options: {
+    //     name: `docs-${code}`,
+    //     remote: `https://github.com/gatsbyjs/gatsby-${code}.git`,
+    //     branch: `master`,
+    //     patterns: [`docs/**`, ...naughtyFiles.map(file => `!${file}`)],
+    //   },
+    // })),
     {
       resolve: `gatsby-plugin-i18n`, // local plugin
       options: {
