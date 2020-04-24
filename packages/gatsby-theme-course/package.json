@@ -1,14 +1,33 @@
 {
-  "name": "gatsby-starter-theme-course",
-  "private": true,
-  "version": "0.0.1",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "build": "yarn workspace example build"
-  },
-  "workspaces": [
-    "gatsby-theme-course",
-    "example"
-  ]
+	"name": "gatsby-theme-course",
+	"version": "1.0.0",
+	"main": "gatsby-config.js",
+	"author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
+	"license": "MIT",
+	"peerDependencies": {
+		"gatsby": "^2.19.42",
+		"react": "^16.13.0",
+		"react-dom": "^16.13.0"
+	},
+	"dependencies": {
+		"@mdx-js/mdx": "^1.5.7",
+		"@theme-ui/presets": "^0.3.0",
+		"deepmerge": "^4.2.2",
+		"gatsby-plugin-mdx": "^1.1.10",
+		"gatsby-plugin-react-helmet": "^3.1.23",
+		"gatsby-plugin-sharp": "^2.5.5",
+		"gatsby-plugin-theme-ui": "^0.3.0",
+		"gatsby-remark-images": "^3.2.3",
+		"gatsby-source-filesystem": "^2.1.54",
+		"mdx-utils": "^0.2.0",
+		"prism-react-renderer": "^1.0.2",
+		"react-helmet": "^5.2.1",
+		"react-live": "^2.2.2",
+		"theme-ui": "^0.3.1"
+	},
+	"scripts": {
+		"build": "gatsby build",
+		"clean": "gatsby clean",
+		"develop": "gatsby develop"
+	}
 }
