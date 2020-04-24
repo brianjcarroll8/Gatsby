@@ -1,37 +1,43 @@
-import React from "react";
-import Highlight, { defaultProps } from "prism-react-renderer";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import theme from "prism-react-renderer/themes/nightOwl";
+import React from "react"
+import Highlight, { defaultProps } from "prism-react-renderer"
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live"
+import theme from "prism-react-renderer/themes/nightOwl"
 
 function getParams(className = ``) {
-  const [lang = ``, params = ``] = className.split(`:`);
+  const [lang = ``, params = ``] = className.split(`:`)
 
-  return [lang.split(`language-`).pop().split(`{`).shift()].concat(
+  return [
+    lang
+      .split(`language-`)
+      .pop()
+      .split(`{`)
+      .shift(),
+  ].concat(
     params.split(`&`).reduce((merged, param) => {
-      const [key, value] = param.split(`=`);
-      merged[key] = value;
-      return merged;
+      const [key, value] = param.split(`=`)
+      merged[key] = value
+      return merged
     }, {})
-  );
+  )
 }
 
-const RE = /{([\d,-]+)}/;
+const RE = /{([\d,-]+)}/
 
-const calculateLinesToHighlight = (meta) => {
+const calculateLinesToHighlight = meta => {
   if (!RE.test(meta)) {
-    return () => false;
+    return () => false
   }
   const lineNumbers = RE.exec(meta)[1]
     .split(`,`)
-    .map((v) => v.split(`-`).map((x) => parseInt(x, 10)));
-  return (index) => {
-    const lineNumber = index + 1;
+    .map(v => v.split(`-`).map(x => parseInt(x, 10)))
+  return index => {
+    const lineNumber = index + 1
     const inRange = lineNumbers.some(([start, end]) =>
       end ? lineNumber >= start && lineNumber <= end : lineNumber === start
-    );
-    return inRange;
-  };
-};
+    )
+    return inRange
+  }
+}
 
 const Code = ({
   codeString,
@@ -40,13 +46,13 @@ const Code = ({
   metastring = ``,
   ...props
 }) => {
-  const showLineNumbers = false;
+  const showLineNumbers = false
 
-  const [language, { title = `` }] = getParams(blockClassName);
-  const shouldHighlightLine = calculateLinesToHighlight(metastring);
+  const [language, { title = `` }] = getParams(blockClassName)
+  const shouldHighlightLine = calculateLinesToHighlight(metastring)
 
   const hasLineNumbers =
-    !noLineNumbers && language !== `noLineNumbers` && showLineNumbers;
+    !noLineNumbers && language !== `noLineNumbers` && showLineNumbers
 
   if (props[`react-live`]) {
     return (
@@ -55,7 +61,7 @@ const Code = ({
         <LiveError />
         <LivePreview data-name="live-preview" />
       </LiveProvider>
-    );
+    )
   }
   return (
     <Highlight
@@ -78,10 +84,10 @@ const Code = ({
               data-linenumber={hasLineNumbers}
             >
               {tokens.map((line, i) => {
-                const lineProps = getLineProps({ line, key: i });
+                const lineProps = getLineProps({ line, key: i })
 
                 if (shouldHighlightLine(i)) {
-                  lineProps.className = `${lineProps.className} highlight-line`;
+                  lineProps.className = `${lineProps.className} highlight-line`
                 }
 
                 return (
@@ -93,14 +99,14 @@ const Code = ({
                       <span {...getTokenProps({ token, key })} />
                     ))}
                   </div>
-                );
+                )
               })}
             </pre>
           </div>
         </React.Fragment>
       )}
     </Highlight>
-  );
-};
+  )
+}
 
-export default Code;
+export default Code
