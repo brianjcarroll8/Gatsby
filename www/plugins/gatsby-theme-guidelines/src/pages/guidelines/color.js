@@ -1,8 +1,8 @@
 import React from "react"
 import { MdWarning } from "react-icons/md"
 
-import Layout from "../components/layout"
-import { Box, Flex, Text } from "../components/system"
+import Layout from "../../components/layout"
+import { Box, Flex, Text } from "../../components/system"
 
 import {
   Container,
@@ -10,20 +10,20 @@ import {
   Columns,
   CopyColumn,
   ContentColumn,
-} from "../components/containers"
+} from "../../components/containers"
 import {
   Intro,
   PageHeading,
   SectionHeading,
   SectionSubheading,
-} from "../components/typography"
+} from "../../components/typography"
 
-import LazyModal from "../../../../src/components/lazy-modal"
-import Badge from "../components/badge"
-import Overview from "../components/color/overview"
-import ColorModal from "../components/color/modal"
+import LazyModal from "../../../../../src/components/lazy-modal"
+import Badge from "../../components/badge"
+import Overview from "../../components/color/overview"
+import ColorModal from "../../components/color/modal"
 
-import palette from "../utils/extend-palette-info"
+import palette from "../../utils/extend-palette-info"
 
 const LegacyColorIcon = ({ textColor }) => (
   <Box

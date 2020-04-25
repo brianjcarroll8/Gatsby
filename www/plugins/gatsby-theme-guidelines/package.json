@@ -12,6 +12,7 @@
     "color-blend": "^2.0.9",
     "gatsby-design-tokens": "^2.0.5",
     "gatsby-plugin-sharp": "^2.5.7",
+    "gatsby-plugin-theme-ui": "^0.3.0",
     "gatsby-source-filesystem": "^2.2.5",
     "gatsby-transformer-sharp": "^2.4.7",
     "gatsby-transformer-yaml": "^2.3.4",

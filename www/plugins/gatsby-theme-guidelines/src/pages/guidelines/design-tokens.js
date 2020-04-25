@@ -1,6 +1,7 @@
 import React from "react"
 import { MdWarning } from "react-icons/md"
-import Link from "../../../../src/components/localized-link"
+// import Link from "../../../../src/components/localized-link"
+import { Link } from "gatsby"
 
 import {
   Container,
@@ -8,20 +9,20 @@ import {
   Columns,
   ContentColumn,
   CopyColumn,
-} from "../components/containers"
+} from "../../components/containers"
 import {
   Intro,
   PageHeading,
   SectionHeading,
   SrOnly,
-} from "../components/typography"
-import Layout from "../components/layout"
-import Badge from "../components/badge"
+} from "../../components/typography"
+import Layout from "../../components/layout"
+import Badge from "../../components/badge"
 
 import theme, {
   mediaQueries,
 } from "gatsby-design-tokens/dist/theme-gatsbyjs-org"
-import { Box, Flex, Text } from "../components/system"
+import { Box, Flex, Text } from "../../components/system"
 
 const ColorExample = ({ hex, token }) => (
   <tr>

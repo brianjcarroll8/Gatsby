@@ -7,7 +7,7 @@ import { Global } from "@emotion/core"
 import { globalStyles } from "../../../../src/utils/styles/global"
 import { Box } from "./system"
 import Header from "./header"
-import Footer from "../../../../src/components/shared/footer-links"
+// import Footer from "../../../../src/components/shared/footer-links"
 
 const Layout = ({ children, background, pageTitle }) => (
   <Box bg="background" position="relative">
@@ -36,7 +36,7 @@ const Layout = ({ children, background, pageTitle }) => (
     <Header />
     <Box as="main" className="main-body">
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   </Box>
 )

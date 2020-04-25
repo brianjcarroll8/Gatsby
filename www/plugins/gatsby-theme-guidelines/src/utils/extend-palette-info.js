@@ -72,7 +72,7 @@ const meta = {
 // and add contrast and accessibility information
 let palette = []
 
-for (var color in colors) {
+for (const color in colors) {
   let m = meta[color]
   let c = {}
 

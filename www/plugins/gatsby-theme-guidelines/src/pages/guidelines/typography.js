@@ -9,19 +9,19 @@ import {
   Columns,
   ContentColumn,
   CopyColumn,
-} from "../components/containers"
+} from "../../components/containers"
 import {
   Intro,
   PageHeading,
   SectionHeading,
   SectionSubheading,
-} from "../components/typography"
-import Layout from "../components/layout"
-import Badge from "../components/badge"
-import Starter from "../components/cards/starter"
-import Blog from "../components/cards/blog"
-import ImagePlaceholder from "../components/image-placeholder"
-import { Box, Button, Flex, Link, Heading, Text } from "../components/system"
+} from "../../components/typography"
+import Layout from "../../components/layout"
+import Badge from "../../components/badge"
+import Starter from "../../components/cards/starter"
+import Blog from "../../components/cards/blog"
+import ImagePlaceholder from "../../components/image-placeholder"
+import { Box, Button, Flex, Link, Heading, Text } from "../../components/system"
 
 import {
   fontSizes,
@@ -631,7 +631,10 @@ const Typography = ({ location }) => (
               my={6}
               fontSize={{ xxs: 1, md: 2 }}
             >
-              💡 For a great introduction to using the command line, check out
+              <span role="img" aria-label="lightbulb">
+                💡
+              </span>{" "}
+              For a great introduction to using the command line, check out
               {` `}
               <a href="https://www.codecademy.com/courses/learn-the-command-line/lessons/navigation/exercises/your-first-command">
                 Codecademy’s Command Line tutorial
