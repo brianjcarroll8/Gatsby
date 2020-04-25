@@ -7,9 +7,9 @@ import { SectionHeading, SectionSubheading } from "../typography"
 
 import Swatch from "./swatch"
 
-import { getA11yLabel, getTextColor } from "../../../utils/guidelines/color"
+import { getA11yLabel, getTextColor } from "../../utils/color"
 import { copyColumnGutter, CopyColumn } from "../containers"
-import palette from "../../../utils/guidelines/extend-palette-info"
+import palette from "../../utils/extend-palette-info"
 import { Box, Flex } from "../system"
 
 // Color swatches

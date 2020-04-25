@@ -9,18 +9,19 @@ import {
   Columns,
   ContentColumn,
   CopyColumn,
-} from "../../components/guidelines/containers"
+} from "../components/containers"
 import {
   Intro,
   PageHeading,
   SectionHeading,
   SectionSubheading,
-} from "../../components/guidelines/typography"
-import Layout from "../../components/guidelines/layout"
-import Badge from "../../components/guidelines/badge"
-import Starter from "../../components/guidelines/cards/starter"
-import Blog from "../../components/guidelines/cards/blog"
-import ImagePlaceholder from "../../components/guidelines/image-placeholder"
+} from "../components/typography"
+import Layout from "../components/layout"
+import Badge from "../components/badge"
+import Starter from "../components/cards/starter"
+import Blog from "../components/cards/blog"
+import ImagePlaceholder from "../components/image-placeholder"
+import { Box, Button, Flex, Link, Heading, Text } from "../components/system"
 
 import {
   fontSizes,
@@ -28,14 +29,6 @@ import {
   letterSpacings,
   lineHeights,
 } from "gatsby-design-tokens/dist/theme-gatsbyjs-org"
-import {
-  Box,
-  Button,
-  Flex,
-  Link,
-  Heading,
-  Text,
-} from "../../components/guidelines/system"
 
 const ExampleBox = styled(Box)({ pt: 4 })
 

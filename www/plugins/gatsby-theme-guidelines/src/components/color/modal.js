@@ -3,12 +3,8 @@ import styled from "@emotion/styled"
 import themeGet from "@styled-system/theme-get"
 
 import { Box, Flex, Heading, Text } from "../system"
-import {
-  getA11yLabel,
-  getTextColor,
-  a11y,
-} from "../../../utils/guidelines/color"
-import { focusStyle } from "../../../utils/styles"
+import { getA11yLabel, getTextColor, a11y } from "../../utils/color"
+import { focusStyle } from "../../../../../src/utils/styles"
 import { colors as themeColors } from "gatsby-design-tokens/dist/theme-gatsbyjs-org"
 
 const Column = styled(Flex)()

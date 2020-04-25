@@ -114,13 +114,6 @@ module.exports = {
         ignore: [`**/dist/**`],
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `guidelines`,
-        path: `${__dirname}/src/data/guidelines/`,
-      },
-    },
     `gatsby-transformer-gatsby-api-calls`,
     {
       resolve: `gatsby-plugin-typography`,
@@ -357,6 +350,7 @@ module.exports = {
         nodeTypes: [`StartersYaml`],
       },
     },
+    `gatsby-theme-guidelines`,
     // `gatsby-plugin-subfont`,
   ].concat(dynamicPlugins),
 }

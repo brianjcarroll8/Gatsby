@@ -4,10 +4,10 @@ import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { Global } from "@emotion/core"
 
-import { globalStyles } from "../../utils/styles/global"
+import { globalStyles } from "../../../../src/utils/styles/global"
 import { Box } from "./system"
 import Header from "./header"
-import Footer from "../shared/footer-links"
+import Footer from "../../../../src/components/shared/footer-links"
 
 const Layout = ({ children, background, pageTitle }) => (
   <Box bg="background" position="relative">

@@ -5,7 +5,7 @@ import { MdLaunch } from "react-icons/md"
 
 import { Box, Flex, Link, Text } from "../system"
 import BoxWithBorder from "../box-with-border"
-import { getTextColor } from "../../../utils/guidelines/color"
+import { getTextColor } from "../../utils/color"
 import { SrOnly } from "../typography"
 
 const ColorValue = ({ label, inverted, value, href }) => (
