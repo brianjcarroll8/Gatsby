@@ -1,4 +1,4 @@
-import merge from "deepmerge"
+import { merge } from "theme-ui"
 import { tailwind } from "@theme-ui/presets"
 
 const headingStyles = {

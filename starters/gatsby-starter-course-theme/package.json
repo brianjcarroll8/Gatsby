@@ -1,18 +1,18 @@
 {
 	"name": "gatsby-starter-course-theme",
 	"version": "0.0.1",
-  "private": true,
-  "author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
+	"private": true,
+	"author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
 	"license": "MIT",
 	"scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby develop",
-    "build": "gatsby build",
-    "clean": "gatsby clean"
+		"develop": "gatsby develop",
+		"start": "gatsby develop",
+		"build": "gatsby build",
+		"clean": "gatsby clean"
 	},
 	"dependencies": {
 		"gatsby": "^2.19.7",
-    "gatsby-theme-course": "^0.0.1",
+		"gatsby-theme-course": "^0.0.1",
 		"react": "^16.12.0",
 		"react-dom": "^16.12.0"
 	}

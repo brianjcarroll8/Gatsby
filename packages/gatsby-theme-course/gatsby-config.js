@@ -8,8 +8,8 @@ module.exports = {
 		author: `Madalyn Parker`,
 	},
 	plugins: [
-		`gatsby-plugin-sharp`,
-    `gatsby-remark-images`,
+    `gatsby-plugin-theme-ui`,
+    `gatsby-plugin-react-helmet`,
 		{
 			resolve: `gatsby-source-filesystem`,
 			options: {
@@ -38,7 +38,7 @@ module.exports = {
         ],
       },
     },
-		`gatsby-plugin-theme-ui`,
-		`gatsby-plugin-react-helmet`,
+    `gatsby-transformer-sharp`,
+    `gatsby-plugin-sharp`,
 	],
 };
