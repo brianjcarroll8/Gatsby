@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve"
+  },
+  // This feels flaky.. should probably find something better for this
+  "include": ["../../src/**/*"]
+}

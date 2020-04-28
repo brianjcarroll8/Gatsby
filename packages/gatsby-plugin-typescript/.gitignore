@@ -1,3 +1,4 @@
 /*.js
 !index.js
 /__tests__
+/tsconfig.json
