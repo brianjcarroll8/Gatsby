@@ -20,7 +20,8 @@ const Header = () => {
         alignItems: `center`,
         variant: `styles.header`,
         gridArea: `header`,
-        padding: 3,
+        px: 4,
+        py: 3,
         borderBottom: theme => `1px solid ${theme.colors.gray[3]}`,
       }}
     >
@@ -29,7 +30,6 @@ const Header = () => {
         to="/"
         sx={{
           variant: `styles.navlink`,
-          p: 2,
           fontWeight: `medium`,
           fontSize: 2,
         }}

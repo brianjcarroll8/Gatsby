@@ -9,6 +9,7 @@ const ListHeader = ({ children }) => (
       backgroundColor: `purple.1`,
       display: `inline-block`,
       mb: 2,
+      borderRadius: 2,
     }}
   >
     <h2

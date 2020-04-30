@@ -1,57 +1,168 @@
-.prism-code {
-  font-size: 1rem;
-  padding: 1rem;
-  -webkit-overflow-scrolling: touch;
-  background-color: transparent;
-  overflow: initial;
-}
+/**
+ * a11y-light theme for JavaScript, CSS, and HTML
+ * Based on the okaidia theme: https://github.com/PrismJS/prism/blob/gh-pages/themes/prism-okaidia.css
+ * @author ericwbailey
+ */
 
-.token {
-  display: inline-block;
-}
-
-p > code,
-li > code {
-  background: rgb(1, 22, 39);
-  color: rgb(214, 222, 235);
-  padding: 0.4em 0.3rem;
-}
-
-.gatsby-highlight {
-  font-size: 1rem;
-  position: relative;
-  -webkit-overflow-scrolling: touch;
-  overflow: auto;
-}
-
-gatsby-highlight > code[class*="language-"],
-.gatsby-highlight > pre[class*="language-"] {
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #545454;
+  background: none;
+  font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  text-align: left;
+  white-space: pre;
   word-spacing: normal;
   word-break: normal;
-  overflow-wrap: normal;
+  word-wrap: normal;
   line-height: 1.5;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
   tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
   hyphens: none;
 }
 
-.line-number-style {
-  display: inline-block;
-  padding-left: 1em;
-  padding-right: 1em;
-  width: 1.2em;
-  user-select: none;
-  opacity: 0.3;
-  text-align: center;
+/* Code blocks */
+pre[class*="language-"] {
+  padding: 1em;
+  margin: 0.5em 0;
+  overflow: auto;
+  border-radius: 0.3em;
+}
+
+/* The BG color was changed here */
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+  background: #f6f8fa;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
+  white-space: normal;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #696969;
+}
+
+.token.punctuation {
+  color: #545454;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #007faa;
+}
+
+.token.boolean,
+.token.number {
+  color: #008000;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #aa5d00;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #008000;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function {
+  color: #aa5d00;
+}
+
+.token.keyword {
+  color: #d91e18;
+}
+
+.token.regex,
+.token.important {
+  color: #d91e18;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+@media screen and (-ms-high-contrast: active) {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: windowText;
+    background: window;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: window;
+  }
+
+  .token.important {
+    background: highlight;
+    color: window;
+    font-weight: normal;
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.selector {
+    font-weight: bold;
+  }
+
+  .token.attr-value,
+  .token.comment,
+  .token.doctype,
+  .token.function,
+  .token.keyword,
+  .token.operator,
+  .token.property,
+  .token.string {
+    color: highlight;
+  }
+
+  .token.attr-value,
+  .token.url {
+    font-weight: normal;
+  }
+}
+
+.gatsby-highlight {
   position: relative;
-}
-
-.highlight-line {
-  background-color: rgb(2, 55, 81);
-  border-left: 4px solid rgb(2, 155, 206);
-}
-
-.highlight-line .line-number-style {
-  opacity: 0.5;
-  width: calc(1.2em - 4px);
-  left: -2px;
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
 }

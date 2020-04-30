@@ -3,7 +3,6 @@ import { jsx, Flex, Link as TLink } from "theme-ui"
 import { Link } from "gatsby"
 
 const PrevNext = ({ previous, next }) => {
-  console.log(previous, next)
   if (!previous && !next) {
     return null
   }

@@ -1,18 +1,12 @@
 import React from "react"
 import Highlight, { defaultProps } from "prism-react-renderer"
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live"
-import theme from "prism-react-renderer/themes/nightOwl"
+import theme from "prism-react-renderer/themes/github"
 
 function getParams(className = ``) {
   const [lang = ``, params = ``] = className.split(`:`)
 
-  return [
-    lang
-      .split(`language-`)
-      .pop()
-      .split(`{`)
-      .shift(),
-  ].concat(
+  return [lang.split(`language-`).pop().split(`{`).shift()].concat(
     params.split(`&`).reduce((merged, param) => {
       const [key, value] = param.split(`=`)
       merged[key] = value
@@ -56,7 +50,12 @@ const Code = ({
 
   if (props[`react-live`]) {
     return (
-      <LiveProvider code={codeString} noInline theme={theme}>
+      <LiveProvider
+        code={codeString}
+        language={language}
+        noInline
+        theme={theme}
+      >
         <LiveEditor data-name="live-editor" />
         <LiveError />
         <LivePreview data-name="live-preview" />
@@ -68,7 +67,7 @@ const Code = ({
       {...defaultProps}
       code={codeString}
       language={language}
-      theme={theme}
+      theme={undefined}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <React.Fragment>

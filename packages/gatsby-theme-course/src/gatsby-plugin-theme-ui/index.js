@@ -1,37 +1,59 @@
 import { merge } from "theme-ui"
 import { tailwind } from "@theme-ui/presets"
 
-const headingStyles = {
-  h1: {
-    fontSize: 5,
-    color: `heading`,
-  },
-  h2: {
-    fontSize: 4,
-    color: `heading`,
-  },
-  h3: {
-    fontSize: 3,
-    color: `heading`,
-  },
-}
-
 export default merge(tailwind, {
   colors: {
-    primary: `#663399`,
+    primary: `#663399`, // Gatsby Color
     textMuted: tailwind.colors.gray[7],
     heading: tailwind.colors.black,
+    separator: tailwind.colors.gray[3],
   },
   sizes: {
     container: 900,
-    sidebar: 320,
+    sidebar: 260,
   },
   styles: {
-    ...headingStyles,
+    h1: {
+      variant: `text.heading`,
+      pb: 2,
+      mb: 4,
+      borderBottom: theme => `1px solid ${theme.colors.separator}`,
+      fontSize: 5,
+    },
+    h2: {
+      variant: `text.heading`,
+      fontSize: 4,
+    },
+    h3: {
+      variant: `text.heading`,
+      fontSize: 3,
+    },
+    h4: {
+      variant: `text.heading`,
+      fontSize: 2,
+    },
+    h5: {
+      variant: `text.heading`,
+      fontSize: 1,
+    },
+    h6: {
+      variant: `text.heading`,
+      fontSize: 1,
+    },
     a: {
       textDecoration: `none`,
       "&:hover,&:focus": {
         textDecoration: `none`,
+      },
+    },
+    p: {
+      "> code": {
+        variant: `highlighting.inline`,
+      },
+    },
+    li: {
+      "> code": {
+        variant: `highlighting.inline`,
       },
     },
   },
@@ -40,12 +62,22 @@ export default merge(tailwind, {
       px: 3,
     },
   },
+  highlighting: {
+    inline: {
+      backgroundColor: `purple.1`,
+      color: `purple.8`,
+      px: 2,
+      py: 1,
+      borderRadius: `0.3em`,
+      fontFamily: `Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
+    },
+  },
   text: {
-    ...headingStyles,
     heading: {
       fontFamily: `heading`,
       fontWeight: `heading`,
       lineHeight: `heading`,
+      color: `heading`,
     },
   },
   list: {

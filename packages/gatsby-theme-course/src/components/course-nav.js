@@ -30,8 +30,10 @@ const CourseNav = ({ currentModule }) => {
   `)
 
   const navItems = []
+
   data.modules.nodes.forEach(mod => {
     const modLessons = []
+
     data.lessons.nodes
       .filter(lesson => lesson.module === mod.number)
       .forEach(lesson => {
@@ -42,6 +44,7 @@ const CourseNav = ({ currentModule }) => {
           number: lesson.number,
         })
       })
+
     navItems.push({
       slug: mod.slug,
       title: mod.title,
@@ -53,7 +56,17 @@ const CourseNav = ({ currentModule }) => {
 
   return (
     <nav sx={{ gridArea: `course-nav`, maxWidth: `sidebar` }}>
-      <ul sx={{ m: 0, padding: 4, display: `grid`, gridRowGap: 4 }}>
+      <ul
+        sx={{
+          m: 0,
+          padding: 4,
+          pl: theme => `calc(${theme.space[4]} - 0.25rem)`,
+          display: `grid`,
+          gridRowGap: 4,
+          position: `sticky`,
+          top: 0,
+        }}
+      >
         {navItems.map(navItem => (
           <MenuToggle
             title={navItem.title}

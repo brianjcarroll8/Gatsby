@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx, Flex, Link as TLink } from "theme-ui"
+import { jsx, Link as TLink } from "theme-ui"
 import { useState, useRef } from "react"
 import { Link } from "gatsby"
 
@@ -34,7 +34,10 @@ const MenuToggle = ({
           textTransform: `uppercase`,
           fontSize: 1,
           color: `#687690`,
-          mb: 2,
+          p: 1,
+          "&:hover": {
+            cursor: `pointer`,
+          },
         }}
       >
         {title}
@@ -49,6 +52,7 @@ const MenuToggle = ({
           display: `none`,
           listStyle: `none`,
           pl: 3,
+          mt: 2,
           a: {
             color: `gray.9`,
             fontSize: 1,

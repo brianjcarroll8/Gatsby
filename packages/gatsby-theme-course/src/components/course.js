@@ -8,7 +8,9 @@ import Separator from "./separator"
 
 const Course = ({ data: { course, modules } }) => (
   <Layout>
-    <Heading as="h1">{course.title}</Heading>
+    <Heading as="h1" variant="styles.h1">
+      {course.title}
+    </Heading>
     <MDXRenderer>{course.body}</MDXRenderer>
     <Separator />
     <ListHeader>List of modules</ListHeader>

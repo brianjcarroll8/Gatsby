@@ -6,11 +6,12 @@ const Footer = () => (
     sx={{
       gridArea: `footer`,
       padding: 4,
+      mt: 3,
       borderTop: theme => `1px solid ${theme.colors.gray[3]}`,
       color: `gray.7`,
     }}
   >
-    &copy; {new Date().getFullYear()} by Gatsby - All rights reserved
+    &copy; {new Date().getFullYear()} by Gatsby - All rights reserved.
   </footer>
 )
 
