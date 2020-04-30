@@ -3,7 +3,8 @@ const path = require(`path`);
 const mkdirp = require(`mkdirp`);
 const withDefaults = require(`./utils/default-options`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
-const { urlResolve, createContentDigest, graphql } = require(`gatsby-core-utils`);
+const { urlResolve } = require(`gatsby-core-utils`);
+
 // Make sure the data directory exists
 exports.onPreBootstrap = ({ store }, themeOptions) => {
 	const { program } = store.getState();
@@ -151,7 +152,7 @@ exports.createSchemaCustomization = ({ actions, schema }) => {
 	);
 };
 
-exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOptions) => {
+exports.onCreateNode = async ({ node, actions, getNode, createNodeId, createContentDigest }, themeOptions) => {
 	const { createNode, createParentChildLink } = actions;
 	const { coursePath, basePath } = withDefaults(themeOptions);
 
@@ -162,7 +163,7 @@ exports.onCreateNode = async ({ node, actions, getNode, createNodeId }, themeOpt
 
 	// Create source field (according to coursePath)
 	const fileNode = getNode(node.parent);
-	const { sourceInstanceName: source, name } = fileNode;
+	const { sourceInstanceName: source } = fileNode;
 
 	// make sure it's part of our course
 	if (source !== coursePath) {

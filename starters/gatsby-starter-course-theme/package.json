@@ -11,14 +11,9 @@
 		"clean": "gatsby clean"
 	},
 	"dependencies": {
-		"@mdx-js/mdx": "^1.6.0",
-		"@theme-ui/presets": "^0.3.0",
 		"gatsby": "^2.21.1",
 		"gatsby-theme-course": "^0.0.2",
 		"react": "^16.13.1",
-		"react-dom": "^16.13.1",
-		"react-helmet": "^6.0.0",
-		"react-live": "^2.2.2",
-		"theme-ui": "^0.3.1"
+		"react-dom": "^16.13.1"
 	}
 }
