@@ -64,12 +64,14 @@ A basic page component with a GraphQL query might look like this:
 import React from "react"
 import { graphql } from "gatsby"
 
-export default function Page({ data }) (
-  <div>
-    <h1>About {data.site.siteMetadata.title}</h1>
-    <p>We're a very cool website you should return to often.</p>
-  </div>
-)
+export default function Page({ data }) {
+  return (
+    <div>
+      <h1>About {data.site.siteMetadata.title}</h1>
+      <p>We're a very cool website you should return to often.</p>
+    </div>
+  )
+}
 
 export const query = graphql`
   query {
@@ -201,12 +203,14 @@ import React from "react"
 import Img from "gatsby-image"
 import { graphql } from "gatsby"
 
-export default function Page({ data }) (
-  <div>
-    <h1>Hello gatsby-image</h1>
-    <Img fixed={data.file.childImageSharp.fixed} />
-  </div>
-)
+export default function Page({ data }) {
+  return (
+    <div>
+      <h1>Hello gatsby-image</h1>
+      <Img fixed={data.file.childImageSharp.fixed} />
+    </div>
+  )
+}
 
 export const query = graphql`
   query {

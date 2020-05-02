@@ -96,14 +96,16 @@ Open up the `bio-content.js` file and make some content edits:
 ```jsx:title=bio-content.js
 import React, { Fragment } from "react"
 
-export default function Bio() (
-  {/* highlight-start */}
-  <Fragment>
-    This is my updated bio.
-    <br />
-    It's shadowing the content from the theme.
-  </Fragment>
-  {/* highlight-end */}
+export default function Bio() {
+  return (
+    {/* highlight-start */}
+    <Fragment>
+      This is my updated bio.
+      <br />
+      It's shadowing the content from the theme.
+    </Fragment>
+    {/* highlight-end */}
+  )
 )
 ```
 
