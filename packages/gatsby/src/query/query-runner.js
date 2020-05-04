@@ -24,6 +24,8 @@ type QueryJob = {
 
 // Run query
 module.exports = async (graphqlRunner, queryJob: QueryJob) => {
+  // console.trace()
+
   const { program } = store.getState()
 
   const graphql = (query, context) => {
@@ -86,6 +88,8 @@ module.exports = async (graphqlRunner, queryJob: QueryJob) => {
           message: e.message,
         })
 
+        console.log({ e })
+
         structuredError.context = {
           ...structuredError.context,
           codeFrame: getCodeFrame(
@@ -123,6 +127,7 @@ module.exports = async (graphqlRunner, queryJob: QueryJob) => {
     delete result.pageContext.componentPath
     delete result.pageContext.context
     delete result.pageContext.isCreatedByStatefulCreatePages
+    delete result.pageContext.moduleDependencies
   }
 
   const resultJSON = JSON.stringify(result)

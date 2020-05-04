@@ -55,6 +55,15 @@ const getComponents = pages =>
     .orderBy(c => c.componentChunkName)
     .value()
 
+const getModules = modules => {
+  const ret = []
+  modules.forEach(({ moduleID }) => {
+    ret.push(moduleID)
+  })
+
+  return ret.sort()
+}
+
 /**
  * Get all dynamic routes and sort them by most specific at the top
  * code is based on @reach/router match utility (https://github.com/reach/router/blob/152aff2352bc62cefc932e1b536de9efde6b64a5/src/lib/utils.js#L224-L254)
@@ -121,10 +130,10 @@ const getMatchPaths = pages => {
     })
 }
 
-const createHash = (matchPaths, components) =>
+const createHash = (matchPaths, components, modules) =>
   crypto
     .createHash(`md5`)
-    .update(JSON.stringify({ matchPaths, components }))
+    .update(JSON.stringify({ matchPaths, components, modules }))
     .digest(`hex`)
 
 // Write out pages information.
@@ -134,8 +143,9 @@ const writeAll = async state => {
   const pages = [...state.pages.values()]
   const matchPaths = getMatchPaths(pages)
   const components = getComponents(pages)
+  const modules = getModules(state.modules)
 
-  const newHash = createHash(matchPaths, components)
+  const newHash = createHash(matchPaths, components, modules)
 
   if (newHash === lastHash) {
     // Nothing changed. No need to rewrite files
@@ -153,6 +163,8 @@ const writeAll = async state => {
   const hotMethod =
     process.env.GATSBY_HOT_LOADER !== `fast-refresh` ? `hot` : ``
 
+  console.log({ modules })
+
   // Create file with sync requires of components/json files.
   let syncRequires = `${hotImport}
 
@@ -167,7 +179,14 @@ const preferDefault = m => m && m.default || m
         }": ${hotMethod}(preferDefault(require("${joinPath(c.component)}")))`
     )
     .join(`,\n`)}
-}\n\n`
+}\n\nconst modules = {\n${modules
+    .map(
+      moduleID =>
+        `  "${moduleID}": ${hotMethod}(preferDefault(require("GATSBY_MAGIC_${moduleID}.js")))`
+    )
+    .join(
+      `,\n`
+    )}}\n\nexports.modules = modules\n\nif (process.env.GATSBY_BUILD_STAGE === "build-html") {\n  const { setModules } = require("./modules-provider");\n  setModules(modules);\n}\n\n`
 
   // Create file with async requires of components/json files.
   let asyncRequires = `// prefer default export if available
@@ -186,7 +205,15 @@ const preferDefault = m => m && m.default || m
       )}" /* webpackChunkName: "${c.componentChunkName}" */)`
     })
     .join(`,\n`)}
-}\n\n`
+}\n\nexports.modules = {\n${modules
+    .map(
+      moduleID =>
+        // add /* webpackChunkName: "${moduleID}" */ when moduleID is nicer - right now it contains path for local modules and breaks runtime :(
+        // this is also needed to add <script> tag to html pages as those seems to require named chunks.
+        // Alternatively lookup ways to avoid that limitation by changing GatsbyWebpackStatsExtractor
+        `  "${moduleID}": () => import("GATSBY_MAGIC_${moduleID}.js" )`
+    )
+    .join(`,\n`)}}\n\n`
 
   const writeAndMove = (file, data) => {
     const destination = joinPath(program.directory, `.cache`, file)

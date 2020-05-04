@@ -40,6 +40,9 @@ export const buildProductionBundle = async (
         return reject(flattenStatsErrors(stats))
       }
 
+      // const c = stats.toJson()fs.outputJsonSync(file, {name: 'JP'})
+      require(`fs-extra`).outputJsonSync(`stats.json`, stats.toJson())
+
       return resolve(stats)
     })
   })

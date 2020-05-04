@@ -437,6 +437,7 @@ module.exports = async (program: IProgram): Promise<void> => {
   await db.saveState()
 
   await waitUntilAllJobsComplete()
+  requiresWriter.writeAll(store.getState())
   requiresWriter.startListener()
   db.startAutosave()
   queryUtil.startListeningToDevelopQueue()

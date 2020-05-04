@@ -199,8 +199,11 @@ export class BaseLoader {
         }
 
         let pageData = result.payload
-        const { componentChunkName } = pageData
-        return this.loadComponent(componentChunkName).then(component => {
+        const { componentChunkName, moduleDependencies } = pageData
+        return Promise.all([
+          this.loadComponent(componentChunkName),
+          ...this.fetchAndEmitModuleDependencies(moduleDependencies),
+        ]).then(([component]) => {
           const finalResult = { createdAt: new Date() }
           let pageResources
           if (!component) {
@@ -351,6 +354,25 @@ export class BaseLoader {
       return appData
     })
   }
+
+  fetchAndEmitModuleDependencies(moduleDependencies, pagePath) {
+    console.log(`fetch modules`, moduleDependencies, pagePath)
+
+    if (!moduleDependencies) {
+      return Promise.resolve()
+    }
+
+    // in-flight db and all that jazz
+    return moduleDependencies.map(moduleId =>
+      this.loadComponent(moduleId, `modules`).then(c => {
+        emitter.emit(`module-fetched`, {
+          moduleId,
+          module: c,
+        })
+        return c
+      })
+    )
+  }
 }
 
 const createComponentUrls = componentChunkName =>
@@ -360,9 +382,9 @@ const createComponentUrls = componentChunkName =>
 
 export class ProdLoader extends BaseLoader {
   constructor(asyncRequires, matchPaths) {
-    const loadComponent = chunkName =>
-      asyncRequires.components[chunkName]
-        ? asyncRequires.components[chunkName]()
+    const loadComponent = (chunkName, key = `components`) =>
+      asyncRequires[key][chunkName]
+        ? asyncRequires[key][chunkName]()
             .then(preferDefault)
             // loader will handle the case when component is null
             .catch(() => null)

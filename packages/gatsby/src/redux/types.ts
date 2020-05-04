@@ -204,6 +204,7 @@ export interface IGatsbyState {
   }
   pageDataStats: Map<SystemPath, number>
   pageData: any
+  modules: any
 }
 
 export interface ICachedReduxState {
@@ -222,6 +223,7 @@ export type ActionsUnion =
   | IAddThirdPartySchema
   | ICreateFieldExtension
   | ICreatePageDependencyAction
+  | ICreatePageModuleDependencyAction
   | ICreateTypes
   | IDeleteCacheAction
   | IDeleteComponentDependenciesAction
@@ -231,6 +233,7 @@ export type ActionsUnion =
   | IQueryExtractedBabelSuccessAction
   | IQueryExtractionBabelErrorAction
   | IQueryExtractionGraphQLErrorAction
+  | IRegisterModuleAction
   | IRemoveStaticQuery
   | IReplaceComponentQueryAction
   | IReplaceStaticQueryAction
@@ -421,4 +424,24 @@ export interface IReplaceWebpackConfigAction {
 export interface ISetWebpackConfigAction {
   type: `SET_WEBPACK_CONFIG`
   payload: Partial<IGatsbyState["webpack"]>
+}
+
+export interface ICreatePageModuleDependencyAction {
+  type: `CREATE_MODULE_DEPENDENCY`
+  plugin: string
+  payload: {
+    path: string
+    moduleID: string
+  }
+}
+
+export interface IRegisterModuleAction {
+  type: `REGISTER_MODULE`
+  plugin: string
+  payload: {
+    moduleID: string
+    source: string
+    type: string
+    importName?: string
+  }
 }

@@ -15,6 +15,7 @@ const signalExit = require(`signal-exit`)
 const telemetry = require(`gatsby-telemetry`)
 const { store, readState } = require(`../redux`)
 const queryUtil = require(`../query`)
+const requiresWriter = require(`./../bootstrap/requires-writer`)
 import * as appDataUtil from "../utils/app-data"
 import * as WorkerPool from "../utils/worker/pool"
 import { structureWebpackErrors } from "../utils/webpack-error-utils"
@@ -80,6 +81,7 @@ module.exports = async function build(program: BuildArgs) {
   })
 
   await processStaticQueries()
+  await processPageQueries()
 
   await apiRunnerNode(`onPreBuild`, {
     graphql: bootstrapGraphQLRunner,
@@ -89,6 +91,20 @@ module.exports = async function build(program: BuildArgs) {
   // Copy files from the static directory to
   // an equivalent static directory within public.
   copyStaticDirs()
+
+  {
+    // Write out files.
+    const activity = report.activityTimer(`write out requires`, {
+      parentSpan: buildSpan,
+    })
+    activity.start()
+    try {
+      await requiresWriter.writeAll(store.getState())
+    } catch (err) {
+      report.panic(`Failed to write out requires`, err)
+    }
+    activity.end()
+  }
 
   let activity = report.activityTimer(
     `Building production JavaScript and CSS bundles`,
@@ -123,8 +139,6 @@ module.exports = async function build(program: BuildArgs) {
 
     activity.end()
   }
-
-  await processPageQueries()
 
   if (process.env.GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES) {
     const { pages } = store.getState()

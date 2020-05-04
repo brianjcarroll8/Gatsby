@@ -2,7 +2,9 @@ import {
   IGatsbyPlugin,
   ProgramStatus,
   ICreatePageDependencyAction,
+  ICreatePageModuleDependencyAction,
   IDeleteComponentDependenciesAction,
+  IRegisterModuleAction,
   IReplaceComponentQueryAction,
   IReplaceStaticQueryAction,
   IQueryExtractedAction,
@@ -13,6 +15,8 @@ import {
   IPageQueryRunAction,
   IRemoveStaleJobAction,
 } from "../types"
+
+// import { store } from ".."
 
 /**
  * Create a dependency between a page and data. Probably for
@@ -214,6 +218,53 @@ export const removeStaleJob = (
     traceId,
     payload: {
       contentDigest,
+    },
+  }
+}
+
+/**
+ * Create a dependency between a page and module.
+ * For internal use only.
+ * @private
+ */
+export const addModuleDependencyToQueryResult = (
+  { path, moduleID }: { path: string; moduleID: string },
+  plugin = ``
+): ICreatePageModuleDependencyAction => {
+  return {
+    type: `CREATE_MODULE_DEPENDENCY`,
+    plugin,
+    payload: {
+      path,
+      moduleID,
+    },
+  }
+}
+
+export const registerModule = (
+  {
+    moduleID,
+    source,
+    importName,
+    type = `default`,
+  }: {
+    moduleID: string
+    source: string
+    type: string
+    importName?: string
+  },
+  plugin = ``
+): IRegisterModuleAction => {
+  console.log({ plugin })
+
+  return {
+    type: `REGISTER_MODULE`,
+    plugin,
+    payload: {
+      moduleID,
+      source,
+      type,
+      importName,
     },
   }
 }

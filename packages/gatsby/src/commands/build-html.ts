@@ -55,8 +55,8 @@ const buildRenderer = async (
 
 const deleteRenderer = async (rendererPath: string): Promise<void> => {
   try {
-    await fs.remove(rendererPath)
-    await fs.remove(`${rendererPath}.map`)
+    // await fs.remove(rendererPath)
+    // await fs.remove(`${rendererPath}.map`)
   } catch (e) {
     // This function will fail on Windows with no further consequences.
   }

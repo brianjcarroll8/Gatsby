@@ -12,6 +12,7 @@ const debug = require(`debug`)(`gatsby:webpack-config`)
 const report = require(`gatsby-cli/lib/reporter`)
 import { withBasePath, withTrailingSlash } from "./path"
 import { getGatsbyDependents } from "./gatsby-dependents"
+const { GatsbyPageDepsPlugin } = require(`./webpack-gatsby-page-deps-plugin`)
 
 const apiRunnerNode = require(`./api-runner-node`)
 import { createWebpackUtils } from "./webpack-utils"
@@ -200,6 +201,7 @@ module.exports = async (
           program.prefixPaths ? assetPrefix : ``
         ),
       }),
+      new GatsbyPageDepsPlugin(),
     ]
 
     switch (stage) {

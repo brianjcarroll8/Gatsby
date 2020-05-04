@@ -27,6 +27,7 @@ const write = async ({ publicDir }, page, result) => {
     componentChunkName: page.componentChunkName,
     path: page.path,
     matchPath: page.matchPath,
+    moduleDependencies: page.moduleDependencies,
     result,
   }
   const bodyStr = JSON.stringify(body)

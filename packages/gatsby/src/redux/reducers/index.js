@@ -1,5 +1,6 @@
 const reduxNodes = require(`./nodes`)
 const lokiNodes = require(`../../db/loki/nodes`).reducer
+import { modulesReducer } from "./modules"
 import { redirectsReducer } from "./redirects"
 import { staticQueryComponentsReducer } from "./static-query-components"
 import { statusReducer } from "./status"
@@ -73,4 +74,5 @@ module.exports = {
   inferenceMetadata: require(`./inference-metadata`),
   pageDataStats: require(`./page-data-stats`),
   pageData: require(`./page-data`),
+  modules: modulesReducer,
 }
