@@ -112,7 +112,7 @@ exports.createSchemaCustomization = ({ actions, schema }, themeOptions) => {
 
 function validURL(str) {
   try {
-    url.parse(str)
+    new URL(str)
     return true
   } catch {
     return false
