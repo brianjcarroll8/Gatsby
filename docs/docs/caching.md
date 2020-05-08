@@ -49,7 +49,7 @@ The following plugins have been created:
 
 When deploying with Now, follow the instructions in the [Now documentation](https://zeit.co/guides/deploying-gatsby-with-now#bonus:-cache-your-gatsby-assets).
 
----
+- - -
 
 <sup>1</sup> You can use 'no-cache' instead of 'max-age=0, must-revalidate'. Despite
 what the name might imply, 'no-cache' permits a cache to serve cached content as
@@ -62,6 +62,7 @@ validation you will avoid downloading assets when the cached copy is still valid
 <!--lint disable no-unused-definitions -->
 
 [2]: https://tools.ietf.org/html/rfc7234#section-5.2.2.1
+
 [3]: https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching#no-cache_and_no-store
 
 <!--lint enable no-unused-definitions -->

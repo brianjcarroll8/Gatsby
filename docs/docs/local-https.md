@@ -160,6 +160,6 @@ If your certificate is self-signed, then do not include the `--ca-file` flag. Al
 
 In most cases, the `--https` passed by itself is easier and more convenient to get local HTTPS.
 
----
+- - -
 
 Automatic certificates issued with the `--https` flag are issued to `localhost` by default, unless you have used the `--host` flag. If you have, a record in your hosts file will automatically be configured to point the defined host to `127.0.0.1`. At this time, ip addresses defined by `--host` are not supported.

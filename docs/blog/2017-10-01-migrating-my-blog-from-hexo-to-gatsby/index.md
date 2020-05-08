@@ -14,7 +14,7 @@ Gatsby!_
 
 ## Migrating a blog to Gatsby
 
----
+- - -
 
 **Abstract:** Gatsby is a great tool for building a blog. In part 1 I did the
 more basic task of migrating an existing React site to Gatsby. This time I
@@ -31,7 +31,7 @@ Here's the gist of what I'm going to cover:
 
 Let's jump in.
 
----
+- - -
 
 ### Preparing your existing blog for migration
 
@@ -749,7 +749,7 @@ still under heavy development, so you may run in to bugs, but in my view the
 pros heavily outweigh the cons. It's a best-in-class static site generator and
 well worth the adoption time if you want to customize your blog.
 
----
+- - -
 
 If anything was unclear or you have more questions feel free to ask me on
 [Twitter](https://twitter.com/ian_sinn).

@@ -88,9 +88,15 @@ To best support any users who may still be using Node 6 and these newer versions
 We are very much cognizant that this change may introduce some measure of churn and potential confusion for that very small percentage of users who may still be on Node 6 and using recent versions of Gatsby packages. However, in an effort to increase productivity and deliver features and fixes to the great **majority** of users not using Node 6, we feel confident that it's time to make this change.
 
 [semver]: https://semver.org/
+
 [rfc]: https://github.com/gatsbyjs/rfcs/pull/24
+
 [node-8-docs]: /tutorial/part-zero/#install-nodejs-for-your-appropriate-operating-system
+
 [vw-test-suite]: https://github.com/auchenberg/volkswagen
+
 [babel-preset-gatsby-package]: https://github.com/gatsbyjs/gatsby/tree/master/packages/babel-preset-gatsby-package
+
 [babel-preset-env]: https://babeljs.io/docs/en/babel-preset-env#targetsnode
+
 [pr]: https://github.com/gatsbyjs/gatsby/pull/14842

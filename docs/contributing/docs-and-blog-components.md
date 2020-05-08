@@ -13,7 +13,7 @@ Information about authoring in Markdown on the site is also listed.
 
 A variety of components have been written to help with formatting code and content across the blog and the docs and don't need to be imported.
 
----
+- - -
 
 ### Guide List
 
@@ -47,7 +47,7 @@ When rendered in a page, the Guide List looks like this:
 
 _This example has the prop `slug="/docs/headless-cms/"` set, and can be seen on the doc for [Headless CMS](/docs/headless-cms/)_
 
----
+- - -
 
 ### Egghead Embed
 
@@ -88,7 +88,7 @@ Rendered, it looks like this:
   lessonTitle="Use gatsby-image's GraphQL fragments for blurred-up and traced SVG images"
 />
 
----
+- - -
 
 ### Pull Quote
 
@@ -195,7 +195,7 @@ import EmailCaptureForm from "../../www/src/components/email-capture-form"
 
 Doing so will break localized versions of the page, which are stored in other repos.
 
----
+- - -
 
 ## Writing content in Markdown
 
@@ -299,6 +299,7 @@ Code can be formatted using regular Markdown syntax, but the docs site has addit
 Code blocks are wrapped in 3 backticks. A language can be added immediately after the first set of back ticks to provide syntax highlighting for the language. A `title` of the file can be added after the language. Line highlighting can be included in the code block by commenting `highlight-line`, or `highlight-start` followed by a `highlight-end`.
 
 <!-- prettier-ignore -->
+
 ````markdown
 ```javascript:title=gatsby-config.js
 // In your gatsby-config.js
@@ -340,6 +341,7 @@ plugins: [
 The above code block is rendered like this:
 
 <!-- prettier-ignore -->
+
 ```javascript:title=gatsby-config.js
 // In your gatsby-config.js
 plugins: [

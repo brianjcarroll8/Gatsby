@@ -334,7 +334,7 @@ Phew that was a lot! but you should have a solid starting point for your app :)
 
 ## Bonus points: Authenticated Lambda Functions for your Gatsby App
 
-Just like [every magic act has a pledge, a turn, and a prestige](<https://en.wikipedia.org/wiki/The_Prestige_(film)>), I have one last tidbit for you. [Nothing on the client-side is safe](https://stackoverflow.com/questions/50277192/react-security-concerns-restricted-pages-in-app), and although you can send along Netlify Identity user id's to your Netlify Function endpoints for authenticated access from your Gatsby App (for example in the body of a POST request), you'll never be truly sure if that flow is secure either from malicious users or snooping.
+Just like [every magic act has a pledge, a turn, and a prestige](https://en.wikipedia.org/wiki/The_Prestige_(film)), I have one last tidbit for you. [Nothing on the client-side is safe](https://stackoverflow.com/questions/50277192/react-security-concerns-restricted-pages-in-app), and although you can send along Netlify Identity user id's to your Netlify Function endpoints for authenticated access from your Gatsby App (for example in the body of a POST request), you'll never be truly sure if that flow is secure either from malicious users or snooping.
 
 The best way to do authenticated actions inside serverless functions is to do it from inside the context of the function itself. Fortunately, [Netlify Identity and Functions work seamlessly together](https://docs.netlify.com/functions/functions-and-identity/). All you have to do is to send along the user's [JWT](https://jwt.io/) when hitting your endpoint:
 

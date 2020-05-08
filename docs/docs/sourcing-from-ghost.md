@@ -8,7 +8,7 @@ It comes with all the benefits of modern, centralized Headless CMS platforms, wi
 
 This guide will walk you through using [Gatsby](/) with the [Ghost Content API](https://docs.ghost.org/api/content/).
 
----
+- - -
 
 ## Quick start
 
@@ -19,7 +19,7 @@ The fastest way to get started is with the official **Gatsby Starter Ghost** rep
 
 [![Gatsby Starter Ghost](./images/gatsby-starter-ghost.jpg)](https://gatsby.ghost.org)
 
----
+- - -
 
 ## Install and setup
 
@@ -47,7 +47,7 @@ module.exports = {
 }
 ```
 
----
+- - -
 
 ## Generating pages
 
@@ -100,7 +100,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 }
 ```
 
----
+- - -
 
 ## Outputting data
 
@@ -141,7 +141,7 @@ export const postQuery = graphql`
 `
 ```
 
----
+- - -
 
 ## Wrapping up
 

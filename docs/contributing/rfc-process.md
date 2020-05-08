@@ -126,6 +126,9 @@ represent the feature and its progress.
 RFC process], [Rust RFC process], and [Ember RFC process]**
 
 [react rfc process]: https://github.com/reactjs/rfcs
+
 [yarn rfc process]: https://github.com/yarnpkg/rfcs
+
 [rust rfc process]: https://github.com/rust-lang/rfcs
+
 [ember rfc process]: https://github.com/emberjs/rfcs

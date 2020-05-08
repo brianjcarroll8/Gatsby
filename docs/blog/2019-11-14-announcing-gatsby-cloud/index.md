@@ -6,7 +6,7 @@ excerpt: "I'm excited to announce that we're launching our commercial platform, 
 tags: ["gatsby-inc", "releases", "gatsby-cloud"]
 ---
 
----
+- - -
 
 We're excited to announce the launch of [Gatsby Cloud](https://www.gatsbyjs.com/): a commercial platform of stable, trusted tools that enable web creators to build better websites.
 

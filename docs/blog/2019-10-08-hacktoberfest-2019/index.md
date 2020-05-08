@@ -66,4 +66,5 @@ Gatsby [plugins](https://www.gatsbyjs.org/docs/creating-plugins/) and [themes](h
 2. To make contributing to Gatsby as welcoming, friendly, and accessible as we can -- especially to first-time contributors.
 
 [docs-filter]: https://github.com/gatsbyjs/gatsby/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22Hacktoberfest%22+label%3A%22type%3A+documentation%22
+
 [oss]: https://github.com/gatsbyjs/gatsby/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22Hacktoberfest%22+-label%3A%22type%3A+documentation%22+
