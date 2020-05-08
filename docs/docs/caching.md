@@ -49,7 +49,7 @@ The following plugins have been created:
 
 When deploying with Now, follow the instructions in the [Now documentation](https://zeit.co/guides/deploying-gatsby-with-now#bonus:-cache-your-gatsby-assets).
 
-- - -
+---
 
 <sup>1</sup> You can use 'no-cache' instead of 'max-age=0, must-revalidate'. Despite
 what the name might imply, 'no-cache' permits a cache to serve cached content as

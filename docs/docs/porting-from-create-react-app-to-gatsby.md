@@ -8,7 +8,7 @@ Create React App is an officially supported [CLI](/docs/glossary/#cli) tool from
 
 Gatsby is similar in that it can also help you set up an application and removes much of the configuration headache. However, Gatsby offers some additional advantages like performance optimizations with static rendering and a thriving ecosystem of plugins. Gatsby and Create React App even share nearly identical webpack and Babel configurations which makes porting less cumbersome. React's own [docs](https://reactjs.org/) run on Gatsby, and React even [recommends Gatsby](https://github.com/facebook/create-react-app#popular-alternatives) to users of Create React App!
 
-- - -
+---
 
 ## What do you get by changing to Gatsby?
 
@@ -35,7 +35,7 @@ This data layer simplifies the process of pulling data from different sources an
 
 > **Note**: GraphQL isn't required for managing data in a Gatsby app. Feel free to look over the guide on [using Gatsby without GraphQL](/docs/using-gatsby-without-graphql/) as well
 
-- - -
+---
 
 ## What changes need to be made?
 

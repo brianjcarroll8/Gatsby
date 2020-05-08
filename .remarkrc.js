@@ -2,7 +2,7 @@ module.exports = {
   settings: {
     listItemIndent: "1",
     rule: "-",
-    ruleSpaces: true,
+    ruleSpaces: false,
   },
   plugins: [
     ["remark-frontmatter", "yaml"],

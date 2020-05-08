@@ -61,7 +61,7 @@ Some tweets to that effect:
 
 <https://twitter.com/sebmck/status/1085279417151057920>
 
-- - -
+---
 
 <https://twitter.com/ericalli/status/1083271854653992962>
 
@@ -69,7 +69,7 @@ Some tweets to that effect:
 
 <https://twitter.com/ericalli/status/1083271858605023232>
 
-- - -
+---
 
 <https://twitter.com/jtth/status/1080519113930350592>
 

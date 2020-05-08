@@ -56,6 +56,6 @@ The core of the bootstrap process is the "api-runner", which helps to execute AP
 
 (to be written)
 
-- - -
+---
 
 Please see the links along the left under "REFERENCE" for the full API documentation.

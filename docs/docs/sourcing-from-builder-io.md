@@ -6,7 +6,7 @@ title: Sourcing from Builder.io
 
 <img src="https://imgur.com/HjBWIbv.gif" alt="Editor example" />
 
-- - -
+---
 
 ## Quick Start
 

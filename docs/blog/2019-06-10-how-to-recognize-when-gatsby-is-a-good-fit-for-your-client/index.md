@@ -47,7 +47,7 @@ Mobile websites that take [more than 3 seconds to load have a 53% bounce rate](h
 
 Every site needs to be performant. There isn’t a site out there where slow response times won’t negatively impact user engagement, conversion, and often, the bottom line. But remember, there is fast (which every site should be) and then there is Gatsby-fast. Companies that migrate to Gatsby will find their site is [between three and 10 times faster](https://www.gatsbyjs.com/guides/why-are-gatsby-sites-fast/). Indeed, the speed of a Gatsby-powered frontend resembles more of the instantaneous feel of native mobile apps.
 
-- - -
+---
 
 Selling Gatsby is just like selling anything else. Focus the conversation on how using Gatsby will support their organizational and personal goals, not on its cool technical features or its fascinating architecture. Be honest about Gatsby in conversations. If your client points out a challenge with your proposed approach, don’t try to minimize it. Acknowledge it, be honest, explore the concern more deeply, and explain it in the greater context of the overall strategy you are advocating.
 

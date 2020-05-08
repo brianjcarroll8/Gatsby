@@ -98,7 +98,7 @@ It is used during [static-entry.js](https://github.com/gatsbyjs/gatsby/blob/mast
 
 ## async-requires.js
 
-- - -
+---
 
 `async-requires.js` is very similar to `sync-requires.js`, in that it is a dynamically generated JavaScript file. The difference is that it is written to be used for code splitting via webpack. So, instead of using `require` with the component's path, it uses `import` and adds a `webpackChunkName` hint so that we can eventually link the componentChunkName to its resulting file (more info in [Code Splitting](/docs/how-code-splitting-works/) docs). `components` is a function, so that it can be lazily initialized.
 

@@ -286,6 +286,6 @@ To watch the full recorded webinar, [register here](https://www.gatsbyjs.com/beh
 **Question:** What's the best way to get involved with contributing to Gatsby? Do you have regular calls for contributors or a preferred async channel e.g. Slack / Discord?
 **Answer:** We do have Discord, and highly recommend it! Check out our [Community page](/contributing/community/).
 
-- - -
+---
 
 Reminder that if you want to watch the full recorded webinar, [register here](https://www.gatsbyjs.com/behind-the-scenes/). Thanks for stopping by!

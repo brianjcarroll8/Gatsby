@@ -88,7 +88,7 @@ look at our code [on GitHub](https://github.com/smartive/smartive.ch).
 We are really looking forward to build other cool stuff for our customers using
 Gatsby!
 
-- - -
+---
 
 If you have any questions about the way we built
 [smartive.ch](https://smartive.ch) feel free to contact me on

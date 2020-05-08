@@ -42,7 +42,7 @@ Firstly, though, why do we want a Headless CMS and a JAMstack for the project? T
 3. **No server needed.** Cloud CMSs mean that I don’t need to pay the hosting people to setup an SQL database.
 4. **Easy to edit.** If I need to edit a site on the fly or have a client who needs to do the same, they don’t need to touch any code or run to their home workstation to fix a spelling error. They can access it anywhere.
 
-- - -
+---
 
 ![Contentful](contentful.png)
 
@@ -70,7 +70,7 @@ You then setup your fields, choosing from a big list. If you want a simple Title
 
 Contentful looks like a fantastic service. It isn’t perfect but it checks all my boxes — and what do you want for nothing? It’s definitely the one to beat.
 
-- - -
+---
 
 ![WP's REST API](wp.jpeg)
 
@@ -88,7 +88,7 @@ A lot of this information came from a [fantastic tutorial by Jeremey Duvall](htt
 
 The only problem with the WordPress.com setup is that it’s restricted to posts and pages that boil down to title/image/content. If you want ACF or other plugins you’re going to need a paid-for WP package, which harks back to the WordPress.org issue: I can’t use it without paying for it.
 
-- - -
+---
 
 ### NetlifyCMS
 
@@ -104,7 +104,7 @@ They also say, however, that if you use NetlifyCMS with Netlify, they convenient
 
 Pedro Duarte has a [great article](https://medium.com/netlify/jamstack-with-gatsby-netlify-and-netlify-cms-a300735e2c5d) about using Gatsby with both Netlify and NetlifyCMS.
 
-- - -
+---
 
 ### Best of the rest - Prismic.io & Cockpit
 
@@ -122,7 +122,7 @@ Cockpit also seems to share a lot of the same features except for two big differ
 
 - It’s self-hosted - this ties into the last point and if it did all come crashing down, as long as your site is still active so will your CMS be. Great news for the tech-paranoid!
 
-- - -
+---
 
 ## Conclusion - Which backend is right?
 
