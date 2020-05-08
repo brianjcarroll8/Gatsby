@@ -88,7 +88,7 @@ We already knew that error messages needed to be improved (see [this RFC up for 
 Here are two ways you can help by testing error messages:
 
 1. [Setup a usability test with us](https://calendly.com/shannon-soper/gatsby-usability). If you do this, don’t “cheat” on the test and look up the errors in the repo ahead of time! It’s most useful for us to see you face the error message for the first time, without preparation.
-2. [Clone this repo](https://github.com/gatsbyjs/error-testing) and find two sites under `error-testing/sites/`. Screen record yourself running one site at a time to test how fast you can resolve the errors in them. Send the screen recording to shannon@gatsbyjs.com!
+2. [Clone this repo](https://github.com/gatsbyjs/error-testing) and find two sites under `error-testing/sites/`. Screen record yourself running one site at a time to test how fast you can resolve the errors in them. Send the screen recording to [shannon@gatsbyjs.com](mailto:shannon@gatsbyjs.com)!
 
 ## How will the data be used?
 

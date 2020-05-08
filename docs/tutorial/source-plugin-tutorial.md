@@ -44,7 +44,7 @@ query {
 
 This data is an example of the data you will source with your plugin.
 
-_You can also see a running version of the GraphQL playground associated with a distinct API at [https://gatsby-source-plugin-api.glitch.me/](https://gatsby-source-plugin-api.glitch.me/), which is running the `api` folder in a Glitch project, like you would when you run `npm start` on your own computer._
+_You can also see a running version of the GraphQL playground associated with a distinct API at <https://gatsby-source-plugin-api.glitch.me/>, which is running the `api` folder in a Glitch project, like you would when you run `npm start` on your own computer._
 
 #### Plugin behavior
 

@@ -80,7 +80,7 @@ Depending on your size and reach, there are a few ways we can work together.
 
 If you’re an established vendor adding a Gatsby integration, we’d love for you to tell that story on our blog (e.g. [Kentico Cloud](/blog/2018-12-19-kentico-cloud-and-gatsby-take-you-beyond-static-websites/)). Here is a [guide to posting this in the blog](/docs/how-to-contribute/#contributing-to-the-blog).
 
-3. **Writing a case study**. If you have customers using Gatsby & your solution, you can work with our marketing team at marketing@gatsbyjs.com to put together a joint case study of how our solutions work together, and post this on the gatsbyjs.org blog
+3. **Writing a case study**. If you have customers using Gatsby & your solution, you can work with our marketing team at [marketing@gatsbyjs.com](mailto:marketing@gatsbyjs.com) to put together a joint case study of how our solutions work together, and post this on the gatsbyjs.org blog
 
 ### Step Four: Integrating with Gatsby Preview and Co-Selling
 

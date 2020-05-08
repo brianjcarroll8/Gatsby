@@ -96,17 +96,17 @@ But static sites, despite how much developers love them, have never gained wides
 
 As I thought deeply about this problem, it occurred to me that there were strong parallels between this problem and everything I’d learned about event sourcing and building cloud-native applications.
 
-https://twitter.com/kylemathews/status/825512417337544705
+<https://twitter.com/kylemathews/status/825512417337544705>
 
-https://twitter.com/kylemathews/status/825513977329307648
+<https://twitter.com/kylemathews/status/825513977329307648>
 
 I realized you could view a website as the current computed state of a long stream of content and code changes. When viewed through that lens, the architecture became clear for a new version of Gatsby that would glue Gatsby to various data sources & solve the really hard problems of static sites: fast incremental builds and parallelizing builds for large and complex sites.
 
 This architecture would enable Gatsby to eliminate the build step entirely—any code or content change would be quickly incorporated into the site and go live immediately. We could port the ideas of real-time event processing to building websites.
 
-https://twitter.com/kylemathews/status/916165920359198720
+<https://twitter.com/kylemathews/status/916165920359198720>
 
-https://twitter.com/kylemathews/status/916165988772487168
+<https://twitter.com/kylemathews/status/916165988772487168>
 
 ### Launching new version of Gatsby
 

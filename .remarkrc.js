@@ -1,4 +1,9 @@
 module.exports = {
+  settings: {
+    listItemIndent: "1",
+    rule: "-",
+    ruleSpaces: true,
+  },
   plugins: [
     ["remark-frontmatter", "yaml"],
     "remark-preset-lint-recommended",
@@ -35,6 +40,6 @@ module.exports = {
     ["remark-lint-no-shortcut-reference-link", false],
     // We use brackets in a lot of places as argument lists and do not want to escape them.
     ["remark-lint-no-undefined-references", false],
-    ["remark-lint-first-heading-level", 2]
+    ["remark-lint-first-heading-level", 2],
   ],
 }

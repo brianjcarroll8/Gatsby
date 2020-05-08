@@ -41,9 +41,9 @@ We love our docs! Improving docs is a never-ending effort, and we have some [stu
 
 Want to do help us translate the Gatsby docs? Consider contributing to an existing repo (we have Spanish and Russian so far!), or start a new language translation by [opening an issue](https://www.gatsbyjs.org/contributing/how-to-file-an-issue/) to create a new repo and earn Hacktoberfest credit by contributing PRs to that repo.
 
-- Spanish repo: https://github.com/gatsbyjs/gatsby-es
-- Russian repo: https://github.com/gatsbyjs/gatsby-ru
-- New translation repo request: https://github.com/gatsbyjs/gatsby/issues/new?template=new_translation.md
+- Spanish repo: <https://github.com/gatsbyjs/gatsby-es>
+- Russian repo: <https://github.com/gatsbyjs/gatsby-ru>
+- New translation repo request: <https://github.com/gatsbyjs/gatsby/issues/new?template=new_translation.md>
 
 ### [OSS][oss]
 

@@ -130,7 +130,7 @@ We're really excited about this pattern and everything it enables. With our upco
 
 ## Where can I get this?
 
-https://twitter.com/jacobimpson/status/1095930703504584706
+<https://twitter.com/jacobimpson/status/1095930703504584706>
 
 The astute reader (Jacob is astute, be like Jacob) would've noticed that we _stealthily_ released `useStaticQuery` last week.
 

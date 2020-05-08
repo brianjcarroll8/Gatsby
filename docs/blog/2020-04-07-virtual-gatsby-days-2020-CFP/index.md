@@ -15,4 +15,4 @@ The next Gatsby Days will take place on June 2-3, 2020, from 9:00am-12:00pm PST 
 
 Please make sure to [submit your proposal](https://docs.google.com/forms/d/e/1FAIpQLSfjUpqpmRL18ydo_PmC4jxvPG8xhOlix43KeRHOhUbPp3u7Mw/viewform?usp=sf_link) NO LATER THAN Friday, April 24th, 2020 at 11:59pm PST. We are reviewing submissions as they come in, so submitting early is an advantage.
 
-Learn more about Virtual Gatsby Days and previous Gatsby Days events on our website: https://www.gatsbyjs.com/resources/gatsby-days
+Learn more about Virtual Gatsby Days and previous Gatsby Days events on our website: <https://www.gatsbyjs.com/resources/gatsby-days>

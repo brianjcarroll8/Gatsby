@@ -11,7 +11,7 @@ We've been working on a new design for the docs sidebar. You can see it live on 
 
 ![New Sidebar expanded](new-sidebar-expanded.png)
 
-And here's the previous design (still living at www.gatsbyjs.org for now)
+And here's the previous design (still living at [www.gatsbyjs.org](http://www.gatsbyjs.org) for now)
 
 ![Previous Sidebar GIF](prev-sidebar.png)
 

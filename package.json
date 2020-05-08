@@ -124,6 +124,7 @@
     "lint": "npm-run-all --continue-on-error -p lint:code lint:docs lint:other",
     "lint:code": "eslint --cache --ext .js,.jsx,.ts,.tsx .",
     "lint:docs": "remark --quiet --frail \"./docs/\"",
+    "format:docs": "remark \"./docs/\" --output",
     "lint:scripts": "sh scripts/lint-shell-scripts.sh",
     "lint:other": "npm run prettier -- --check",
     "markdown": "md-magic --path \"starters/**/*.md\"",

@@ -7,9 +7,9 @@ import HorizontalNavList from "@components/horizontal-nav-list"
 
 When you're new to Gatsby there can be a lot of words to learn. This glossary aims to give you a 10,000-foot overview of common terms and what they mean for Gatsby sites.
 
-<HorizontalNavList
-  items={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
-  slug={props.slug}
+&lt;HorizontalNavList
+items={"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")}
+slug={props.slug}
 />
 
 ## A

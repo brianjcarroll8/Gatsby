@@ -17,4 +17,4 @@ We are seeking speakers to share knowledge about all things Gatsby, at every lev
 
 Due to current events, this year’s summer Gatsby Days will be virtual: live-streamed on YouTube June 2-3, 2020, from 9:00am-12:00pm PST each day. This means all speakers will need a computer, decent internet connection, and some kind of microphone/camera setup (the camera in your computer is great!) All speakers will receive a \$500.00 stipend from Gatsby following the conference.
 
-Learn more about Virtual Gatsby Days and previous Gatsby Days events on our website: https://www.gatsbyjs.com/resources/gatsby-days 💜
+Learn more about Virtual Gatsby Days and previous Gatsby Days events on our website: <https://www.gatsbyjs.com/resources/gatsby-days> 💜
