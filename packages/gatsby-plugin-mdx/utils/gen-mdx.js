@@ -62,15 +62,20 @@ module.exports = async function genMDX(
     if (cachedPayload) {
       return cachedPayload
     }
+  } else {
+    console.error(`no more disabling cache! (please?)`)
+    console.trace()
+    process.exit(1)
   }
 
   let results = {
     mdast: undefined,
     hast: undefined,
     html: undefined,
-    scopeImports: [],
-    scopeIdentifiers: [],
+    // scopeImports: [],
+    // scopeIdentifiers: [],
     body: undefined,
+    imports: [],
   }
 
   // TODO: a remark and a hast plugin that pull out the ast and store it in results
@@ -161,15 +166,17 @@ ${code}`
       ],
     })
 
-    const identifiers = Array.from(instance.state.identifiers)
-    const imports = Array.from(instance.state.imports)
-    if (!identifiers.includes(`React`)) {
-      identifiers.push(`React`)
-      imports.push(`import * as React from 'react'`)
-    }
+    results.imports = instance.state.imports
 
-    results.scopeImports = imports
-    results.scopeIdentifiers = identifiers
+    // const identifiers = Array.from(instance.state.identifiers)
+    // const imports = Array.from(instance.state.imports)
+    // if (!identifiers.includes(`React`)) {
+    //   identifiers.push(`React`)
+    //   imports.push(`import * as React from 'react'`)
+    // }
+
+    // results.scopeImports = imports
+    // results.scopeIdentifiers = identifiers
     // TODO: be more sophisticated about these replacements
     results.body = result.code
       .replace(

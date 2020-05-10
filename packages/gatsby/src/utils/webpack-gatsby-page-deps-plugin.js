@@ -7,7 +7,7 @@ function generateExportCode({ type, source, importName }) {
   }
 
   if (type === `named`) {
-    return `export { ${importName}} from "${source}"`
+    return `export { ${importName} as default } from "${source}"`
   }
 
   if (type === `namespace`) {

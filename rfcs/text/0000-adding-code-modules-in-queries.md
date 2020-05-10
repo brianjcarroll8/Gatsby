@@ -94,6 +94,19 @@ As alternative to `getModules` this could be just set as page prop (or maybe bot
 
 While this part of API is not needed to make it work. Users/plugins being able to explicitly register modules (without tying them to pages yet) is something to consider. Consider scenario when there is component that is used from time to time (for example "limited-time offer component"). If the component is added to webpack deps only when it's used means there will be webpack hash change every time when component is added/removed forcing Gatsby to rewrite all .html files. Ensuring that component is bundled (even if it's not used) can stabilize webpack hashes and avoid the need to rewrite all .html pages because of content change.
 
+## Technical details
+
+This API has few parts:
+
+1. Adding dependencies to webpack bundles
+2. Making runtime aware of additional resources
+
+### Adding dependencies to webpack bundles
+
+Requierment here is that all dependencies are registered before we run webpack. For regular `gatsby build` as well as initial running for `gatsby develop` and incremental builds this is pretty straight forward, because everything run linearly one after another.
+
+There will need to be adjustment so page queries in `gatsby build` run before webpack: Right now we run those after webpack, because `page-data.json` files contain webpack hash used for runtime integrity checks and we can get away with writing complete `page-data` files after webpack compilation. This will require us to run page queries before webpack and so write out partial `page-data.json` files and then do second pass after webpack compilation (note: we already do )
+
 ## Tangential: feature checking
 
 There is common problem with Gatsby plugins and new APIs is that plugins trying to make use of new APIs just break on older version of Gatsby. This often requires doing MAJOR version bump and declaring that plugin requires Gatsby core version ^x.y.z (whenever API was implemented). This however is problematic for users, because it's on them to keep track of things like that and they won't get benefits "for free".

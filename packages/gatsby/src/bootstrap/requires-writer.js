@@ -182,7 +182,7 @@ const preferDefault = m => m && m.default || m
 }\n\nconst modules = {\n${modules
     .map(
       moduleID =>
-        `  "${moduleID}": ${hotMethod}(preferDefault(require("GATSBY_MAGIC_${moduleID}.js")))`
+        `  "${moduleID}": preferDefault(require("GATSBY_MAGIC_${moduleID}.js"))`
     )
     .join(
       `,\n`

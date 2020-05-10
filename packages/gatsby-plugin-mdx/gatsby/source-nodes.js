@@ -157,10 +157,35 @@ module.exports = (
       fileAbsolutePath: { type: `String!` },
       frontmatter: { type: `MdxFrontmatter` },
       body: {
-        type: `String!`,
-        async resolve(mdxNode) {
-          const { body } = await processMDX({ node: mdxNode })
-          return body
+        type: `JSON!`,
+        async resolve(mdxNode, args, context) {
+          const { body, imports } = await processMDX({ node: mdxNode })
+
+          // not ideal - we should check for namespace and warn if there is non-namespace import with React named variable
+          const hasReactImport = imports.some(
+            importSpec => importSpec.local === `React`
+          )
+
+          if (!hasReactImport) {
+            imports.push({
+              source: `react`,
+              type: `namespace`,
+              local: `React`,
+            })
+          }
+
+          const moduleMapping = []
+
+          imports.forEach(({ local, ...importSpec }) => {
+            const moduleID = context.addModuleDependency(importSpec)
+            moduleMapping.push({
+              local,
+              moduleID,
+            })
+            // .arguments([local] = moduleID
+          })
+
+          return { body, moduleMapping }
         },
       },
       excerpt: {

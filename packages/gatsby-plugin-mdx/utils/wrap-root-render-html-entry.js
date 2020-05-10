@@ -1,6 +1,6 @@
 import React from "react"
 import { renderToStaticMarkup } from "react-dom/server"
-import scopeContexts from "../loaders/mdx-scopes"
+// import scopeContexts from "../loaders/mdx-scopes"
 import MDXRenderer from "../mdx-renderer"
 import { plugins as wrappers } from "../loaders/mdx-wrappers"
 
@@ -10,7 +10,7 @@ import { plugins as wrappers } from "../loaders/mdx-wrappers"
 export default body => {
   const wrappedElement = wrappers.reduce(
     (element, plugin) => plugin.wrapRootElement({ element }, {}),
-    <MDXRenderer scope={scopeContexts} isHTMLRenderPass>
+    <MDXRenderer /* scope={scopeContexts} */ isHTMLRenderPass>
       {body}
     </MDXRenderer>
   )

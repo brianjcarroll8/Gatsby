@@ -202,7 +202,9 @@ export class BaseLoader {
         const { componentChunkName, moduleDependencies } = pageData
         return Promise.all([
           this.loadComponent(componentChunkName),
-          ...this.fetchAndEmitModuleDependencies(moduleDependencies),
+          ...(moduleDependencies
+            ? this.fetchAndEmitModuleDependencies(moduleDependencies)
+            : []),
         ]).then(([component]) => {
           const finalResult = { createdAt: new Date() }
           let pageResources

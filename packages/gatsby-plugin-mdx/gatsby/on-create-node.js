@@ -1,14 +1,14 @@
-const fs = require(`fs`)
-const path = require(`path`)
-const babel = require(`@babel/core`)
-const { createContentDigest } = require(`gatsby-core-utils`)
+// const fs = require(`fs`)
+// const path = require(`path`)
+// const babel = require(`@babel/core`)
+// const { createContentDigest } = require(`gatsby-core-utils`)
 
 const defaultOptions = require(`../utils/default-options`)
 const createMDXNode = require(`../utils/create-mdx-node`)
-const { MDX_SCOPES_LOCATION } = require(`../constants`)
-const genMDX = require(`../utils/gen-mdx`)
+// const { MDX_SCOPES_LOCATION } = require(`../constants`)
+// const genMDX = require(`../utils/gen-mdx`)
 
-const contentDigest = val => createContentDigest(val)
+// const contentDigest = val => createContentDigest(val)
 
 module.exports = async (
   {
@@ -56,92 +56,92 @@ module.exports = async (
   createParentChildLink({ parent: node, child: mdxNode })
 
   // write scope files into .cache for later consumption
-  const { scopeImports, scopeIdentifiers } = await genMDX(
-    {
-      node: mdxNode,
-      getNode,
-      getNodes,
-      reporter,
-      cache,
-      pathPrefix,
-      options,
-      loadNodeContent,
-      actions,
-      createNodeId,
-      ...helpers,
-    },
-    { forceDisableCache: true }
-  )
-  await cacheScope({
-    cache,
-    scopeIdentifiers,
-    scopeImports,
-    createContentDigest: contentDigest,
-    parentNode: node,
-  })
+  // const { scopeImports, scopeIdentifiers } = await genMDX(
+  //   {
+  //     node: mdxNode,
+  //     getNode,
+  //     getNodes,
+  //     reporter,
+  //     cache,
+  //     pathPrefix,
+  //     options,
+  //     loadNodeContent,
+  //     actions,
+  //     createNodeId,
+  //     ...helpers,
+  //   },
+  //   { forceDisableCache: true }
+  // )
+  // await cacheScope({
+  //   cache,
+  //   scopeIdentifiers,
+  //   scopeImports,
+  //   createContentDigest: contentDigest,
+  //   parentNode: node,
+  // })
 }
 
-async function cacheScope({
-  cache,
-  scopeImports,
-  scopeIdentifiers,
-  createContentDigest,
-  parentNode,
-}) {
-  // scope files are the imports from an MDX file pulled out and re-exported.
-  let scopeFileContent = `${scopeImports.join(`\n`)}
+// async function cacheScope({
+//   cache,
+//   scopeImports,
+//   scopeIdentifiers,
+//   createContentDigest,
+//   parentNode,
+// }) {
+//   // scope files are the imports from an MDX file pulled out and re-exported.
+//   let scopeFileContent = `${scopeImports.join(`\n`)}
 
-export default { ${scopeIdentifiers.join(`, `)} }`
+// export default { ${scopeIdentifiers.join(`, `)} }`
 
-  // if parent node is a file, convert relative imports to be
-  // relative to new .cache location
-  if (parentNode.internal.type === `File`) {
-    const instance = new BabelPluginTransformRelativeImports({
-      parentFilepath: parentNode.dir,
-      cache: cache,
-    })
-    const result = babel.transform(scopeFileContent, {
-      configFile: false,
-      plugins: [instance.plugin],
-    })
-    scopeFileContent = result.code
-  }
+//   // if parent node is a file, convert relative imports to be
+//   // relative to new .cache location
+//   if (parentNode.internal.type === `File`) {
+//     const instance = new BabelPluginTransformRelativeImports({
+//       parentFilepath: parentNode.dir,
+//       cache: cache,
+//     })
+//     const result = babel.transform(scopeFileContent, {
+//       configFile: false,
+//       plugins: [instance.plugin],
+//     })
+//     scopeFileContent = result.code
+//   }
 
-  const filePath = path.join(
-    cache.directory,
-    MDX_SCOPES_LOCATION,
-    `${createContentDigest(scopeFileContent)}.js`
-  )
+//   const filePath = path.join(
+//     cache.directory,
+//     MDX_SCOPES_LOCATION,
+//     `${createContentDigest(scopeFileContent)}.js`
+//   )
 
-  fs.writeFileSync(filePath, scopeFileContent)
-}
+//   fs.writeFileSync(filePath, scopeFileContent)
+// }
 
-const declare = require(`@babel/helper-plugin-utils`).declare
+// const declare = require(`@babel/helper-plugin-utils`).declare
 
-class BabelPluginTransformRelativeImports {
-  constructor({ parentFilepath, cache }) {
-    this.plugin = declare(api => {
-      api.assertVersion(7)
+// class BabelPluginTransformRelativeImports {
+//   constructor({ parentFilepath, cache }) {
+//     this.plugin = declare(api => {
+//       api.assertVersion(7)
 
-      return {
-        visitor: {
-          StringLiteral({ node }) {
-            let split = node.value.split(`!`)
-            const nodePath = split.pop()
-            const loaders = `${split.join(`!`)}${split.length > 0 ? `!` : ``}`
-            if (nodePath.startsWith(`.`)) {
-              const valueAbsPath = path.resolve(parentFilepath, nodePath)
-              const replacementPath =
-                loaders +
-                path.relative(
-                  path.join(cache.directory, MDX_SCOPES_LOCATION),
-                  valueAbsPath
-                )
-              node.value = replacementPath
-            }
-          },
-        },
-      }
-    })
-  }
-}
+//       return {
+//         visitor: {
+//           StringLiteral({ node }) {
+//             let split = node.value.split(`!`)
+//             const nodePath = split.pop()
+//             const loaders = `${split.join(`!`)}${split.length > 0 ? `!` : ``}`
+//             if (nodePath.startsWith(`.`)) {
+//               const valueAbsPath = path.resolve(parentFilepath, nodePath)
+//               const replacementPath =
+//                 loaders +
+//                 path.relative(
+//                   path.join(cache.directory, MDX_SCOPES_LOCATION),
+//                   valueAbsPath
+//                 )
+//               node.value = replacementPath
+//             }
+//           },
+//         },
+//       }
+//     })
+//   }
+// }
