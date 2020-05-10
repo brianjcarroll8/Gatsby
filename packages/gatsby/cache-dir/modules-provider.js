@@ -1,4 +1,3 @@
-// import React from "react"
 import emitter from "./emitter"
 
 let modules = {}
@@ -8,18 +7,11 @@ emitter.on(`module-fetched`, event => {
   modules[event.moduleId] = event.module
 })
 
-// const Placeholder = () => <div>placeholder</div>
-
 export function getModule(id) {
-  // if (!modules[id]) {
-  //   return Placeholder
-  // }
   return modules[id]
 }
 
-// for ssr only (should be tree shaken in browser)
-export function setModules(_modules) {
-  if (process.env.GATSBY_BUILD_STAGE === `build-html`) {
-    modules = _modules
-  }
+// // for ssr only (should be tree shaken in browser)
+if (process.env.GATSBY_BUILD_STAGE === `build-html`) {
+  modules = require(`./sync-modules`).modules
 }

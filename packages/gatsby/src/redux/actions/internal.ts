@@ -245,34 +245,6 @@ export const addModuleDependencyToQueryResult = (
   }
 }
 
-export const registerModule = (
-  {
-    moduleID,
-    source,
-    importName,
-    type = `default`,
-  }: {
-    moduleID: string
-    source: string
-    type: string
-    importName?: string
-  },
-  plugin = ``
-): IRegisterModuleAction => {
-  console.log({ plugin })
-
-  return {
-    type: `REGISTER_MODULE`,
-    plugin,
-    payload: {
-      moduleID,
-      source,
-      type,
-      importName,
-    },
-  }
-}
-
 /*
  * Set gatsby config
  * @private

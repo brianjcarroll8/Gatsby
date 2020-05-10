@@ -17,6 +17,15 @@ const genMDX = require(`../utils/gen-mdx`)
 const { mdxHTMLLoader: loader } = require(`../utils/render-html`)
 const { interopDefault } = require(`../utils/interop-default`)
 
+const getModuleMappingFromImports = (imports, register) =>
+  imports.map(({ local, ...importSpec }) => {
+    const moduleID = register(importSpec)
+    return {
+      local,
+      moduleID,
+    }
+  })
+
 async function getCounts({ mdast }) {
   let counts = {}
 
@@ -136,31 +145,17 @@ module.exports = (
       body: {
         type: `JSON!`,
         async resolve(mdxNode, args, context) {
-          const { body, imports } = await processMDX({ node: mdxNode })
+          const { body, imports } = await processMDX({
+            node: mdxNode,
+            context,
+          })
 
-          // not ideal - we should check for namespace and warn if there is non-namespace import with React named variable
-          const hasReactImport = imports.some(
-            importSpec => importSpec.local === `React`
+          const moduleMapping = getModuleMappingFromImports(
+            imports,
+            context.addModuleDependency
           )
 
-          if (!hasReactImport) {
-            imports.push({
-              source: `react`,
-              type: `namespace`,
-              local: `React`,
-            })
-          }
-
-          const moduleMapping = []
-
-          imports.forEach(({ local, ...importSpec }) => {
-            const moduleID = context.addModuleDependency(importSpec)
-            moduleMapping.push({
-              local,
-              moduleID,
-            })
-            // .arguments([local] = moduleID
-          })
+          // context.addModuleDependency(importSpec)
 
           return { body, moduleMapping }
         },
@@ -230,12 +225,21 @@ module.exports = (
           if (mdxNode.html) {
             return Promise.resolve(mdxNode.html)
           }
-          const { body } = await processMDX({ node: mdxNode })
+          const { body, imports } = await processMDX({ node: mdxNode })
           try {
             if (!mdxHTMLLoader) {
               mdxHTMLLoader = loader({ reporter, cache, store })
             }
-            const html = await mdxHTMLLoader.load({ ...mdxNode, body })
+            const moduleMapping = getModuleMappingFromImports(
+              imports,
+              actions.registerModule
+            )
+
+            const html = await mdxHTMLLoader.load({
+              ...mdxNode,
+              body,
+              moduleMapping,
+            })
             return html
           } catch (e) {
             reporter.error(
@@ -252,6 +256,7 @@ ${e}`
       mdxAST: {
         type: `JSON`,
         async resolve(mdxNode) {
+          // does this need to add modules as page deps? how do users use this
           const { mdast } = await processMDX({ node: mdxNode })
           return mdast
         },

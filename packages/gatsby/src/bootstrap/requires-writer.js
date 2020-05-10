@@ -163,8 +163,6 @@ const writeAll = async state => {
   const hotMethod =
     process.env.GATSBY_HOT_LOADER !== `fast-refresh` ? `hot` : ``
 
-  console.log({ modules })
-
   // Create file with sync requires of components/json files.
   let syncRequires = `${hotImport}
 
@@ -179,14 +177,17 @@ const preferDefault = m => m && m.default || m
         }": ${hotMethod}(preferDefault(require("${joinPath(c.component)}")))`
     )
     .join(`,\n`)}
-}\n\nconst modules = {\n${modules
+}\n\nexports.modules = require("./sync-modules.js").modules\n\n`
+
+  let modulesFile = `
+  const preferDefault = m => m && m.default || m
+  
+  exports.modules = {\n${modules
     .map(
       moduleID =>
         `  "${moduleID}": preferDefault(require("GATSBY_MAGIC_${moduleID}.js"))`
     )
-    .join(
-      `,\n`
-    )}}\n\nexports.modules = modules\n\nif (process.env.GATSBY_BUILD_STAGE === "build-html") {\n  const { setModules } = require("./modules-provider");\n  setModules(modules);\n}\n\n`
+    .join(`,\n`)}}\n\n`
 
   // Create file with async requires of components/json files.
   let asyncRequires = `// prefer default export if available
@@ -208,10 +209,7 @@ const preferDefault = m => m && m.default || m
 }\n\nexports.modules = {\n${modules
     .map(
       moduleID =>
-        // add /* webpackChunkName: "${moduleID}" */ when moduleID is nicer - right now it contains path for local modules and breaks runtime :(
-        // this is also needed to add <script> tag to html pages as those seems to require named chunks.
-        // Alternatively lookup ways to avoid that limitation by changing GatsbyWebpackStatsExtractor
-        `  "${moduleID}": () => import("GATSBY_MAGIC_${moduleID}.js" )`
+        `  "${moduleID}": () => import("GATSBY_MAGIC_${moduleID}.js" /* webpackChunkName: "${moduleID}" */)`
     )
     .join(`,\n`)}}\n\n`
 
@@ -226,6 +224,8 @@ const preferDefault = m => m && m.default || m
   await Promise.all([
     writeAndMove(`sync-requires.js`, syncRequires),
     writeAndMove(`async-requires.js`, asyncRequires),
+    writeAndMove(`sync-modules.js`, modulesFile),
+
     writeAndMove(`match-paths.json`, JSON.stringify(matchPaths, null, 4)),
   ])
 

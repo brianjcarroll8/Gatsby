@@ -15,6 +15,7 @@ const sanitizeNode = require(`../../db/sanitize-node`)
 const { store } = require(`..`)
 const fileExistsSync = require(`fs-exists-cached`).sync
 import { nodeSchema } from "../../joi-schemas/joi"
+import { registerModule } from "./modules/register-module"
 const { generateComponentChunkName } = require(`../../utils/js-chunk-names`)
 const {
   getCommonDir,
@@ -1465,5 +1466,7 @@ actions.removePageData = (id: PageDataRemove) => {
     payload: id,
   }
 }
+
+actions.registerModule = registerModule
 
 module.exports = { actions }

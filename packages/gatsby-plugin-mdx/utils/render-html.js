@@ -152,9 +152,9 @@ exports.mdxHTMLLoader = ({ cache, reporter, store }) =>
               }
 
               resolve(
-                keys.map(({ body }) =>
+                keys.map(({ body, moduleMapping }) =>
                   renderMdxBody
-                    ? renderMdxBody(body)
+                    ? renderMdxBody(body, moduleMapping)
                     : new Error(
                         `renderMdxBody was unavailable when rendering html.`
                       )

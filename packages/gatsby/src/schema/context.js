@@ -3,8 +3,9 @@ import { createPageDependency } from "../redux/actions/add-page-dependency"
 import { store } from "../redux"
 import {
   registerModule,
-  addModuleDependencyToQueryResult,
-} from "../redux/actions/internal"
+  generateModuleId,
+} from "../redux/actions/modules/register-module"
+import { addModuleDependencyToQueryResult } from "../redux/actions/internal"
 
 const { LocalNodeModel } = require(`./node-model`)
 const { defaultFieldResolver } = require(`./resolvers`)
@@ -48,12 +49,12 @@ const withResolverContext = ({
       // TO-DO: validation
 
       // generate moduleID - this show too many details - will change in future
-      const moduleID = `${source}-${type}-${importName || ``}`
+      const moduleID = generateModuleId({ source, type, importName })
+
       if (!store.getState().modules.has(moduleID)) {
         // register module
         store.dispatch(
           registerModule({
-            moduleID,
             source,
             type,
             importName,
@@ -61,14 +62,12 @@ const withResolverContext = ({
         )
       }
 
-      const test = store.dispatch(
+      store.dispatch(
         addModuleDependencyToQueryResult({
           path: context.path,
           moduleID,
         })
       )
-
-      console.log({ test })
 
       // actual working stuff
       return moduleID

@@ -2,6 +2,7 @@ const babel = require(`@babel/core`)
 const grayMatter = require(`gray-matter`)
 const mdx = require(`@mdx-js/mdx`)
 const objRestSpread = require(`@babel/plugin-proposal-object-rest-spread`)
+const path = require(`path`)
 
 const debug = require(`debug`)(`gatsby-plugin-mdx:gen-mdx`)
 
@@ -49,6 +50,7 @@ module.exports = async function genMDX(
     reporter,
     cache,
     pathPrefix,
+    actions,
     ...helpers
   },
   { forceDisableCache = false } = {}
@@ -121,6 +123,7 @@ export const _frontmatter = ${JSON.stringify(data)}`
       reporter,
       cache,
       pathPrefix,
+      actions,
       compiler: {
         parseString: compiler.parse.bind(compiler),
         generateHTML: ast => mdx(ast, options),
@@ -166,7 +169,46 @@ ${code}`
       ],
     })
 
-    results.imports = instance.state.imports
+    // results.imports = instance.state.imports
+
+    const imports = instance.state.imports
+    // not ideal - we should check for namespace and warn if there is non-namespace import with React named variable
+    const hasReactImport = imports.some(
+      importSpec => importSpec.local === `React`
+    )
+
+    if (!hasReactImport) {
+      imports.push({
+        source: `react`,
+        type: `namespace`,
+        local: `React`,
+      })
+    }
+
+    // const moduleMapping = []
+
+    let parentNode
+    let checkedParentNode = false
+    results.imports = imports.map(importSpec => {
+      // convert relative import paths
+      if (importSpec.source.startsWith(`.`)) {
+        if (!checkedParentNode) {
+          const parentNodeId = node.parent
+          if (parentNodeId) {
+            parentNode = getNode(parentNodeId)
+          }
+          checkedParentNode = true
+        }
+
+        if (parentNode) {
+          importSpec.source = path.resolve(parentNode.dir, importSpec.source)
+        }
+      }
+
+      return importSpec
+    })
+
+    // results.moduleMapping = moduleMapping
 
     // const identifiers = Array.from(instance.state.identifiers)
     // const imports = Array.from(instance.state.imports)
