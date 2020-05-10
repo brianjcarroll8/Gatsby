@@ -30,7 +30,7 @@ export interface IGatsbyPage {
   isCreatedByStatefulCreatePages: boolean
   context: {}
   updatedAt: number
-  pluginCreator__NODE: Identifier
+  pluginCreator___NODE: Identifier
   pluginCreatorId: Identifier
   componentPath: SystemPath
 }
@@ -47,6 +47,9 @@ export interface IGatsbyConfig {
     title?: string
     author?: string
     description?: string
+    sireUrl?: string
+    // siteMetadata is free form
+    [key: string]: unknown
   }
   // @deprecated
   polyfill?: boolean
@@ -73,6 +76,7 @@ export interface IGatsbyNode {
 }
 
 export interface IGatsbyPlugin {
+  id: Identifier
   name: string
   version: string
 }
@@ -203,7 +207,7 @@ export interface IGatsbyState {
     }
   }
   pageDataStats: Map<SystemPath, number>
-  pageData: any
+  pageData: Map<Identifier, string>
   modules: any
 }
 
@@ -220,13 +224,20 @@ export interface ICachedReduxState {
 }
 
 export type ActionsUnion =
+  | IAddChildNodeToParentNodeAction
+  | IAddFieldToNodeAction
   | IAddThirdPartySchema
   | ICreateFieldExtension
+  | ICreateNodeAction
+  | ICreatePageAction
   | ICreatePageDependencyAction
   | ICreatePageModuleDependencyAction
   | ICreateTypes
   | IDeleteCacheAction
+  | IDeleteNodeAction
+  | IDeleteNodesAction
   | IDeleteComponentDependenciesAction
+  | IDeletePageAction
   | IPageQueryRunAction
   | IPrintTypeDefinitions
   | IQueryExtractedAction
@@ -240,9 +251,12 @@ export type ActionsUnion =
   | IReplaceWebpackConfigAction
   | ISetPluginStatusAction
   | ISetProgramStatusAction
+  | ISetSchemaAction
   | ISetWebpackCompilationHashAction
   | ISetWebpackConfigAction
   | IUpdatePluginsHashAction
+  | IRemovePageDataAction
+  | ISetPageDataAction
 
 export interface ICreatePageDependencyAction {
   type: `CREATE_COMPONENT_DEPENDENCY`
@@ -378,13 +392,44 @@ export interface ICreateResolverContext {
     | { [camelCasedPluginNameWithoutPrefix: string]: IGatsbyPluginContext }
 }
 
+export interface ICreatePageAction {
+  type: `CREATE_PAGE`
+  payload: IGatsbyPage
+  plugin?: IGatsbyPlugin
+}
+
 export interface ICreateRedirectAction {
   type: `CREATE_REDIRECT`
   payload: IRedirect
 }
 
+export interface ISetResolvedThemesAction {
+  type: `SET_RESOLVED_THEMES`
+  payload: any // TODO
+}
+
 export interface IDeleteCacheAction {
   type: `DELETE_CACHE`
+}
+
+export interface IRemovePageDataAction {
+  type: `REMOVE_PAGE_DATA`
+  payload: {
+    id: Identifier
+  }
+}
+
+export interface ISetPageDataAction {
+  type: `SET_PAGE_DATA`
+  payload: {
+    id: Identifier
+    resultHash: string
+  }
+}
+
+export interface IDeletePageAction {
+  type: `DELETE_PAGE`
+  payload: IGatsbyPage
 }
 
 export interface IReplaceStaticQueryAction {
@@ -444,4 +489,40 @@ export interface IRegisterModuleAction {
     type: string
     importName?: string
   }
+}
+export interface ISetSchemaAction {
+  type: `SET_SCHEMA`
+  payload: IGatsbyState["schema"]
+}
+
+export interface ISetSiteConfig {
+  type: `SET_SITE_CONFIG`
+  payload: IGatsbyState["config"]
+}
+
+export interface ICreateNodeAction {
+  type: `CREATE_NODE`
+  payload: IGatsbyNode
+}
+
+export interface IAddFieldToNodeAction {
+  type: `ADD_FIELD_TO_NODE`
+  payload: IGatsbyNode
+}
+
+export interface IAddChildNodeToParentNodeAction {
+  type: `ADD_CHILD_NODE_TO_PARENT_NODE`
+  payload: IGatsbyNode
+}
+
+export interface IDeleteNodeAction {
+  type: `DELETE_NODE`
+  payload: {
+    id: Identifier
+  }
+}
+
+export interface IDeleteNodesAction {
+  type: `DELETE_NODES`
+  payload: Identifier[]
 }
