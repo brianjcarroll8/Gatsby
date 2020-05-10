@@ -85,6 +85,7 @@ module.exports = {
     "Mdx.frontmatter.author": `AuthorYaml`,
   },
   plugins: [
+    `@wardpeet/gatsby-plugin-sourcemap-explorer`,
     `gatsby-plugin-theme-ui`,
     {
       resolve: `gatsby-alias-imports`,
