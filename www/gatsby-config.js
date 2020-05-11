@@ -86,6 +86,7 @@ module.exports = {
   },
   plugins: [
     `@wardpeet/gatsby-plugin-sourcemap-explorer`,
+    `gatsby-plugin-perf-budgets`,
     `gatsby-plugin-theme-ui`,
     {
       resolve: `gatsby-alias-imports`,
