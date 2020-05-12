@@ -2,6 +2,8 @@
 title: Different Organization Types
 ---
 
+import GuideList from "@components/guide-list"
+
 Using Gatsby more is a different kind of problem depending on the type of organization you work in.
 
 As a freelancer, the most important thing is [helping clients understand](/docs/winning-over-clients) the benefits of Gatsby.

@@ -2,6 +2,8 @@
 title: Gatsby Lifecycle APIs
 ---
 
+import ComponentModel from "@components/layer-model/component-model"
+
 Gatsby provides a rich set of lifecycle APIs to hook into its bootstrap,
 build, and client runtime operations.
 

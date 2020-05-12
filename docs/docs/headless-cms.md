@@ -3,6 +3,8 @@ title: What is a Headless CMS and How to Source Content from One
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 A _headless CMS_ is content management software that enables writers to produce and organize content, while providing developers with structured data that can be displayed using a separate system on the frontend of a website or app.
 
 A traditional, monolithic CMS is responsible for both the backend management of content, and serving that content to end users. In contrast, a headless CMS is decoupled from frontend concerns, which frees developers to build rich experiences for end users, using the best technology available.

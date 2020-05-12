@@ -3,6 +3,8 @@ title: Best Practices for Organizations
 issue: https://github.com/gatsbyjs/gatsby/issues/14042
 ---
 
+import GuideList from "@components/guide-list"
+
 When you have multiple teams building Gatsby sites, there are some best practices to ensure you're working well at scale. These docs explain those practices.
 
 <GuideList slug={props.slug} />

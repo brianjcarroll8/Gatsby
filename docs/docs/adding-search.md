@@ -3,6 +3,8 @@ title: Adding Search
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 See below for a list of guides in this section, or keep reading for an overview on adding search functionality to your site.
 
 <GuideList slug={props.slug} />

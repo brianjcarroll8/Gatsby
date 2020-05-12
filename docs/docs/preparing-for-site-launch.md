@@ -3,6 +3,8 @@ title: Preparing Your Site for Launch
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 So your Gatsby site is done, and you're ready to share it with the world, **congratulations**! 🎉
 
 Before you hit that deploy button though, there are a few things you can do to make sure your site is configured properly to be searchable, shareable, and properly navigable.

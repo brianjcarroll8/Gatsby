@@ -2,6 +2,8 @@
 title: Adding Components to Markdown with MDX
 ---
 
+import GuideList from "@components/guide-list"
+
 When writing long-form content in Markdown you might want to embed [components](/docs/glossary/#component).
 This is often achieved by either writing content in JSX or using plugins that
 use custom syntax. The first approach isn't optimal because JSX isn't the best

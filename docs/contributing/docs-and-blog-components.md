@@ -3,6 +3,9 @@ title: Docs & Blog Components
 tableOfContentsDepth: 2
 ---
 
+import ComponentModel from "@components/layer-model/component-model"
+import GuideList from "@components/guide-list"
+
 The Gatsbyjs.org site has a handful of components that have been developed to facilitate writing new content for the blog and the docs. There are also components that help organize and lay out content in various pages across the website.
 
 This guide documents what components are available and explains how to use them. You can also refer to the [code for this page on GitHub](https://github.com/gatsbyjs/gatsby/blob/master/docs/contributing/docs-and-blog-components.md) to see to how each component can be used, because they are all embedded here!

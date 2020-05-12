@@ -2,6 +2,8 @@
 title: How to Contribute
 ---
 
+import GuideList from "@components/guide-list"
+
 We want contributing to Gatsby to be fun, enjoyable, and educational for anyone and everyone. All contributions are welcome, including issues, new docs as well as updates and tweaks, blog posts, workshops, and more.
 
 ## Not sure how to start contributing?

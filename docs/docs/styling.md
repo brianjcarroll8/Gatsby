@@ -3,6 +3,8 @@ title: Styling
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 There are many ways to style your website. They can roughly be grouped into three styling approaches:
 
 - [**Global CSS Files**](/docs/global-css/): the traditional way to style a website. CSS rules are declared globally and styles are applied depending on specificity and inheritance.

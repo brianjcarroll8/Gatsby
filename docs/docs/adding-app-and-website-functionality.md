@@ -3,6 +3,8 @@ title: Adding App and Website Functionality
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 Gatsby empowers developers and creators to make many different types of websites. One may wish to add additional functionality to their site such as search, authentication, forms, comments, and plenty of others.
 
 The distinction between apps and websites is blurry, the way Dustin Schau puts it in a [blog post](/blog/2018-10-15-beyond-static-intro/):

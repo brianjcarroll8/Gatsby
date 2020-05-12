@@ -2,6 +2,8 @@
 title: How to Write a Reference Guide
 ---
 
+import GuideList from "@components/guide-list"
+
 ## What are reference guide articles?
 
 Reference guide articles cover discrete topics as documentation with links to other resources. A reference guide explains a Gatsby concept or technique without the step-by-step context provided by a tutorial or recipe.

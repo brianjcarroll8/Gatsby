@@ -3,6 +3,8 @@ title: A/B Testing
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 A/B or split testing is when you make test changes to a website. Suppose you have two buttons: a green “Buy Now!” button and a red “Buy Now!” button. You want to figure out which button will receive the most clicks. An A/B test would be an ideal way to measure engagement.
 
 ![side-by-side images comparing the Gatsby default starter with a red button on one side and a green button on the other](./images/gatsby-default-starter-image.png)

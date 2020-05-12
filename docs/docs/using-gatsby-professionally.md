@@ -3,6 +3,8 @@ title: Using Gatsby Professionally
 overview: true
 ---
 
+import GuideList from "@components/guide-list"
+
 As a Gatsby developer and enthusiast, you may be interested in how you can spend more of your time professionally building with Gatsby.
 
 You may see problems happen around you that you know Gatsby could solve, and want others to adopt Gatsby so they don't encounter them in the future. You may be interested in driving business goals, such as growing your organization or increasing revenue. Or, you may simply love building with Gatsby and want to do it more.

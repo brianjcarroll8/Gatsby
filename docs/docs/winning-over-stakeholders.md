@@ -2,6 +2,8 @@
 title: Winning Over Stakeholders
 ---
 
+import GuideList from "@components/guide-list"
+
 Any website project has multiple stakeholders, such as developers, marketers, content creators, engineering leaders, executives, and clients.
 
 In smaller projects and organizations, one person may wear multiple hats. As a freelancer, you may be the developer, marketer, content creator, and engineering leader rolled into one. Working at a mid-sized agency or organization, you are likely to only wear one hat at a time.
