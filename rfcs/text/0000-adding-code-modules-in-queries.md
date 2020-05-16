@@ -14,12 +14,12 @@ There are currently 2 approaches to this and each have its own problems:
 
 ## Proposed API:
 
-### `context.pageDependencies.addModule`
+### `context.pageModel.addModule`
 
 This is responsible for adding given module to webpack bundle (if it didn't exist yet) and to add it to `page-data.json` / `app-data.json` so runtime loader knows that it is page/app dependency it needs to fetch.
 
 ```js
-const identifier = context.pageDependencies.addModule({
+const identifier = context.pageModel.addModule({
   // TBD figure out who should be responsible for handling local paths - do we require either absolute path or node_modules package name?
   // Example of something that is unclear what would be responsible for resolving: `import Something from "../../src/components/component-used-in-mdx"`
   source: `some-module`,
@@ -40,18 +40,18 @@ const identifier = context.pageDependencies.addModule({
 
 Return value of this function (module identifier) will be used in frontend code to access modules.
 
-If you want to include multiple named exports - you call `context.pageDependencies.addModule` (with same `source`) multiple times for each named export.
+If you want to include multiple named exports - you call `context.pageModel.addModule` (with same `source`) multiple times for each named export.
 
-Using `context.pageDependencies.*` also allow to cheaply add more kind of dependencies for page in future - examples:
+Using `context.pageModel.*` also allow to cheaply add more kind of dependencies to a page in future - examples:
 
-- asset resources like images/fonts that would only need to preload
+- critical asset resources like images/fonts that would only need to preload
 - json payloads that don't need to be handled by webpack
 
 NOTE: in this proposal, this is only available in graphql resolvers and not in general gatsby-node context. Reason for it is that Gatsby being in charge of running queries makes it easier to avoid weird edge cases and only thing that need to be coordinated is query running and webpack using this limitation. Additionally gatsby is aware what page query is run for, so users don't need to handle assigning modules to particular pages, because this is done behind the scenes. On top of that we already have query results invalidation that will also handle cases of removing stale modules, which otherwise would be responsibility of users/plugins and given our experience with caching problems in 3rd party code I think it's safe assumption that if users/plugins would be responsible for it it wouldn't be done correctly (it would also be heard to teach / document).
 
 ### `import { getModule } from "gatsby"`
 
-`context.pageDependencies.addModule` API makes sure modules are bundled and are loaded. We still need a way to access those in frontend code.
+`context.pageModel.addModule` API makes sure modules are bundled and are loaded. We still need a way to access those in frontend code.
 
 ```js
 import { getModule, graphql } from "gatsby"
@@ -104,9 +104,11 @@ This API has few parts:
 1. Adding dependencies to webpack bundles
 2. Making runtime aware of additional resources
 3. Invalidating stale modules
-4. Impact on server/hosting/cdn configuration
+4. Adoption strategy
+5. Tangential: Impact on server/hosting/cdn configuration
+6. Very tangential: feature checking
 
-### Adding dependencies to webpack bundles
+### 1. Adding dependencies to webpack bundles
 
 Requirement here is that all dependencies are registered before we run webpack. For regular `gatsby build` as well as initial (bootstrap) run for `gatsby develop` and incremental builds this is pretty straight forward, because everything runs linearly one after another.
 
@@ -120,7 +122,7 @@ I plan to use `requires-writer` to add registered modules to `(a)sync-requires` 
 
 For `async-requires` I plan to use familiar dynamic import map (that we already use for page templates). There is nuance to that because dynamic imports don't really support pulling singular imports (to allow for tree shaking) so I will need extra indirection ("glue re-export") to allow tree shaking in case of default/named imports (if plugin/user import entire namespace - `import * as X from "x"` - we can dynamically import those directly without glue). For import types that need glue code - instead of writing actual files to fs, we can use [`webpack-virtual-modules`](https://www.npmjs.com/package/webpack-virtual-modules) to create the glue modules on the fly. Those glue modules would be one liners like `export { namedExport as default } from "some-module"`
 
-### Making runtime aware of additional resources
+### 2. Making runtime aware of additional resources
 
 For modules added as part of page queries this is straight forward. Queries are already tied to pages, so it's just matter of adding those modules as page dependencies and making sure when we write `page-data` files we add list of required module ids to it. Loader then can read that list and fetch them as part of resource loading. Note - there is already request waterfall today (we read page-data file -> get page template chunk name -> fetch page template chunk), so while not ideal to add more requests like that payoff seems worth it (especially that this API add ability to remove unused code from app or page template chunks, so those extra requests would be only for pages that need them). After fetching modules we put them in `module_id -> module` map that is somewhat globally available and add method to grab module by `module_id`. I was thinking of adding those as page props, but with users potentially using it static queries this won't work (unless we change signature of static queries to return `{ result, modules }` instead of just `result` - that would be a breaking change). Additionally this is a low level API that is not meant for massive adoption and usage by end users directly - ideally various plugins will make use it under the hood, potentially adding nice abstraction over it. There is also follow up work: "Graphql components"/"Page data processors" that would internally use this API and would be bit more higher level (more suited for end user usage).
 
@@ -128,11 +130,19 @@ Static queries currently are difficult to support because they skip our resource
 
 This feature does need to work both for browser bundle as well as for SSR. Ideally SSR mimics browser closely so any problems with not catching all the required dependencies would be caught at build time and not after sites are deployed.
 
-### Invalidating stale modules
+### 3. Invalidating stale modules
 
 We already have mechanism for invalidating page query results. Because this API relies on query running we can hook into this invalidation to remove stale modules. Note: with optional `actions.registerModule` we also need to make sure to not invalidate modules registered with that action completely as users tries to force those modules.
 
-### Tangential: Impact on server/hosting/cdn configuration and (potentially) offline plugin
+### 4. Adoption strategy
+
+As mentioned previously - this is low level API. For pure correctness reasons it means that this is not very straight forward for users to use and benefit from. API is not good if our users can't utilize it. Nature of API (deriving module dependencies from data) makes it impossible to create fully generic higher level APIs baked into core - they will always be dependent on shape of data and will require some custom graphql field resolvers. We do however already have abstractions for this - those are source and transformer plugins. Those seem like natural spot to support new APIs and abstract gnarly parts from the user (this is somewhat similar situation to schema customization or even node creation in sense that complexity of those is hidden/abstracted from users).
+
+In the problem description section I mention to primary cases - MDX and page builders. Changes to MDX will be purely internal meaning that users will not have to change any of their code (unless they heavily rely on `MDXProvider` or `gatsby-plugin-theme-ui/components` - which uses MDXProvider internally which would still place used components in `app` chunk). This is because `gatsby-plugin-mdx` already provides nice APIs to consume query results (`MDXRenderer`) which will be used to hide usage of `getModule` in frontend code.
+
+If you squint hard enough - this is actually single case because MDX can be considered page builder as well. When you look at it this way - the way forward for other plugins would be "copy" this convention and provide "Renderer" functions for users to use. To illustrate this I will use example of using Contentful as data/content source and how we can bake usage of this API into this plugin.
+
+### 5. Tangential: Impact on server/hosting/cdn configuration and (potentially) offline plugin
 
 Additional split chunks means we have to add extra `<script>` tags in html we render. This is part is not a problem. Problematic part is integrations with hosting providers (like Netlify with gatsby-plugin-netlify). Gatsby currently doesn't have any form of API that those plugin can use and what they do to setup [Server (no)push](https://w3c.github.io/preload/#server-push-http-2) is essentially replicate a lot of our code in `static-entry` themselves (for javascript/webpack generated resources: reading webpack.stats.json and figuring out which chunks are used for each page). This means to support it properly we will need to adjust at very least `gatsby-plugin-netlify` (are there any other plugins like that?).
 
@@ -140,10 +150,10 @@ Similarly we might need to look into resource precaching setup in offline plugin
 
 While this on itself is not huge problem (I would do that either as part of main pull request or as related PR). We might want to start talking about providing some API that plugins like that can hook into. Splitting static query results from webpack handling is another case where we put handling like this in hands of those plugins.
 
-### Tangential: feature checking
+### 6. Very tangential: feature checking
 
 There is common problem with Gatsby plugins and new APIs is that plugins trying to make use of new APIs just break on older version of Gatsby. This often requires doing MAJOR version bump and declaring that plugin requires Gatsby core version ^x.y.z (whenever API was implemented). This however is problematic for users, because it's on them to keep track of things like that and they won't get benefits "for free".
 
-Testing for existence of some APIs is one way to go about it now, but it only works in limited number of scenarios. For example - you can't do that for `gatsby-X.js` hooks (like `createSchemaCustomization`). You also wouldn't really be able to do that here. At the time you get to calling field resolvers (when users would first get ability to call `context.pageDependencies.addModule`) - this would already be too late. There is lot of logic that happens before that right now which could be disabled if plugin knew that API exists (different code path).
+Testing for existence of some APIs is one way to go about it now, but it only works in limited number of scenarios. For example - you can't do that for `gatsby-X.js` hooks (like `createSchemaCustomization`). You also wouldn't really be able to do that here. At the time you get to calling field resolvers (when users would first get ability to call `context.pageModel.addModule`) - this would already be too late. There is lot of logic that happens before that right now which could be disabled if plugin knew that API exists (different code path).
 
 I would really love to have `@supports`-like (CSS-inspired) function in Gatsby that would help plugin authors and plugin users (in my opinion)
