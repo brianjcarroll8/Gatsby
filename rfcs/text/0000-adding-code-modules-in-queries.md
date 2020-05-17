@@ -138,9 +138,92 @@ We already have mechanism for invalidating page query results. Because this API 
 
 As mentioned previously - this is low level API. For pure correctness reasons it means that this is not very straight forward for users to use and benefit from. API is not good if our users can't utilize it. Nature of API (deriving module dependencies from data) makes it impossible to create fully generic higher level APIs baked into core - they will always be dependent on shape of data and will require some custom graphql field resolvers. We do however already have abstractions for this - those are source and transformer plugins. Those seem like natural spot to support new APIs and abstract gnarly parts from the user (this is somewhat similar situation to schema customization or even node creation in sense that complexity of those is hidden/abstracted from users).
 
-In the problem description section I mention to primary cases - MDX and page builders. Changes to MDX will be purely internal meaning that users will not have to change any of their code (unless they heavily rely on `MDXProvider` or `gatsby-plugin-theme-ui/components` - which uses MDXProvider internally which would still place used components in `app` chunk). This is because `gatsby-plugin-mdx` already provides nice APIs to consume query results (`MDXRenderer`) which will be used to hide usage of `getModule` in frontend code.
+In the problem description section I mention to primary cases - MDX and page builders. Changes to MDX will be purely internal meaning that users will not have to change any of their code (unless they heavily rely on `MDXProvider` or `gatsby-plugin-theme-ui/components` - which uses MDXProvider internally which would still place used components in `app` chunk). This is because `gatsby-plugin-mdx` already provides nice APIs to consume query results (`MDXRenderer`) which will be used to hide usage of `getModule` in frontend code and the resolver is already in place so the way users interact with this plugin will remain unchanged.
 
-If you squint hard enough - this is actually single case because MDX can be considered page builder as well. When you look at it this way - the way forward for other plugins would be "copy" this convention and provide "Renderer" functions for users to use. To illustrate this I will use example of using Contentful as data/content source and how we can bake usage of this API into this plugin.
+If you squint hard enough - this is actually single case because MDX can be considered page builder as well. When you look at it this way - the way forward for other plugins would be "copy" this convention and provide "Renderer" functions for users to use.
+
+#### Contentful example
+
+To illustrate this I will use example of using Contentful as data/content source and how we can bake usage of this API into this plugin. Existing Contentful primitives allow users to setup page building in 2 ways: a) using [Rich Text](https://www.contentful.com/developers/docs/concepts/rich-text/) and b) using reference/link field that allow multiple entries and allow multiple types. Before diving into differences between those let's cover common area:
+
+In both cases we would like to map Contentful types to React components. This can be done in few ways (not mutually exclusive - in fact those could be combined by users depending on specific needs):
+
+- use `gatsby-source-contentful` plugin options to map Contentful types to React components - this would be global setup and similar to what Providers in react land do (but for our case it's better than providers, because nature of providers is that it's very hard to code split):
+  ```js
+  {
+    resolve: `gatsby-source-contentful`,
+    options: {
+      // need better plugin option name - ideally we come with name convention that can be shared in other plugins (prismic, dato, etc) as well so setup is consistent
+      typeToComponent: {
+        "NameOfContentTypeInContentful": require.resolve(`./src/components/some-component`),
+        // insert as many entries as needed
+      }
+    }
+  }
+  ```
+- use arguments in graphql queries (this might be cumbersome to use, but in cases when user would want to change presentation in some templates - this would allow to override global plugin settings). Concrete examples of this flow depend on setup (rich text vs reference fields), so examples will be shown later.
+
+Ideally we would discourage usage of Providers because those makes it very difficult to properly code split. It's not impossible but it requires some form of static analysis and would be very brittle (as static analysis need to be aware of how component tree is composed to properly resolve which component should be used etc - we can somewhat guarantee correctness if there is single provider, but if there are multiple nested ones it becomes unfeasible and likely we would have to opt out of this kind of optimization to not cause incorrect and unexpected behavior)
+
+Let's dive into specifics of possible page builder setups
+
+#### a) Contentful Rich Text
+
+Rich Text is somewhat WYSIWIG style field that allow users to format text as well as "embed" entries of other types. For reference see screenshot below - in there I have some text as well as embedded "Media Object" and "List group" elements.
+![](./field-edit-view.png)
+
+This case is very similar to MDX AST in terms of handling content on Gatsby side - rich text fields return hierarchical JSON blob with nodes having types. Types can be builtin (paragraphs, links, headings, etc) or ones that use defines in their Contentful space content model (and those extra ones are what we would like to map to specific React components).
+
+We could extend existing `json` resolver for rich text fields or create additional (enhanced) one that would tell gatsby that it needs to add components used in particular field instance to "current page" (page we execute query for). We can use mapping declared in plugin options and/or make the `json` field in graphql accept arguments that would map Contentful types to components:
+
+```graphql
+{
+  contentfulPageBuilderType(<filter>) {
+    richTextField {
+      # json or jsonWithComponents return JSON type
+      jsonWithComponents(MediaObject:"<path_to_component>")
+    }
+  }
+}
+```
+
+The second part is how users will render this in React land. As I mentioned we can take clues from MDX ... but also from helper library that Contentful already have for Rich Text fields ( [`@contentful/rich-text-react-renderer`](https://www.npmjs.com/package/@contentful/rich-text-react-renderer)). We could wrap `@contentful/rich-text-react-renderer` with additional logic to handle `getModule` and users then would consume result of query like this:
+
+```jsx
+import { RichTextRenderer } from "gatsby-source-contentful"
+
+const TemplateComponent = ({ data }) => {
+  return (
+    <RichTextRenderer>
+      {data.contentfulPageBuilderType.richTextField.jsonWithComponents}
+    </RichTextRenderer>
+  )
+}
+
+export default TemplateComponent
+
+// graphql query left out for brevity - but consider it would be similar to one shown above
+```
+
+With Graphql Components this could just turned into
+
+```jsx
+const TemplateComponent = ({ data }) => {
+  return data.contentfulPageBuilderType.richTextField.Component
+}
+
+export default TemplateComponent
+
+export const pageQuery = graphql`
+  {
+    contentfulPageBuilderType(<filter>) {
+      richTextField {
+        Component(MediaObject:"<path_to_component>")
+      }
+    }
+  }
+`
+```
 
 ### 5. Tangential: Impact on server/hosting/cdn configuration and (potentially) offline plugin
 
