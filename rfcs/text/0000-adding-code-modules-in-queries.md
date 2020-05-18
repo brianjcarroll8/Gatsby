@@ -165,22 +165,24 @@ In both cases we would like to map Contentful types to React components. This ca
 
 Ideally we would discourage usage of Providers because those makes it very difficult to properly code split. It's not impossible but it requires some form of static analysis and would be very brittle (as static analysis need to be aware of how component tree is composed to properly resolve which component should be used etc - we can somewhat guarantee correctness if there is single provider, but if there are multiple nested ones it becomes unfeasible and likely we would have to opt out of this kind of optimization to not cause incorrect and unexpected behavior)
 
-Let's dive into specifics of possible page builder setups
+Let's dive into specifics of possible page builder setups:
 
 #### a) Contentful Rich Text
 
 Rich Text is somewhat WYSIWIG style field that allow users to format text as well as "embed" entries of other types. For reference see screenshot below - in there I have some text as well as embedded "Media Object" and "List group" elements.
+
 ![](./field-edit-view.png)
 
 This case is very similar to MDX AST in terms of handling content on Gatsby side - rich text fields return hierarchical JSON blob with nodes having types. Types can be builtin (paragraphs, links, headings, etc) or ones that use defines in their Contentful space content model (and those extra ones are what we would like to map to specific React components).
 
-We could extend existing `json` resolver for rich text fields or create additional (enhanced) one that would tell gatsby that it needs to add components used in particular field instance to "current page" (page we execute query for). We can use mapping declared in plugin options and/or make the `json` field in graphql accept arguments that would map Contentful types to components:
+We could extend existing `json` resolver for rich text fields or create additional (enhanced) one that would tell gatsby that it needs to add components used in particular field instance to "current page" (page we execute query for). We can use mapping declared in plugin options and/or make the `json` field in graphql accept optional arguments that would map Contentful types to components:
 
 ```graphql
 {
   contentfulPageBuilderType(<filter>) {
     richTextField {
       # json or jsonWithComponents return JSON type
+      # all arguments used for component mapping are optional (they would be merged with mapping provided in plugin options)
       jsonWithComponents(MediaObject:"<path_to_component>")
     }
   }
@@ -205,7 +207,7 @@ export default TemplateComponent
 // graphql query left out for brevity - but consider it would be similar to one shown above
 ```
 
-With Graphql Components this could just turned into
+With Graphql Components this could just turned into something like this
 
 ```jsx
 const TemplateComponent = ({ data }) => {
@@ -219,6 +221,104 @@ export const pageQuery = graphql`
     contentfulPageBuilderType(<filter>) {
       richTextField {
         Component(MediaObject:"<path_to_component>")
+      }
+    }
+  }
+`
+```
+
+Above snippet is speculative, TBD on details of Graphql Components, but idea is that users wouldn't have to use `<RichTextRenderer>` and graphql result would provide it for users
+
+#### b) Contentful reference links
+
+Reference field is very structured in strict. Users wouldn't be able to use free form text (unless they create Text content type). Simalarly to previous example I use similar content ("Media Object" and "List group" entries):
+
+![](./field-reference.png)
+
+This case is quite different than previous when it comes to querying for data. We no longer have "JSON" blob - instead we have graphql union and need to select fields individually (as well as use (inline) fragments for each possible type). This makes it a bit more overhead to work with ... but also gives a lot more control.
+
+In this case we will likely have to add `moduleID` (or similar) field on each possible type and users would be required to query for it (we can't hide this as we did with rich text example).
+
+Example of usage could look like this:
+
+```jsx
+import { graphql, getModule } from "gatsby"
+
+const TemplateComponent = ({ data }) => {
+  return (
+    <>
+      {data.contentfulPageBuilderType.referenceField.map(({moduleID, ...props}) => {
+        if (!moduleID) {
+          return null
+        }
+
+        const Component = getModule(moduleID)
+        return <Component {...props} />
+      })}
+    </>
+  )
+}
+
+export default TemplateComponent
+
+export const pageQuery = graphql`
+  {
+    contentfulPageBuilderType(<filter>) {
+      referenceField {
+        ... on ContentfulListGroup {
+          moduleID
+          ...ListGroupFragment
+        }
+        ... on ContentfulMediaObject {
+          moduleID
+          ...MediaObjectFragment
+        }
+        # more types to handle
+      }
+    }
+  }
+`
+```
+
+Similarly - we could abstract "renderer" part that would hide usage of `getModule` (same as rich text renderer). What we can't hide however is querying for `moduleID` (at least today).
+
+Similarly to rich text we could allow optional argument to `moduleID` field to overwrite global plugin options - just in this case it would be singular argument as those are already tied to single type:
+
+```graphql
+... on ContentfulListGroup {
+  moduleID(component: "<path_to_component>")
+  ...ListGroupFragment
+}
+```
+
+Note how I used additional fragments for each type - this is so our React component can declare fields they need via fragments.
+
+Similar to rich text case - with Graphql component we potentially could query for `Component` field:
+
+```jsx
+import { graphql } from "gatsby"
+
+const TemplateComponent = ({ data }) => {
+  return (
+    <>
+      {data.contentfulPageBuilderType.referenceField.map(({ Component }) => Component
+    </>
+  )
+}
+
+export default TemplateComponent
+
+export const pageQuery = graphql`
+  {
+    contentfulPageBuilderType(<filter>) {
+      referenceField {
+        ... on ContentfulListGroup {
+          Component
+        }
+        ... on ContentfulMediaObject {
+          Component
+        }
+        # more types to handle
       }
     }
   }
@@ -240,3 +340,9 @@ There is common problem with Gatsby plugins and new APIs is that plugins trying 
 Testing for existence of some APIs is one way to go about it now, but it only works in limited number of scenarios. For example - you can't do that for `gatsby-X.js` hooks (like `createSchemaCustomization`). You also wouldn't really be able to do that here. At the time you get to calling field resolvers (when users would first get ability to call `context.pageModel.addModule`) - this would already be too late. There is lot of logic that happens before that right now which could be disabled if plugin knew that API exists (different code path).
 
 I would really love to have `@supports`-like (CSS-inspired) function in Gatsby that would help plugin authors and plugin users (in my opinion)
+
+## Prior art
+
+Initial idea for tying this API heavily to query running and resolvers was inspired by Relay data-driven code-splitting:
+
+![Relay code splitting snippet](./relay-code-splitting.png)
