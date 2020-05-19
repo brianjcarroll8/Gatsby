@@ -17,6 +17,7 @@ import { pageDataStatsReducer } from "./page-data-stats"
 import { componentsReducer } from "./components"
 import { componentDataDependenciesReducer } from "./component-data-dependencies"
 import { babelrcReducer } from "./babelrc"
+import { jobsReducer } from "./jobs"
 
 /**
  * @property exports.nodesTouched Set<string>
@@ -36,7 +37,7 @@ module.exports = {
   componentDataDependencies: componentDataDependenciesReducer,
   components: componentsReducer,
   staticQueryComponents: staticQueryComponentsReducer,
-  jobs: require(`./jobs`),
+  jobs: jobsReducer,
   jobsV2: jobsV2Reducer,
   webpack: webpackReducer,
   webpackCompilationHash: webpackCompilationHashReducer,
