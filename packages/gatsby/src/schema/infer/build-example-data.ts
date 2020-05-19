@@ -3,11 +3,11 @@ import { groupBy } from "lodash"
 import {
   IValueDescriptor,
   ValueType,
-  ITypeMetadata,
+  ITypeMetadata
 } from "./inference-metadata"
 import {
   TypeConflictReporter,
-  ITypeConflictExample,
+  ITypeConflictExample
 } from "./type-conflict-reporter"
 
 // See gatsby/src/schema/infer/inference-metadata.ts for the ValueDescriptor structs (-> typeInfo)
@@ -15,13 +15,13 @@ import {
 const getExampleObject = ({
   fieldMap = {},
   typeName,
-  typeConflictReporter,
+  typeConflictReporter
 }: ITypeMetadata): { [k: string]: unknown } =>
   Object.keys(fieldMap).reduce((acc, key) => {
     const value = buildExampleValue({
       path: `${typeName}.${key}`,
       descriptor: fieldMap[key],
-      typeConflictReporter,
+      typeConflictReporter
     })
     if (key && value !== null) {
       acc[key] = value
@@ -33,7 +33,7 @@ const buildExampleValue = ({
   descriptor,
   typeConflictReporter,
   isArrayItem = false,
-  path = ``,
+  path = ``
 }: {
   descriptor: IValueDescriptor
   typeConflictReporter?: TypeConflictReporter
@@ -70,7 +70,7 @@ const buildExampleValue = ({
             descriptor: item,
             isArrayItem: true,
             typeConflictReporter,
-            path,
+            path
           })
         : null
       return exampleItemValue === null ? null : [exampleItemValue]
@@ -81,7 +81,7 @@ const buildExampleValue = ({
       const { nodes = {} } = typeInfo
       return {
         multiple: type === `relatedNodeList`,
-        linkedNodes: Object.keys(nodes).filter(key => nodes[key] > 0),
+        linkedNodes: Object.keys(nodes).filter(key => nodes[key] > 0)
       }
     }
 
@@ -93,7 +93,7 @@ const buildExampleValue = ({
         const value = buildExampleValue({
           descriptor: dprops[prop],
           typeConflictReporter,
-          path: `${path}.${prop}`,
+          path: `${path}.${prop}`
         })
         if (value !== null) {
           hasKeys = true
@@ -142,29 +142,23 @@ const prepareConflictExamples = (
   }
   const reportedValueMapper = (typeName: ValueType): unknown => {
     if (typeName === `relatedNode`) {
-      // See FIXME in ./inference-metadata.ts
-      // eslint-disable-next-line
-      // @ts-ignore
-      const { nodes } = descriptor.relatedNode
+      const { nodes } = descriptor.relatedNode ?? { nodes: {} }
       return Object.keys(nodes).find(key => nodes[key] > 0)
     }
     if (typeName === `relatedNodeList`) {
-      // See FIXME in ./inference-metadata.ts
-      // eslint-disable-next-line
-      // @ts-ignore
-      const { nodes } = descriptor.relatedNodeList
+      const { nodes } = descriptor.relatedNodeList ?? { nodes: {} }
       return Object.keys(nodes).filter(key => nodes[key] > 0)
     }
     if (typeName === `object`) {
       return getExampleObject({
         typeName,
-        fieldMap: descriptor!.object!.dprops,
+        fieldMap: descriptor!.object!.dprops
       })
     }
     if (typeName === `array`) {
       const itemValue = buildExampleValue({
         descriptor: descriptor!.array!.item,
-        isArrayItem: true,
+        isArrayItem: true
       })
       return itemValue === null || itemValue === undefined ? [] : [itemValue]
     }
@@ -174,7 +168,7 @@ const prepareConflictExamples = (
 
   if (isArrayItem) {
     // Differentiate conflict examples by node they were first seen in.
-    // See Caveats section in the header of this file
+    // See Caveats section in the header of the ./inference-metadata.ts
     const groups = groupBy(
       conflictingTypes,
       type => descriptor[type]?.first || ``
@@ -182,7 +176,7 @@ const prepareConflictExamples = (
     return Object.keys(groups).map(nodeId => {
       return {
         type: `[${groups[nodeId].map(typeNameMapper).join(`,`)}]`,
-        value: groups[nodeId].map(reportedValueMapper),
+        value: groups[nodeId].map(reportedValueMapper)
       }
     })
   }
@@ -190,7 +184,7 @@ const prepareConflictExamples = (
   return conflictingTypes.map(type => {
     return {
       type: typeNameMapper(type),
-      value: reportedValueMapper(type),
+      value: reportedValueMapper(type)
     }
   })
 }

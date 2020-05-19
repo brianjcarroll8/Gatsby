@@ -73,11 +73,11 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `pages`,
-        path: `${__dirname}/src/pages/`,
-      },
+        path: `${__dirname}/src/pages/`
+      }
     },
-    `gatsby-plugin-mdx`,
-  ],
+    `gatsby-plugin-mdx`
+  ]
 }
 ```
 
@@ -99,17 +99,17 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `posts`,
-        path: `${__dirname}/src/posts/`,
-      },
+        path: `${__dirname}/src/posts/`
+      }
     },
     {
       resolve: "gatsby-plugin-page-creator",
       options: {
-        path: `${__dirname}/src/posts`,
-      },
+        path: `${__dirname}/src/posts`
+      }
     },
-    `gatsby-plugin-mdx`,
-  ],
+    `gatsby-plugin-mdx`
+  ]
 }
 ```
 
@@ -128,7 +128,6 @@ scope, and more.
 | [`rehypePlugins`](#rehype-plugins)                                        | `[]`                                   | Specify rehype plugins                                                |
 | [`mediaTypes`](#media-types)                                              | `["text/markdown", "text/x-markdown"]` | Determine which media types are processed by MDX                      |
 | [`shouldBlockNodeFromTransformation`](#shouldblocknodefromtransformation) | `(node) => false`                      | Disable MDX transformation for nodes where this function returns true |
-| [`timeToRead`](#time-to-read)                                             | `wordCount => wordCount / 265`         | Calculate `timeToRead` from the word count, html, and raw MDX content |
 
 #### Extensions
 
@@ -144,10 +143,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        extensions: [`.mdx`, `.md`],
-      },
-    },
-  ],
+        extensions: [`.mdx`, `.md`]
+      }
+    }
+  ]
 }
 ```
 
@@ -166,32 +165,32 @@ module.exports = {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `pages`,
-        path: `${__dirname}/src/pages/`,
-      },
+        path: `${__dirname}/src/pages/`
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `posts`,
-        path: `${__dirname}/src/posts/`,
-      },
+        path: `${__dirname}/src/posts/`
+      }
     },
     {
       resolve: "gatsby-plugin-page-creator",
       options: {
-        path: `${__dirname}/src/posts`,
-      },
+        path: `${__dirname}/src/posts`
+      }
     },
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
         defaultLayouts: {
           posts: require.resolve("./src/components/posts-layout.js"),
-          default: require.resolve("./src/components/default-page-layout.js"),
-        },
-      },
-    },
-  ],
+          default: require.resolve("./src/components/default-page-layout.js")
+        }
+      }
+    }
+  ]
 }
 ```
 
@@ -237,7 +236,7 @@ use one layout for all MDX pages that don't already have a layout defined.
 ```js
 module.exports = {
   siteMetadata: {
-    title: `Gatsby MDX Kitchen Sink`,
+    title: `Gatsby MDX Kitchen Sink`
   },
   plugins: [
     {
@@ -245,24 +244,24 @@ module.exports = {
       options: {
         defaultLayouts: {
           posts: require.resolve("./src/components/posts-layout.js"),
-          default: require.resolve("./src/components/default-page-layout.js"),
-        },
-      },
+          default: require.resolve("./src/components/default-page-layout.js")
+        }
+      }
     },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
         name: `posts`,
-        path: `${__dirname}/src/posts/`,
-      },
+        path: `${__dirname}/src/posts/`
+      }
     },
     {
       resolve: "gatsby-plugin-page-creator",
       options: {
-        path: `${__dirname}/src/posts`,
-      },
-    },
-  ],
+        path: `${__dirname}/src/posts`
+      }
+    }
+  ]
 }
 ```
 
@@ -344,13 +343,13 @@ module.exports = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 590,
-            },
-          },
-        ],
-      },
-    },
-  ],
+              maxWidth: 590
+            }
+          }
+        ]
+      }
+    }
+  ]
 }
 ```
 
@@ -377,10 +376,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        remarkPlugins: [require("remark-abbr")],
-      },
-    },
-  ],
+        remarkPlugins: [require("remark-abbr")]
+      }
+    }
+  ]
 }
 ```
 
@@ -399,10 +398,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        rehypePlugins: [require("rehype-slug")],
-      },
-    },
-  ],
+        rehypePlugins: [require("rehype-slug")]
+      }
+    }
+  ]
 }
 ```
 
@@ -419,10 +418,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        mediaTypes: [`text/markdown`, `text/x-markdown`],
-      },
-    },
-  ],
+        mediaTypes: [`text/markdown`, `text/x-markdown`]
+      }
+    }
+  ]
 }
 ```
 
@@ -450,31 +449,10 @@ module.exports = {
             (node.internal.type === `File` &&
               path.parse(node.dir).dir.endsWith(`packages`))
           )
-        },
-      },
-    },
-  ],
-}
-```
-
-#### Time to read
-
-Calculating the time to read a Markdown document based on the word
-count or Markdown node. This is useful for customizing the time to
-read a document based on a faster or slower words per minute reading
-rate or by custom heuristics based on the markdown node.
-
-```js
-// gatsby-config.js
-module.exports = {
-  plugins: [
-    {
-      resolve: `gatsby-plugin-mdx`,
-      options: {
-        timeToRead: (wordCount, html, rawMDX) => wordCount / 42,
-      },
-    },
-  ],
+        }
+      }
+    }
+  ]
 }
 ```
 
@@ -501,7 +479,7 @@ const MyParagraph = props => <p style={{ fontSize: "18px", lineHeight: 1.6 }} />
 
 const components = {
   h1: MyH1,
-  p: MyParagraph,
+  p: MyParagraph
 }
 
 export const wrapRootElement = ({ element }) => (

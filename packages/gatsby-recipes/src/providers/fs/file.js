@@ -4,6 +4,7 @@ const mkdirp = require(`mkdirp`)
 const Joi = require(`@hapi/joi`)
 const isUrl = require(`is-url`)
 const fetch = require(`node-fetch`)
+const isBinaryPath = require(`is-binary-path`)
 
 const getDiff = require(`../utils/get-diff`)
 const resourceSchema = require(`../resource-schema`)
@@ -77,19 +78,28 @@ const destroy = async (context, fileResource) => {
 
 // TODO pass action to plan
 module.exports.plan = async (context, { id, path: filePath, content }) => {
-  const currentResource = await read(context, filePath)
+  let currentResource
+  if (!isBinaryPath(filePath)) {
+    currentResource = await read(context, filePath)
+  } else {
+    currentResource = `Binary file`
+  }
 
   let newState = content
   if (isUrl(content)) {
-    const res = await fetch(content)
-    newState = await res.text()
+    if (!isBinaryPath(filePath)) {
+      const res = await fetch(content)
+      newState = await res.text()
+    } else {
+      newState = `Binary file`
+    }
   }
 
   const plan = {
     currentState: (currentResource && currentResource.content) || ``,
     newState,
     describe: `Write ${filePath}`,
-    diff: ``,
+    diff: ``
   }
 
   if (plan.currentState !== plan.newState) {
@@ -104,7 +114,7 @@ const message = resource => `Wrote file ${resource.path}`
 const schema = {
   path: Joi.string(),
   content: Joi.string(),
-  ...resourceSchema,
+  ...resourceSchema
 }
 exports.schema = schema
 exports.validate = resource =>

@@ -7,7 +7,7 @@ import {
   moveSync, // Note: moveSync over renameSync because /tmp may be on other mount
   readFileSync,
   removeSync,
-  writeFileSync,
+  writeFileSync
 } from "fs-extra"
 import { IGatsbyNode, ICachedReduxState } from "./types"
 import { sync as globSync } from "glob"
@@ -57,7 +57,7 @@ export function readFromCache(): ICachedReduxState {
 
   const nodes: [string, IGatsbyNode][] = [].concat(...chunks)
 
-  if (!chunks.length && process.env.GATSBY_DB_NODES !== `loki`) {
+  if (!chunks.length) {
     report.info(
       `Cache exists but contains no nodes. There should be at least some nodes available so it seems the cache was corrupted. Disregarding the cache and proceeding as if there was none.`
     )

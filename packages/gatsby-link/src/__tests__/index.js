@@ -3,7 +3,7 @@ import { render, cleanup } from "@testing-library/react"
 import {
   createMemorySource,
   createHistory,
-  LocationProvider,
+  LocationProvider
 } from "@reach/router"
 import Link, { navigate, push, replace, withPrefix, withAssetPrefix } from "../"
 
@@ -65,7 +65,7 @@ const setup = ({ sourcePath = `/active`, linkProps, pathPrefix = `` } = {}) => {
   )
 
   return Object.assign({}, utils, {
-    link: utils.getByText(`link`),
+    link: utils.getByText(`link`)
   })
 }
 
@@ -82,7 +82,7 @@ describe(`<Link />`, () => {
 
   it(`matches partially active snapshot`, () => {
     const { container } = setup({
-      linkProps: { to: `/active/nested`, partiallyActive: true },
+      linkProps: { to: `/active/nested`, partiallyActive: true }
     })
     expect(container).toMatchSnapshot()
   })
@@ -118,7 +118,7 @@ describe(`<Link />`, () => {
 
   describe(`the location to link to`, () => {
     global.___loader = {
-      enqueue: jest.fn(),
+      enqueue: jest.fn()
     }
 
     it(`accepts to as a string`, () => {
@@ -157,6 +157,53 @@ describe(`<Link />`, () => {
   it(`replace is called with correct args`, () => {
     getReplace()(`/some-path`)
     expect(global.___replace).toHaveBeenCalledWith(`/some-path`)
+  })
+
+  describe(`uses push or replace adequately`, () => {
+    it(`respects force disabling replace`, () => {
+      const to = `/`
+      getNavigate()
+      const { link } = setup({ linkProps: { to, replace: false } })
+      link.click()
+
+      expect(
+        global.___navigate
+      ).toHaveBeenCalledWith(`${global.__BASE_PATH__}${to}`, { replace: false })
+    })
+
+    it(`respects force enabling replace`, () => {
+      const to = `/courses`
+      getNavigate()
+      const { link } = setup({ linkProps: { to, replace: true } })
+      link.click()
+
+      expect(
+        global.___navigate
+      ).toHaveBeenCalledWith(`${global.__BASE_PATH__}${to}`, { replace: true })
+    })
+
+    it(`does not replace history when navigating away`, () => {
+      const to = `/courses`
+      getNavigate()
+      const { link } = setup({ linkProps: { to } })
+      link.click()
+
+      expect(global.___navigate).toHaveBeenCalledWith(
+        `${global.__BASE_PATH__}${to}`,
+        {}
+      )
+    })
+
+    it(`does replace history when navigating on the same page`, () => {
+      const to = `/`
+      getNavigate()
+      const { link } = setup({ linkProps: { to } })
+      link.click()
+
+      expect(
+        global.___navigate
+      ).toHaveBeenCalledWith(`${global.__BASE_PATH__}${to}`, { replace: true })
+    })
   })
 })
 
@@ -274,8 +321,12 @@ describe(`state`, () => {
     const { link } = setup({ linkProps: { state } })
     link.click()
 
-    expect(
-      global.___navigate
-    ).toHaveBeenCalledWith(`${global.__BASE_PATH__}${to}`, { state })
+    expect(global.___navigate).toHaveBeenCalledWith(
+      `${global.__BASE_PATH__}${to}`,
+      {
+        replace: true,
+        state
+      }
+    )
   })
 })

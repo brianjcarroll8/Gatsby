@@ -16,14 +16,14 @@ test(`plan returns a description`, async () => {
   expect(result.describe).toEqual(expect.stringContaining(`Install glob`))
 })
 
-describe(`npm package resource`, () => {
+describe.skip(`npm package resource`, () => {
   test(`e2e npm package resource test`, async () => {
     await resourceTestHelper({
       resourceModule: pkg,
       resourceName: `NPMPackage`,
       context: { root },
       initialObject: { name: `is-sorted`, version: `1.0.0` },
-      partialUpdate: { name: `is-sorted`, version: `1.0.2` },
+      partialUpdate: { name: `is-sorted`, version: `1.0.2` }
     })
   })
 })
@@ -33,13 +33,13 @@ describe(`package manager client commands`, () => {
     const yarnInstall = pkg.generateClientComands({
       packageManager: `yarn`,
       depType: ``,
-      packageNames: [`gatsby`],
+      packageNames: [`gatsby`]
     })
 
     const yarnDevInstall = pkg.generateClientComands({
       packageManager: `yarn`,
       depType: `development`,
-      packageNames: [`eslint`],
+      packageNames: [`eslint`]
     })
 
     expect(yarnInstall).toMatchSnapshot()
@@ -49,13 +49,13 @@ describe(`package manager client commands`, () => {
     const yarnInstall = pkg.generateClientComands({
       packageManager: `npm`,
       depType: ``,
-      packageNames: [`gatsby`],
+      packageNames: [`gatsby`]
     })
 
     const yarnDevInstall = pkg.generateClientComands({
       packageManager: `npm`,
       depType: `development`,
-      packageNames: [`eslint`],
+      packageNames: [`eslint`]
     })
 
     expect(yarnInstall).toMatchSnapshot()

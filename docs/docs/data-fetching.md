@@ -2,8 +2,8 @@
 title: Build Time and Client Runtime Data Fetching
 ---
 
-import BuildDataExample from "../../www/src/components/build-data-example.js"
-import ClientDataExample from "../../www/src/components/client-data-example.js"
+import BuildDataExample from "@components/build-data-example"
+import ClientDataExample from "@components/client-data-example"
 
 This guide demonstrates how to fetch data at both [_build time_](/docs/glossary#build) and [_runtime_](/docs/glossary#runtime) in Gatsby. Most of the techniques outlined are for custom data handling. Be sure to check out Gatsby's [plugin library](/plugins/) to see if there's an off-the-shelf solution for your data requirements, such as [sourcing from a CMS](/docs/headless-cms/) or other third-party integration.
 
@@ -50,11 +50,11 @@ module.exports = {
         fieldName: `github`,
         url: `https://api.github.com/graphql`, //highlight-line
         headers: {
-          Authorization: `Bearer your-github-token`,
-        },
-      },
-    },
-  ],
+          Authorization: `Bearer your-github-token`
+        }
+      }
+    }
+  ]
 }
 ```
 
@@ -67,7 +67,7 @@ const fetch = require(`node-fetch`)
 
 exports.sourceNodes = async ({
   actions: { createNode },
-  createContentDigest,
+  createContentDigest
 }) => {
   // get data from GitHub API at build time
   const result = await fetch(`https://api.github.com/repos/gatsbyjs/gatsby`)
@@ -83,8 +83,8 @@ exports.sourceNodes = async ({
     children: [],
     internal: {
       type: `Example`,
-      contentDigest: createContentDigest(resultData),
-    },
+      contentDigest: createContentDigest(resultData)
+    }
   })
 }
 ```

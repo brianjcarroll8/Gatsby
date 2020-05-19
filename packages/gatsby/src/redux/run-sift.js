@@ -6,19 +6,17 @@ const { makeRe } = require(`micromatch`)
 import { getValueAt } from "../utils/get-value-at"
 import _ from "lodash"
 const {
-  toDottedFields,
   objectToDottedField,
-  liftResolvedFields,
   createDbQueriesFromObject,
   prefixResolvedFields,
-  dbQueryToSiftQuery,
+  dbQueryToSiftQuery
 } = require(`../db/common/query`)
 const {
   ensureIndexByQuery,
   ensureIndexByElemMatch,
   getNodesFromCacheByValue,
   addResolvedNodes,
-  getNode: siftGetNode,
+  getNode: siftGetNode
 } = require(`./nodes`)
 
 const FAST_OPS = [
@@ -26,7 +24,7 @@ const FAST_OPS = [
   // "$lt",
   `$lte`,
   // "$gt",
-  // "$gte"
+  `$gte`
 ]
 
 /**
@@ -85,11 +83,6 @@ const prepareQueryArgs = (filterFields = {}) =>
     return acc
   }, {})
 
-const getFilters = filters =>
-  Object.keys(filters).map(key => {
-    return { [key]: filters[key] }
-  })
-
 /////////////////////////////////////////////////////////////////////
 // Run Sift
 /////////////////////////////////////////////////////////////////////
@@ -113,7 +106,7 @@ function handleFirst(siftArgs, nodes) {
     ? 0
     : nodes.findIndex(
         sift({
-          $and: siftArgs,
+          $and: siftArgs
         })
       )
 
@@ -129,7 +122,7 @@ function handleMany(siftArgs, nodes) {
     ? nodes
     : nodes.filter(
         sift({
-          $and: siftArgs,
+          $and: siftArgs
         })
       )
 
@@ -259,8 +252,8 @@ const getBucketsForQueryFilter = (
     query: {
       // Note: comparator is verified to be a FilterOp in filterWithoutSift
       comparator /*: as FilterOp*/,
-      value: filterValue,
-    },
+      value: filterValue
+    }
   } = filter
 
   if (!filtersCache.has(filterCacheKey)) {
@@ -380,7 +373,7 @@ const runFilterAndSort = (args: Object) => {
     firstOnly = false,
     nodeTypeNames,
     filtersCache,
-    stats,
+    stats
   } = args
 
   const result = applyFilters(
@@ -481,7 +474,7 @@ const filterToStats = (
   } else {
     return {
       filterPath: filterPath.concat(filter.path),
-      comparatorPath: comparatorPath.concat(filter.query.comparator),
+      comparatorPath: comparatorPath.concat(filter.query.comparator)
     }
   }
 }
@@ -540,7 +533,7 @@ const filterWithSift = (filters, firstOnly, nodeTypeNames, resolvedFields) => {
   let nodes /*: IGatsbyNode[]*/ = []
   nodeTypeNames.forEach(typeName => addResolvedNodes(typeName, nodes))
 
-  return _runSiftOnNodes(
+  return runSiftOnNodes(
     nodes,
     filters.map(f => dbQueryToSiftQuery(f)),
     firstOnly,
@@ -552,52 +545,17 @@ const filterWithSift = (filters, firstOnly, nodeTypeNames, resolvedFields) => {
 
 /**
  * Given a list of filtered nodes and sorting parameters, sort the nodes
- * Note: this entry point is used by GATSBY_DB_NODES=loki
- *
- * @param {Array<IGatsbyNode>} nodes Should be all nodes of given type(s)
- * @param args Legacy api arg, see _runSiftOnNodes
- * @param {?function(id: string): IGatsbyNode | undefined} getNode
- * @returns {Array<IGatsbyNode> | undefined | null} Collection of results.
- *   Collection will be limited to 1 if `firstOnly` is true
- */
-const runSiftOnNodes = (nodes, args, getNode = siftGetNode) => {
-  const {
-    queryArgs: { filter } = { filter: {} },
-    firstOnly = false,
-    resolvedFields = {},
-    nodeTypeNames,
-  } = args
-
-  let siftFilter = getFilters(
-    liftResolvedFields(toDottedFields(prepareQueryArgs(filter)), resolvedFields)
-  )
-
-  return _runSiftOnNodes(
-    nodes,
-    siftFilter,
-    firstOnly,
-    nodeTypeNames,
-    resolvedFields,
-    getNode
-  )
-}
-
-exports.runSiftOnNodes = runSiftOnNodes
-
-/**
- * Given a list of filtered nodes and sorting parameters, sort the nodes
  *
  * @param {Array<IGatsbyNode>} nodes Should be all nodes of given type(s)
  * @param {Array<DbQuery>} filters Resolved
  * @param {boolean} firstOnly
  * @param {Array<string>} nodeTypeNames
  * @param resolvedFields
- * @param {function(id: string): IGatsbyNode | undefined} getNode Note: this is
- *   different for loki
+ * @param {function(id: string): IGatsbyNode | undefined} getNode
  * @returns {Array<IGatsbyNode> | undefined | null} Collection of results.
  *   Collection will be limited to 1 if `firstOnly` is true
  */
-const _runSiftOnNodes = (
+const runSiftOnNodes = (
   nodes,
   filters,
   firstOnly,

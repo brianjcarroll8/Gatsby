@@ -29,10 +29,10 @@ module.exports = {
       resolve: "gatsby-source-sanity",
       options: {
         projectId: "abc123",
-        dataset: "blog",
-      },
-    },
-  ],
+        dataset: "blog"
+      }
+    }
+  ]
 }
 ```
 
@@ -202,7 +202,7 @@ exports.createPages = async ({ graphql, actions }) => {
     createPage({
       path,
       component: require.resolve("./src/templates/project.js"),
-      context: { slug: edge.node.slug.current },
+      context: { slug: edge.node.slug.current }
     })
   })
 }
@@ -237,17 +237,17 @@ SANITY_TOKEN = my-super-secret-token
 ```
 
 ```js:title=gatsby-config.js
-require('dotenv').config({
+require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`
 })
 
 module.exports = {
   plugins: [
     {
-      resolve: 'gatsby-source-sanity',
+      resolve: "gatsby-source-sanity",
       options: {
         projectId: process.env.SANITY_PROJECT_ID,
-        dataset: process.env.SANITY_DATASET
+        dataset: process.env.SANITY_DATASET,
         token: process.env.SANITY_TOKEN
       }
     }

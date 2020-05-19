@@ -21,13 +21,16 @@ describe(`gatsby-plugin resource`, () => {
   let starterBlogRoot
   let helloWorldRoot
   let configPath
+  let emptyRoot
   beforeAll(async () => {
     tmpDir = await tmp.dir({
-      unsafeCleanup: true,
+      unsafeCleanup: true
     })
     starterBlogRoot = path.join(tmpDir.path, `gatsby-starter-blog`)
     helloWorldRoot = path.join(tmpDir.path, `gatsby-starter-hello-world`)
     configPath = path.join(helloWorldRoot, `gatsby-config.js`)
+    emptyRoot = path.join(tmpDir.path, `empty-site-directory`)
+    await fs.ensureDir(emptyRoot)
     await fs.ensureDir(starterBlogRoot)
     await fs.copy(STARTER_BLOG_FIXTURE, starterBlogRoot)
     await fs.ensureDir(helloWorldRoot)
@@ -45,7 +48,7 @@ describe(`gatsby-plugin resource`, () => {
       resourceName: `GatsbyPlugin`,
       context: { root: starterBlogRoot },
       initialObject: { id: name, name },
-      partialUpdate: { id: name },
+      partialUpdate: { id: name }
     })
   })
 
@@ -55,26 +58,32 @@ describe(`gatsby-plugin resource`, () => {
       resourceName: `GatsbyPlugin`,
       context: { root: helloWorldRoot },
       initialObject: { id: name, name },
-      partialUpdate: { id: name },
+      partialUpdate: { id: name }
     })
+  })
+
+  test(`all returns plugins as array`, async () => {
+    const result = await plugin.all({ root: STARTER_BLOG_FIXTURE })
+
+    expect(result).toMatchSnapshot()
   })
 
   test(`does not add the same plugin twice by default`, async () => {
     const configSrc = await fs.readFile(configPath, `utf8`)
     let newConfigSrc = addPluginToConfig(configSrc, {
-      name: `gatsby-plugin-react-helmet`,
+      name: `gatsby-plugin-react-helmet`
     })
     newConfigSrc = addPluginToConfig(newConfigSrc, {
-      name: `gatsby-plugin-foo`,
+      name: `gatsby-plugin-foo`
     })
     newConfigSrc = addPluginToConfig(newConfigSrc, {
-      name: `gatsby-plugin-mdx`,
+      name: `gatsby-plugin-mdx`
     })
     const plugins = getPluginsFromConfig(newConfigSrc)
     const plugins1 = [...new Set(plugins)]
 
     newConfigSrc = addPluginToConfig(newConfigSrc, {
-      name: `gatsby-plugin-react-helmet`,
+      name: `gatsby-plugin-react-helmet`
     })
 
     const plugins2 = getPluginsFromConfig(newConfigSrc)
@@ -95,7 +104,7 @@ describe(`gatsby-plugin resource`, () => {
   test(`validates the gatsby-source-filesystem specifies a key that isn't equal to the name`, async () => {
     const result = plugin.validate({
       name: `gatsby-source-filesystem`,
-      key: `gatsby-source-filesystem`,
+      key: `gatsby-source-filesystem`
     })
 
     expect(result.error).toEqual(
@@ -110,16 +119,16 @@ describe(`gatsby-plugin resource`, () => {
       name: `gatsby-source-filesystem`,
       options: {
         name: `foo`,
-        path: `foo`,
-      },
+        path: `foo`
+      }
     }
     const barPlugin = {
       key: `bar-data-sourcing`,
       name: `gatsby-source-filesystem`,
       options: {
         name: `bar`,
-        path: `bar`,
-      },
+        path: `bar`
+      }
     }
 
     await plugin.create(context, fooPlugin)
@@ -135,7 +144,7 @@ describe(`gatsby-plugin resource`, () => {
 
     const newBarResult = await plugin.update(context, {
       ...barResult,
-      options: { path: `new-bar` },
+      options: { path: `new-bar` }
     })
 
     expect(newBarResult.key).toEqual(barPlugin.key)
@@ -156,14 +165,22 @@ describe(`gatsby-plugin resource`, () => {
         otherStuff: [
           {
             foo: `bar2`,
-            bar: [{ foo: `bar` }],
-          },
-        ],
-      },
+            bar: [{ foo: `bar` }]
+          }
+        ]
+      }
     })
 
     const result = getPluginsFromConfig(newConfigSrc)
 
+    expect(result).toMatchSnapshot()
+  })
+
+  test(`creates default gatsby-config.js if there isn't one already`, async () => {
+    const result = await plugin.create(
+      { root: emptyRoot },
+      { name: `gatsby-plugin-foo` }
+    )
     expect(result).toMatchSnapshot()
   })
 })

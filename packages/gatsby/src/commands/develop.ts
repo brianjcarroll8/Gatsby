@@ -1,4 +1,3 @@
-import url from "url"
 import fs from "fs"
 import openurl from "better-opn"
 import chokidar from "chokidar"
@@ -24,7 +23,6 @@ import report from "gatsby-cli/lib/reporter"
 import launchEditor from "react-dev-utils/launchEditor"
 import formatWebpackMessages from "react-dev-utils/formatWebpackMessages"
 import chalk from "chalk"
-import address from "address"
 import cors from "cors"
 import telemetry from "gatsby-telemetry"
 import * as WorkerPool from "../utils/worker/pool"
@@ -34,7 +32,7 @@ import https from "https"
 import {
   bootstrapSchemaHotReloader,
   startSchemaHotReloader,
-  stopSchemaHotReloader,
+  stopSchemaHotReloader
 } from "../bootstrap/schema-hot-reloader"
 import bootstrapPageHotReloader from "../bootstrap/page-hot-reloader"
 import { developStatic } from "./develop-static"
@@ -55,15 +53,16 @@ import queryWatcher from "../query/query-watcher"
 import requiresWriter from "../bootstrap/requires-writer"
 import {
   reportWebpackWarnings,
-  structureWebpackErrors,
+  structureWebpackErrors
 } from "../utils/webpack-error-utils"
 import { waitUntilAllJobsComplete } from "../utils/wait-until-jobs-complete"
 import {
   userPassesFeedbackRequestHeuristic,
-  showFeedbackRequest,
+  showFeedbackRequest
 } from "../utils/feedback"
 
-import { BuildHTMLStage, IProgram } from "./types"
+import { IPreparedUrls, prepareUrls } from "../utils/prepare-urls"
+import { Stage, IProgram } from "./types"
 
 // checks if a string is a valid ip
 const REGEX_IP = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$/
@@ -99,10 +98,10 @@ async function startServer(program: IProgram): Promise<IServer> {
     try {
       await buildHTML({
         program,
-        stage: BuildHTMLStage.DevelopHTML,
+        stage: Stage.DevelopHTML,
         pagePaths: [`/`],
         workerPool,
-        activity,
+        activity
       })
     } catch (err) {
       if (err.name !== `WebpackError`) {
@@ -127,7 +126,7 @@ async function startServer(program: IProgram): Promise<IServer> {
   // report.stateUpdate(`webpack`, `IN_PROGRESS`)
 
   const webpackActivity = report.activityTimer(`Building development bundle`, {
-    id: `webpack-develop`,
+    id: `webpack-develop`
   })
   webpackActivity.start()
 
@@ -150,7 +149,7 @@ async function startServer(program: IProgram): Promise<IServer> {
     webpackHotMiddleware(compiler, {
       log: false,
       path: `/__webpack_hmr`,
-      heartbeat: 10 * 1000,
+      heartbeat: 10 * 1000
     })
   )
 
@@ -165,13 +164,13 @@ async function startServer(program: IProgram): Promise<IServer> {
     app.get(
       graphqlEndpoint,
       graphqlPlayground({
-        endpoint: `/___graphql`,
+        endpoint: `/___graphql`
       }),
       () => {}
     )
   } else {
     graphiqlExplorer(app, {
-      graphqlEndpoint,
+      graphqlEndpoint
     })
   }
 
@@ -188,14 +187,14 @@ async function startServer(program: IProgram): Promise<IServer> {
             schema,
             schemaComposer: schemaCustomization.composer,
             context: {},
-            customContext: schemaCustomization.context,
+            customContext: schemaCustomization.context
           }),
           customFormatErrorFn(err): unknown {
             return {
               ...formatError(err),
-              stack: err.stack ? err.stack.split(`\n`) : [],
+              stack: err.stack ? err.stack.split(`\n`) : []
             }
-          },
+          }
         }
       }
     )
@@ -212,13 +211,13 @@ async function startServer(program: IProgram): Promise<IServer> {
     let activity = report.activityTimer(`createSchemaCustomization`, {})
     activity.start()
     await createSchemaCustomization({
-      refresh: true,
+      refresh: true
     })
     activity.end()
     activity = report.activityTimer(`Refreshing source data`, {})
     activity.start()
     await sourceNodes({
-      webhookBody: req.body,
+      webhookBody: req.body
     })
     activity.end()
     activity = report.activityTimer(`rebuild schema`)
@@ -258,7 +257,7 @@ async function startServer(program: IProgram): Promise<IServer> {
       watchOptions: devConfig.devServer
         ? devConfig.devServer.watchOptions
         : null,
-      stats: `errors-only`,
+      stats: `errors-only`
     })
   )
 
@@ -279,7 +278,7 @@ async function startServer(program: IProgram): Promise<IServer> {
           // remove `host` from copied headers
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           headers: { host, ...headers },
-          method,
+          method
         } = req
         req
           .pipe(
@@ -416,7 +415,7 @@ module.exports = async (program: IProgram): Promise<void> => {
       caFile: program[`ca-file`],
       certFile: program[`cert-file`],
       keyFile: program[`key-file`],
-      directory: program.directory,
+      directory: program.directory
     })
   }
 
@@ -443,75 +442,6 @@ module.exports = async (program: IProgram): Promise<void> => {
   queryWatcher.startWatchDeletePage()
 
   let { compiler, webpackActivity } = await startServer(program)
-
-  interface IPreparedUrls {
-    lanUrlForConfig: string
-    lanUrlForTerminal: string
-    localUrlForTerminal: string
-    localUrlForBrowser: string
-  }
-
-  function prepareUrls(
-    protocol: `http` | `https`,
-    host: string,
-    port: number
-  ): IPreparedUrls {
-    const formatUrl = (hostname: string): string =>
-      url.format({
-        protocol,
-        hostname,
-        port,
-        pathname: `/`,
-      })
-    const prettyPrintUrl = (hostname: string): string =>
-      url.format({
-        protocol,
-        hostname,
-        port: chalk.bold(String(port)),
-        pathname: `/`,
-      })
-
-    const isUnspecifiedHost = host === `0.0.0.0` || host === `::`
-    let prettyHost = host
-    let lanUrlForConfig
-    let lanUrlForTerminal
-    if (isUnspecifiedHost) {
-      prettyHost = `localhost`
-
-      try {
-        // This can only return an IPv4 address
-        lanUrlForConfig = address.ip()
-        if (lanUrlForConfig) {
-          // Check if the address is a private ip
-          // https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces
-          if (
-            /^10[.]|^172[.](1[6-9]|2[0-9]|3[0-1])[.]|^192[.]168[.]/.test(
-              lanUrlForConfig
-            )
-          ) {
-            // Address is private, format it for later use
-            lanUrlForTerminal = prettyPrintUrl(lanUrlForConfig)
-          } else {
-            // Address is not private, so we will discard it
-            lanUrlForConfig = undefined
-          }
-        }
-      } catch (_e) {
-        // ignored
-      }
-    }
-    // TODO collect errors (GraphQL + Webpack) in Redux so we
-    // can clear terminal and print them out on every compile.
-    // Borrow pretty printing code from webpack plugin.
-    const localUrlForTerminal = prettyPrintUrl(prettyHost)
-    const localUrlForBrowser = formatUrl(prettyHost)
-    return {
-      lanUrlForConfig,
-      lanUrlForTerminal,
-      localUrlForTerminal,
-      localUrlForBrowser,
-    }
-  }
 
   function printInstructions(appName: string, urls: IPreparedUrls): void {
     console.log()
@@ -566,21 +496,21 @@ module.exports = async (program: IProgram): Promise<void> => {
     type DeprecatedAPIList = ["boundActionCreators", "pathContext"] // eslint-disable-line
     const deprecatedApis: DeprecatedAPIList = [
       `boundActionCreators`,
-      `pathContext`,
+      `pathContext`
     ]
     const fixMap = {
       boundActionCreators: {
         newName: `actions`,
-        docsLink: `https://gatsby.dev/boundActionCreators`,
+        docsLink: `https://gatsby.dev/boundActionCreators`
       },
       pathContext: {
         newName: `pageContext`,
-        docsLink: `https://gatsby.dev/pathContext`,
-      },
+        docsLink: `https://gatsby.dev/pathContext`
+      }
     }
     const deprecatedLocations = {
       boundActionCreators: [] as string[],
-      pathContext: [] as string[],
+      pathContext: [] as string[]
     }
 
     glob
@@ -615,12 +545,12 @@ module.exports = async (program: IProgram): Promise<void> => {
   //   console.log(`set invalid`, args, this)
   // })
 
-  compiler.hooks.watchRun.tapAsync(`log compiling`, function (_, done) {
+  compiler.hooks.watchRun.tapAsync(`log compiling`, function(_, done) {
     if (webpackActivity) {
       webpackActivity.end()
     }
     webpackActivity = report.activityTimer(`Re-building development bundle`, {
-      id: `webpack-develop`,
+      id: `webpack-develop`
     })
     webpackActivity.start()
 
@@ -630,7 +560,7 @@ module.exports = async (program: IProgram): Promise<void> => {
   let isFirstCompile = true
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
-  compiler.hooks.done.tapAsync(`print gatsby instructions`, function (
+  compiler.hooks.done.tapAsync(`print gatsby instructions`, function(
     stats,
     done
   ) {
