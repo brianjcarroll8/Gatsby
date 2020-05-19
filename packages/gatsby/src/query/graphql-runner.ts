@@ -17,8 +17,7 @@ import { createPageDependency } from "../redux/actions/add-page-dependency"
 
 import withResolverContext from "../schema/context"
 import { LocalNodeModel } from "../schema/node-model"
-import { Store } from "redux"
-import { IGatsbyState } from "../redux/types"
+import { GatsbyReduxStore } from "../redux"
 import { IGraphQLRunnerStatResults, IGraphQLRunnerStats } from "./types"
 import GraphQLSpanTracer from "./graphql-span-tracer"
 
@@ -39,7 +38,7 @@ export class GraphQLRunner {
   graphqlTracing: boolean
 
   constructor(
-    protected store: Store<IGatsbyState>,
+    protected store: GatsbyReduxStore,
     {
       collectStats,
       graphqlTracing,
@@ -189,20 +188,20 @@ export class GraphQLRunner {
         errors.length > 0
           ? { errors }
           : execute({
+            schema,
+            document,
+            rootValue: context,
+            contextValue: withResolverContext({
               schema,
-              document,
-              rootValue: context,
-              contextValue: withResolverContext({
-                schema,
-                schemaComposer: schemaCustomization.composer,
-                context,
-                customContext: schemaCustomization.context,
-                nodeModel: this.nodeModel,
-                stats: this.stats,
-                tracer,
-              }),
-              variableValues: context,
-            })
+              schemaComposer: schemaCustomization.composer,
+              context,
+              customContext: schemaCustomization.context,
+              nodeModel: this.nodeModel,
+              stats: this.stats,
+              tracer,
+            }),
+            variableValues: context,
+          })
 
       // Queries are usually executed in batch. But after the batch is finished
       // cache just wastes memory without much benefits.

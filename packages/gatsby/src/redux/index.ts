@@ -8,7 +8,7 @@ import {
 import _ from "lodash"
 
 import { mett } from "../utils/mett"
-import thunk from "redux-thunk"
+import thunk, { ThunkMiddleware, ThunkDispatch } from "redux-thunk"
 import reducers from "./reducers"
 import { writeToCache, readFromCache } from "./persist"
 import { IGatsbyState, ActionsUnion } from "./types"
@@ -53,16 +53,19 @@ const multi: Middleware = ({ dispatch }) => next => (
 ): ActionsUnion | ActionsUnion[] =>
   Array.isArray(action) ? action.filter(Boolean).map(dispatch) : next(action)
 
+export type GatsbyReduxStore = Store<IGatsbyState, ActionsUnion> & {
+  dispatch: ThunkDispatch<IGatsbyState, undefined, ActionsUnion>
+}
+
 export const configureStore = (
   initialState: IGatsbyState
-): Store<IGatsbyState> =>
-  createStore(
-    combineReducers<IGatsbyState>({ ...reducers }),
-    initialState,
-    applyMiddleware(thunk, multi)
-  )
+): GatsbyReduxStore => createStore(
+  combineReducers<IGatsbyState>({ ...reducers }),
+  initialState,
+  applyMiddleware(thunk as ThunkMiddleware<IGatsbyState, ActionsUnion>, multi)
+)
 
-export const store: Store<IGatsbyState> = configureStore(readState())
+export const store: GatsbyReduxStore = configureStore(readState())
 
 // Persist state.
 export const saveState = (): void => {
