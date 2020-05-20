@@ -20,6 +20,8 @@ import {
   ISetSiteConfig,
 } from "../types"
 
+import { store } from "../"
+
 import { gatsbyConfigSchema } from "../../joi-schemas/joi"
 import { didYouMean } from "../../utils/did-you-mean"
 
@@ -55,10 +57,23 @@ export const createPageDependency = (
 export const deleteComponentsDependencies = (
   paths: string[]
 ): IDeleteComponentDependenciesAction => {
+  // get list of modules
+  const { queryModuleDependencies } = store.getState()
+
+
+  let modules = new Set<string>()
+  paths.forEach(path => {
+    const deps = queryModuleDependencies.get(path)
+    if (deps) {
+      deps.forEach(modules.add)
+    }
+  })
+
   return {
     type: `DELETE_COMPONENTS_DEPENDENCIES`,
     payload: {
       paths,
+      modules,
     },
   }
 }

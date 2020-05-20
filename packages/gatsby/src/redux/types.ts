@@ -232,7 +232,17 @@ export interface IGatsbyState {
   }
   pageDataStats: Map<SystemPath, number>
   pageData: Map<Identifier, string>
-  modules: any
+  modules: Map<string, IDependencyModule>
+  queryModuleDependencies: Map<string, Set<string>>
+}
+
+export interface IDependencyModule {
+  moduleID: string
+  source: string
+  type: string
+  importName?: string
+  queryIDs: Set<String>
+  // forced: boolean
 }
 
 export interface ICachedReduxState {
@@ -245,6 +255,8 @@ export interface ICachedReduxState {
   webpackCompilationHash: IGatsbyState["webpackCompilationHash"]
   pageDataStats: IGatsbyState["pageDataStats"]
   pageData: IGatsbyState["pageData"]
+  modules: IGatsbyState["modules"]
+  queryModuleDependencies: IGatsbyState["queryModuleDependencies"]
 }
 
 export type ActionsUnion =
@@ -384,6 +396,7 @@ export interface IDeleteComponentDependenciesAction {
   type: "DELETE_COMPONENTS_DEPENDENCIES"
   payload: {
     paths: string[]
+    modules: Set<string>
   }
 }
 
@@ -500,8 +513,8 @@ export interface ICreateResolverContext {
   plugin: IGatsbyPlugin
   traceId?: string
   payload:
-    | IGatsbyPluginContext
-    | { [camelCasedPluginNameWithoutPrefix: string]: IGatsbyPluginContext }
+  | IGatsbyPluginContext
+  | { [camelCasedPluginNameWithoutPrefix: string]: IGatsbyPluginContext }
 }
 
 export interface ICreatePageAction {

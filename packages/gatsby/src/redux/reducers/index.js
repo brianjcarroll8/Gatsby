@@ -18,6 +18,7 @@ import { componentsReducer } from "./components"
 import { componentDataDependenciesReducer } from "./component-data-dependencies"
 import { babelrcReducer } from "./babelrc"
 import { jobsReducer } from "./jobs"
+import { queryModuleDependenciesReducer } from "./query-module-dependencies"
 
 /**
  * @property exports.nodesTouched Set<string>
@@ -50,4 +51,5 @@ module.exports = {
   pageDataStats: pageDataStatsReducer,
   pageData: pageDataReducer,
   modules: modulesReducer,
+  queryModuleDependencies: queryModuleDependenciesReducer
 }

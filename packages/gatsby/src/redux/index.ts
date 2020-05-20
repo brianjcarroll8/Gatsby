@@ -81,10 +81,22 @@ export const saveState = (): void => {
     webpackCompilationHash: state.webpackCompilationHash,
     pageDataStats: state.pageDataStats,
     pageData: state.pageData,
+    modules: state.modules,
+    queryModuleDependencies: state.queryModuleDependencies,
+    // pages: state.pages,
   })
 }
 
 store.subscribe(() => {
-  const lastAction = store.getState().lastAction
+  // const state = store.getState()
+  const { lastAction, modules, queryModuleDependencies } = store.getState()
+
+  if ([`CREATE_MODULE_DEPENDENCY`, `DELETE_COMPONENTS_DEPENDENCIES`, `REGISTER_MODULE`].includes(lastAction.type)) {
+    console.log(require(`util`).inspect({
+      action: lastAction.type,
+      modules, queryModuleDependencies
+    }, { depth: null, color: true }))
+  }
+
   emitter.emit(lastAction.type, lastAction)
 })

@@ -8,7 +8,7 @@ export const generateModuleId = ({
 }): string =>
   `${generateComponentChunkName(source, `module`)}-${type}-${importName || ``}`
 
-type ReturnType = (dispatch: any) => string
+type ReturnType = (dispatch: (IRegisterModuleAction) => void) => string
 
 export const registerModule = (
   {
@@ -27,7 +27,7 @@ export const registerModule = (
   const _moduleID = moduleID || generateModuleId({ source, type, importName })
 
   return dispatch => {
-    const action: IRegisterModuleAction = {
+    const action = {
       type: `REGISTER_MODULE`,
       plugin,
       payload: {

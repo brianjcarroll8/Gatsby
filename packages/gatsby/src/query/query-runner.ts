@@ -38,6 +38,8 @@ export const queryRunner = async (
   queryJob: IQueryJob,
   parentSpan: Span | undefined
 ): Promise<IExecutionResult> => {
+  console.log('Running query', queryJob.id)
+
   const { program } = store.getState()
 
   const graphql = (
@@ -109,7 +111,7 @@ export const queryRunner = async (
           location: undefined,
         })
 
-        console.log({ e })
+        // console.log({ e })
 
         structuredError.context = {
           ...structuredError.context,
@@ -122,7 +124,10 @@ export const queryRunner = async (
           ...(urlPath ? { urlPath } : {}),
           ...queryContext,
           plugin,
+          // error: e,
         }
+
+        structuredError.error = e
 
         return structuredError
       })
@@ -161,9 +166,15 @@ export const queryRunner = async (
 
     if (queryJob.isPage) {
       const publicDir = path.join(program.directory, `public`)
-      const { pages } = store.getState()
+      const { pages, queryModuleDependencies, componentDataDependencies } = store.getState()
       const page = pages.get(queryJob.id)
-      await pageDataUtil.write({ publicDir }, page, result)
+      const moduleDependencies = Array.from(queryModuleDependencies.get(queryJob.id) || [])
+
+
+
+      console.log(require(`util`).inspect({ id: queryJob.id, moduleDependencies, componentDataDependencies }, { depth: null, color: true }))
+
+      await pageDataUtil.write({ publicDir }, page, result, moduleDependencies)
     } else {
       // The babel plugin is hard-coded to load static queries from
       // public/static/d/

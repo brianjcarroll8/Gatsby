@@ -38,34 +38,35 @@ export const pagesReducer = (
 
       return state
     }
-    case `CREATE_MODULE_DEPENDENCY`: {
-      const page = state.get(action.payload.path)
+    // case `CREATE_MODULE_DEPENDENCY`: {
+    //   const page = state.get(action.payload.path)
 
-      state.set(action.payload.path, {
-        ...page,
-        moduleDependencies: [
-          ...page.moduleDependencies,
-          action.payload.moduleID,
-        ],
-      })
+    //   // probably want to mutate array moduleDependencies and not recreate
+    //   state.set(action.payload.path, {
+    //     ...page,
+    //     moduleDependencies: [
+    //       ...page.moduleDependencies,
+    //       action.payload.moduleID,
+    //     ],
+    //   })
 
-      return state
-    }
-    case `DELETE_COMPONENTS_DEPENDENCIES`: {
-      const { paths } = action.payload
+    //   return state
+    // }
+    // case `DELETE_COMPONENTS_DEPENDENCIES`: {
+    //   const { paths } = action.payload
 
-      paths.forEach(path => {
-        const page = state.get(path)
-        if (page) {
-          state.set(path, {
-            ...page,
-            moduleDependencies: [],
-          })
-        }
-      })
+    //   paths.forEach(path => {
+    //     const page = state.get(path)
+    //     if (page) {
+    //       state.set(path, {
+    //         ...page,
+    //         moduleDependencies: [],
+    //       })
+    //     }
+    //   })
 
-      return state
-    }
+    //   return state
+    // }
 
     default:
       return state

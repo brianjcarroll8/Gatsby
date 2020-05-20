@@ -75,6 +75,8 @@ const popNodeQueries = state => {
 
     if (!node || !node.id || !node.internal.type) return dirtyIds
 
+    console.log(`dirty node`, node.id)
+
     // Find components that depend on this node so are now dirty.
     if (state.componentDataDependencies.nodes.has(node.id)) {
       state.componentDataDependencies.nodes.get(node.id).forEach(n => {
@@ -83,6 +85,8 @@ const popNodeQueries = state => {
         }
       })
     }
+
+    console.log(`dirty connection`, node.internal.type)
 
     // Find connections that depend on this node so are now invalid.
     if (state.componentDataDependencies.connections.has(node.internal.type)) {
@@ -97,6 +101,16 @@ const popNodeQueries = state => {
 
     return dirtyIds
   }, new Set())
+
+  console.log({ uniqDirties })
+
+  // groupQueryIds()
+
+
+  boundActionCreators.deleteComponentsDependencies(
+    [...uniqDirties]
+  )
+
   queuedDirtyActions = []
   return uniqDirties
 }
@@ -196,7 +210,7 @@ const createQueryRunningActivity = (queryJobsCount, parentSpan) => {
       done: () => {
         report.completeActivity(`query-running`)
       },
-      tick: () => {},
+      tick: () => { },
     }
   }
 }
@@ -367,20 +381,20 @@ const startListeningToDevelopQueue = ({ graphqlTracing } = {}) => {
   })
 
   emitter.on(`API_RUNNING_QUEUE_EMPTY`, runQueuedQueries)
-  ;[
-    `DELETE_CACHE`,
-    `CREATE_NODE`,
-    `DELETE_NODE`,
-    `DELETE_NODES`,
-    `SET_SCHEMA_COMPOSER`,
-    `SET_SCHEMA`,
-    `ADD_FIELD_TO_NODE`,
-    `ADD_CHILD_NODE_TO_PARENT_NODE`,
-  ].forEach(eventType => {
-    emitter.on(eventType, event => {
-      graphqlRunner = null
+    ;[
+      `DELETE_CACHE`,
+      `CREATE_NODE`,
+      `DELETE_NODE`,
+      `DELETE_NODES`,
+      `SET_SCHEMA_COMPOSER`,
+      `SET_SCHEMA`,
+      `ADD_FIELD_TO_NODE`,
+      `ADD_CHILD_NODE_TO_PARENT_NODE`,
+    ].forEach(eventType => {
+      emitter.on(eventType, event => {
+        graphqlRunner = null
+      })
     })
-  })
 }
 
 const enqueueExtractedQueryId = pathname => {

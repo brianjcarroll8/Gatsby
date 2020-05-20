@@ -23,6 +23,7 @@ import { getConfigFile } from "./get-config-file"
 const tracer = require(`opentracing`).globalTracer()
 import { preferDefault } from "./prefer-default"
 import { removeStaleJobs } from "./remove-stale-jobs"
+import { createPages } from "../utils/create-pages"
 
 // Show stack trace on unhandled promises.
 process.on(`unhandledRejection`, (reason, p) => {
@@ -230,10 +231,10 @@ module.exports = async (args: BootstrapArgs) => {
     !!process.env.GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES,
     md5File(`package.json`),
     Promise.resolve(
-      md5File(`${program.directory}/gatsby-config.js`).catch(() => {})
+      md5File(`${program.directory}/gatsby-config.js`).catch(() => { })
     ), // ignore as this file isn't required),
     Promise.resolve(
-      md5File(`${program.directory}/gatsby-node.js`).catch(() => {})
+      md5File(`${program.directory}/gatsby-node.js`).catch(() => { })
     ), // ignore as this file isn't required),
   ])
   const pluginsHash = crypto
@@ -428,7 +429,7 @@ module.exports = async (args: BootstrapArgs) => {
   await require(`../utils/source-nodes`).default({ parentSpan: activity.span })
   reporter.verbose(
     `Now have ${store.getState().nodes.size} nodes with ${
-      store.getState().nodesByType.size
+    store.getState().nodesByType.size
     } types: [${[...store.getState().nodesByType.entries()]
       .map(([type, nodes]) => type + `:` + nodes.size)
       .join(`, `)}]`
@@ -462,26 +463,13 @@ module.exports = async (args: BootstrapArgs) => {
     parentSpan: args.parentSpan ? args.parentSpan : bootstrapSpan,
   })
 
-  // Collect pages.
-  activity = reporter.activityTimer(`createPages`, {
-    parentSpan: bootstrapSpan,
-  })
-  activity.start()
-  await apiRunnerNode(
-    `createPages`,
-    {
-      graphql: graphqlRunner,
-      traceId: `initial-createPages`,
-      waitForCascadingActions: true,
-      parentSpan: activity.span,
-    },
-    { activity }
-  )
+  createPages(graphqlRunner, `initial-createPages`, bootstrapSpan)
+
   reporter.verbose(
     `Now have ${store.getState().nodes.size} nodes with ${
-      store.getState().nodesByType.size
+    store.getState().nodesByType.size
     } types, and ${
-      store.getState().nodesByType?.get(`SitePage`).size
+    store.getState().nodesByType?.get(`SitePage`).size
     } SitePage nodes`
   )
   activity.end()
