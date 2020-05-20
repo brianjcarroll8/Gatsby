@@ -1,7 +1,8 @@
 const withDefaults = require(`./utils/default-options`);
-const options = withDefaults({});
 
-module.exports = {
+module.exports = opts => {
+	const options = withDefaults(opts);
+	return {
 	siteMetadata: {
 		title: `Course Site`,
 		description: `you can see a course here!`,
@@ -14,8 +15,8 @@ module.exports = {
 		{
 			resolve: `gatsby-source-filesystem`,
 			options: {
-				path: options.coursePath || `content/course`,
-				name: options.coursePath || `content/course`,
+				path: options.coursePath,
+				name: options.coursePath,
 			},
 		},
 		{
@@ -40,4 +41,4 @@ module.exports = {
       },
     },
 	],
-};
+}};
