@@ -102,10 +102,6 @@ const popNodeQueries = state => {
     return dirtyIds
   }, new Set())
 
-  console.log({ uniqDirties })
-
-  // groupQueryIds()
-
 
   boundActionCreators.deleteComponentsDependencies(
     [...uniqDirties]
