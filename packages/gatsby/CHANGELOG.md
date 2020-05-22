@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.9](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.8...gatsby@2.22.9) (2020-05-22)
+
+### Performance Improvements
+
+- **gatsby:** support empty filters without sift ([#24258](https://github.com/gatsbyjs/gatsby/issues/24258)) ([542cda8](https://github.com/gatsbyjs/gatsby/commit/542cda8))
+
+## [2.22.8](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.7...gatsby@2.22.8) (2020-05-22)
+
+**Note:** Version bump only for package gatsby
+
+## [2.22.7](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.6...gatsby@2.22.7) (2020-05-22)
+
+**Note:** Version bump only for package gatsby
+
+## [2.22.6](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.5...gatsby@2.22.6) (2020-05-21)
+
+**Note:** Version bump only for package gatsby
+
+## [2.22.5](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.4...gatsby@2.22.5) (2020-05-21)
+
+### Bug Fixes
+
+- **gatsby:** add control-has-associated-label rule into eslint-config ([#24311](https://github.com/gatsbyjs/gatsby/issues/24311)) ([c1ae8f2](https://github.com/gatsbyjs/gatsby/commit/c1ae8f2))
+- **gatsby:** adjust `create-react-context` alias to match actual package exports ([#24305](https://github.com/gatsbyjs/gatsby/issues/24305)) ([cb5d055](https://github.com/gatsbyjs/gatsby/commit/cb5d055))
+
+## [2.22.4](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.3...gatsby@2.22.4) (2020-05-20)
+
+**Note:** Version bump only for package gatsby
+
+## [2.22.3](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.2...gatsby@2.22.3) (2020-05-20)
+
+**Note:** Version bump only for package gatsby
+
+## [2.22.2](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.1...gatsby@2.22.2) (2020-05-20)
+
+### Bug Fixes
+
+- **gatsby-core-utils:** create lock per service, rather than per site ([#24252](https://github.com/gatsbyjs/gatsby/issues/24252)) ([718deb3](https://github.com/gatsbyjs/gatsby/commit/718deb3))
+
+## [2.22.1](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.22.0...gatsby@2.22.1) (2020-05-20)
+
+**Note:** Version bump only for package gatsby
+
 # [2.22.0](https://github.com/gatsbyjs/gatsby/compare/gatsby@2.21.40...gatsby@2.22.0) (2020-05-19)
 
 ### Features
