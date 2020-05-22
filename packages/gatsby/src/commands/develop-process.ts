@@ -146,9 +146,17 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
 
   // report.stateUpdate(`webpack`, `IN_PROGRESS`)
 
-  const webpackActivity = report.activityTimer(`Building development bundle`, {
-    id: `webpack-develop`,
-  })
+  // const webpackActivity = report.activityTimer(`Building development bundle`, {
+  //   id: `webpack-develop`,
+  // })
+  const webpackActivity = {
+    start: () => {
+      console.log('webpack start')
+    },
+    end: () => {
+      console.log(`webpack end`)
+    }
+  }
   webpackActivity.start()
 
   const devConfig = await webpackConfig(
@@ -280,15 +288,19 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
   // We serve by default an empty index.html that sets up the dev environment.
   app.use(developStatic(`public`, { index: false }))
 
+  const webpackDevMiddlewareInstance = webpackDevMiddleware(compiler, {
+    logLevel: `silent`,
+    publicPath: devConfig.output.publicPath,
+    watchOptions: devConfig.devServer
+      ? devConfig.devServer.watchOptions
+      : null,
+    stats: `errors-only`,
+  })
+
+  const webpackWatching = webpackDevMiddlewareInstance.context.watching
+
   app.use(
-    webpackDevMiddleware(compiler, {
-      logLevel: `silent`,
-      publicPath: devConfig.output.publicPath,
-      watchOptions: devConfig.devServer
-        ? devConfig.devServer.watchOptions
-        : null,
-      stats: `errors-only`,
-    })
+    webpackDevMiddlewareInstance
   )
 
   // Expose access to app for advanced use cases
@@ -374,7 +386,7 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
     socket.to(`clients`).emit(`reload`)
   })
 
-  return { compiler, listener, webpackActivity }
+  return { compiler, listener, webpackActivity, webpackWatching }
 }
 
 interface IDevelopArgs extends IProgram {
@@ -480,7 +492,13 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
   })
   queryWatcher.startWatchDeletePage()
 
-  let { compiler, webpackActivity } = await startServer(program)
+
+  debugger
+
+
+  console.log('----START----')
+
+  let { compiler, webpackActivity, webpackWatching } = await startServer(program)
 
   interface IPreparedUrls {
     lanUrlForConfig: string
@@ -649,17 +667,25 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     })
   }
 
-  // compiler.hooks.invalid.tap(`log compiling`, function(...args) {
-  //   console.log(`set invalid`, args, this)
-  // })
+  compiler.hooks.invalid.tap(`log compiling`, function (...args) {
+    console.log(`set invalid`, args, this)
+  })
 
   compiler.hooks.watchRun.tapAsync(`log compiling`, function (_, done) {
     if (webpackActivity) {
       webpackActivity.end()
     }
-    webpackActivity = report.activityTimer(`Re-building development bundle`, {
-      id: `webpack-develop`,
-    })
+    // webpackActivity = report.activityTimer(`Re-building development bundle`, {
+    //   id: `webpack-develop`,
+    // })
+    webpackActivity = {
+      start: () => {
+        console.log('webpack re-start')
+      },
+      end: () => {
+        console.log(`webpack end`)
+      }
+    }
     webpackActivity.start()
 
     done()
@@ -715,6 +741,16 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
       webpackActivity.end()
       webpackActivity = null
     }
+
+    webpackWatching.suspend()
+
+    setTimeout(
+      () => {
+        console.log('----RESUME----')
+        webpackWatching.resume()
+      },
+      10000
+    )
 
     done()
   })
