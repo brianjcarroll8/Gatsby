@@ -110,6 +110,7 @@ class WebsocketManager {
   pageResults: PageResultsMap = new Map()
   staticQueryResults: QueryResultsMap = new Map()
   websocket: socketIO.Server | undefined
+  pageQueryIDsToEmitSometimeInTheFuture: Set<string> = new Set()
 
   init = ({
     directory,
@@ -244,27 +245,69 @@ class WebsocketManager {
     }
   }
 
-  emitPageData = (data: IPageQueryResult): void => {
+  enqueueEmitPageData = (data: IPageQueryResult): void => {
     data.id = normalizePagePath(data.id)
     this.pageResults.set(data.id, data)
+    this.pageQueryIDsToEmitSometimeInTheFuture.add(data.id)
+  }
 
+  flushPageData = (): void => {
     if (this.websocket) {
-      this.websocket.send({ type: `pageQueryResult`, payload: data })
 
-      if (this.connectedClients > 0) {
-        telemetry.trackCli(
-          `WEBSOCKET_EMIT_PAGE_DATA_UPDATE`,
-          {
-            siteMeasurements: {
-              clientsCount: this.connectedClients,
-              paths: hashPaths(Array.from(this.activePaths)),
+      const state = store.getState()
+
+      this.pageQueryIDsToEmitSometimeInTheFuture.forEach(id => {
+        const data = this.pageResults.get(id)
+
+        const moduleDependencies = Array.from(state.queryModuleDependencies.get(id) || [])
+
+        // this.websocket.send({
+        //   type: `pageData`, payload: {
+        //     data,
+        //     moduleDependencies
+        //   }
+        // })
+
+        this.websocket.send({
+          type: `pageQueryResult`, payload:
+            { ...data, moduleDependencies }
+        })
+
+        if (this.connectedClients > 0) {
+          telemetry.trackCli(
+            `WEBSOCKET_EMIT_PAGE_DATA_UPDATE`,
+            {
+              siteMeasurements: {
+                clientsCount: this.connectedClients,
+                paths: hashPaths(Array.from(this.activePaths)),
+              },
             },
-          },
-          { debounce: true }
-        )
-      }
+            { debounce: true }
+          )
+        }
+      })
+      this.pageQueryIDsToEmitSometimeInTheFuture.clear()
     }
   }
+
+  // emitPageData = (data: IPageQueryResult): void => {
+  //   if (this.websocket) {
+  //     this.websocket.send({ type: `pageQueryResult`, payload: data })
+
+  //     if (this.connectedClients > 0) {
+  //       telemetry.trackCli(
+  //         `WEBSOCKET_EMIT_PAGE_DATA_UPDATE`,
+  //         {
+  //           siteMeasurements: {
+  //             clientsCount: this.connectedClients,
+  //             paths: hashPaths(Array.from(this.activePaths)),
+  //           },
+  //         },
+  //         { debounce: true }
+  //       )
+  //     }
+  //   }
+  // }
 
   emitError = (id: string, message?: string): void => {
     if (message) {

@@ -149,17 +149,17 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
 
   // report.stateUpdate(`webpack`, `IN_PROGRESS`)
 
-  // const webpackActivity = report.activityTimer(`Building development bundle`, {
-  //   id: `webpack-develop`,
-  // })
-  const webpackActivity = {
-    start: () => {
-      console.log('webpack start')
-    },
-    end: () => {
-      console.log(`webpack end`)
-    }
-  }
+  const webpackActivity = report.activityTimer(`Building development bundle`, {
+    id: `webpack-develop`,
+  })
+  // const webpackActivity = {
+  //   start: () => {
+  //     console.log('webpack start')
+  //   },
+  //   end: () => {
+  //     console.log(`webpack end`)
+  //   }
+  // }
   webpackActivity.start()
 
   const devConfig = await webpackConfig(
@@ -678,17 +678,17 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     if (webpackActivity) {
       webpackActivity.end()
     }
-    // webpackActivity = report.activityTimer(`Re-building development bundle`, {
-    //   id: `webpack-develop`,
-    // })
-    webpackActivity = {
-      start: () => {
-        console.log('webpack re-start')
-      },
-      end: () => {
-        console.log(`webpack end`)
-      }
-    }
+    webpackActivity = report.activityTimer(`Re-building development bundle`, {
+      id: `webpack-develop`,
+    })
+    // webpackActivity = {
+    //   start: () => {
+    //     console.log('webpack re-start')
+    //   },
+    //   end: () => {
+    //     console.log(`webpack end`)
+    //   }
+    // }
     webpackActivity.start()
 
     done()

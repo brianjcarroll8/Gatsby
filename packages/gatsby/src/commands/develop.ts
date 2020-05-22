@@ -68,7 +68,7 @@ class ControllableScript {
     })
     fs.outputFileSync(tmpFileName, this.script)
     this.isRunning = true
-    this.process = spawn(`node`, [`--inspect-brk`, tmpFileName], {
+    this.process = spawn(`node`, [tmpFileName], {
       env: process.env,
       stdio: [`inherit`, `inherit`, `inherit`, `ipc`],
     })

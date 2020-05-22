@@ -62,10 +62,12 @@ export const deleteComponentsDependencies = (
 
 
   let modules = new Set<string>()
+
+  const addModule = modules.add.bind(modules)
   paths.forEach(path => {
     const deps = queryModuleDependencies.get(path)
     if (deps) {
-      deps.forEach(modules.add)
+      deps.forEach(addModule)
     }
   })
 

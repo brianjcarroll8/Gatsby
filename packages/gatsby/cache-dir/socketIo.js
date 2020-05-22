@@ -20,14 +20,25 @@ export default function socketIo() {
         socket = io()
 
         const didDataChange = (msg, queryData) => {
+
           const id =
             msg.type === `staticQueryResult`
               ? msg.payload.id
               : normalizePagePath(msg.payload.id)
-          return (
+
+          const changed = (
             !(id in queryData) ||
             JSON.stringify(msg.payload.result) !== JSON.stringify(queryData[id])
           )
+
+          console.log({
+            id,
+            old: queryData[id],
+            new: msg.payload.result,
+            changed,
+          })
+
+          return changed
         }
 
         socket.on(`message`, msg => {
@@ -45,6 +56,14 @@ export default function socketIo() {
                 [normalizePagePath(msg.payload.id)]: msg.payload.result,
               }
             }
+            // } else if (msg.type === `pageData`) {
+
+            //   if (didDataChange(msg, pageQueryData)) {
+            //     pageQueryData = {
+            //       ...pageQueryData,
+            //       [normalizePagePath(msg.payload.id)]: msg.payload.result,
+            //     }
+            //   }
           } else if (msg.type === `overlayError`) {
             if (msg.payload.message) {
               reportError(msg.payload.id, msg.payload.message)
