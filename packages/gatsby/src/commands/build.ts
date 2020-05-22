@@ -16,6 +16,7 @@ import { store, readState } from "../redux"
 import queryUtil from "../query"
 import requiresWriter from "../bootstrap/requires-writer"
 import * as appDataUtil from "../utils/app-data"
+import * as pageDataUtil from "../utils/page-data"
 import * as WorkerPool from "../utils/worker/pool"
 import { structureWebpackErrors } from "../utils/webpack-error-utils"
 import {
@@ -27,6 +28,7 @@ import { boundActionCreators } from "../redux/actions"
 import { waitUntilAllJobsComplete } from "../utils/wait-until-jobs-complete"
 import { IProgram, Stage } from "./types"
 import { PackageJson } from "../.."
+import { mapPagesToStaticQueryHashes } from "../utils/map-pages-to-static-query-hashes"
 
 let cachedPageData
 let cachedWebpackCompilationHash
@@ -127,6 +129,13 @@ module.exports = async function build(program: IBuildArgs): Promise<void> {
 
   const workerPool = WorkerPool.create()
 
+  const state = store.getState()
+
+  const mapOfPagesToStaticQueryHashes = mapPagesToStaticQueryHashes(
+    state,
+    stats
+  )
+
   const webpackCompilationHash = stats.hash
   if (
     webpackCompilationHash !== store.getState().webpackCompilationHash ||
@@ -146,6 +155,16 @@ module.exports = async function build(program: IBuildArgs): Promise<void> {
 
     activity.end()
   }
+
+  mapOfPagesToStaticQueryHashes.forEach(async (staticQueryHashes, pagePath) => {
+    const page = state.pages.get(pagePath)
+    const moduleDependencies = Array.from(state.queryModuleDependencies.get(pagePath) || [])
+
+    await pageDataUtil.writePageData({ publicDir }, page, {
+      staticQueryHashes,
+      moduleDependencies,
+    })
+  })
 
   if (process.env.GATSBY_EXPERIMENTAL_PAGE_BUILD_ON_DATA_CHANGES) {
     const { pages } = store.getState()

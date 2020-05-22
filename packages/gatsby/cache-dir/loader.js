@@ -145,6 +145,7 @@ export class BaseLoader {
     //   }
     // }
     this.pageDb = new Map()
+    this.staticQueryDb = new Map()
     this.inFlightDb = new Map()
     this.pageDataDb = new Map()
     this.prefetchTriggered = new Set()
@@ -199,13 +200,14 @@ export class BaseLoader {
         }
 
         let pageData = result.payload
-        const { componentChunkName, moduleDependencies } = pageData
-        return Promise.all([
-          this.loadComponent(componentChunkName),
-          ...(moduleDependencies
-            ? this.fetchAndEmitModuleDependencies(moduleDependencies)
-            : []),
-        ]).then(([component]) => {
+
+        const { componentChunkName, staticQueryHashes = [], moduleDependencies = [] } = pageData
+
+        const moduleDependenciesBatchPromise = Promise.all(this.fetchAndEmitModuleDependencies(moduleDependencies))
+
+        const componentChunkPromise = this.loadComponent(
+          componentChunkName
+        ).then(component => {
           const finalResult = { createdAt: new Date() }
           let pageResources
           if (!component) {
@@ -231,6 +233,56 @@ export class BaseLoader {
           // undefined if final result is an error
           return pageResources
         })
+
+        const staticQueryBatchPromise = Promise.all(
+          staticQueryHashes.map(staticQueryHash => {
+            console.log(
+              `${pagePath} needs a static query with hash ${staticQueryHash}`
+            )
+
+            // TODO: Get from cache
+
+            // TODO: Get in flight Promise
+
+            return doFetch(`/static/d/${staticQueryHash}.json`).then(req => {
+              const jsonPayload = JSON.parse(req.responseText)
+              console.log(
+                `Static query with hash ${staticQueryHash} was fetched`,
+                jsonPayload
+              )
+              // this.staticQueryDb.set(staticQueryHash, jsonPayload)
+              return { staticQueryHash, jsonPayload }
+            })
+          })
+        ).then(staticQueryResults => {
+          console.log({
+            staticQueryResults,
+          })
+          const staticQueryResultsMap = staticQueryResults.reduce(
+            (map, { staticQueryHash, jsonPayload }) => {
+              map[staticQueryHash] = jsonPayload
+              return map
+            },
+            {}
+          )
+          // emitter.emit(`onPostLoadStaticQueryResults`, {
+          //   staticQueryResultsMap,
+          // })
+          this.staticQueryDb.set(pagePath, staticQueryResultsMap)
+          return staticQueryResultsMap
+        })
+
+        return Promise.all([
+          componentChunkPromise,
+          staticQueryBatchPromise,
+
+          moduleDependenciesBatchPromise,
+        ]).then(([pageResources, staticQueryResults]) => {
+          return {
+            ...pageResources,
+            staticQueryResults,
+          }
+        })
       })
       // prefer duplication with then + catch over .finally to prevent problems in ie11 + firefox
       .then(response => {
@@ -249,8 +301,17 @@ export class BaseLoader {
   // returns undefined if loading page ran into errors
   loadPageSync(rawPath) {
     const pagePath = findPath(rawPath)
-    if (this.pageDb.has(pagePath)) {
-      return this.pageDb.get(pagePath).payload
+    if (this.pageDb.has(pagePath) && this.staticQueryDb.has(pagePath)) {
+      const pageData = this.pageDb.get(pagePath).payload
+      const staticQueryData = this.staticQueryDb.get(pagePath)
+      console.log({
+        pageData,
+        staticQueryData,
+      })
+      return {
+        ...pageData,
+        staticQueryData,
+      }
     }
     return undefined
   }
@@ -387,9 +448,9 @@ export class ProdLoader extends BaseLoader {
     const loadComponent = (chunkName, key = `components`) =>
       asyncRequires[key][chunkName]
         ? asyncRequires[key][chunkName]()
-            .then(preferDefault)
-            // loader will handle the case when component is null
-            .catch(() => null)
+          .then(preferDefault)
+          // loader will handle the case when component is null
+          .catch(() => null)
         : Promise.resolve()
 
     super(loadComponent, matchPaths)

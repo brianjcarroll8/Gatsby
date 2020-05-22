@@ -7,7 +7,6 @@ import crypto from "crypto"
 import path from "path"
 import { store } from "../redux"
 import { boundActionCreators } from "../redux/actions"
-import pageDataUtil from "../utils/page-data"
 import { getCodeFrame } from "./graphql-errors"
 import errorParser from "./error-parser"
 
@@ -165,16 +164,31 @@ export const queryRunner = async (
     resultHashes.set(queryJob.id, resultHash)
 
     if (queryJob.isPage) {
-      const publicDir = path.join(program.directory, `public`)
-      const { pages, queryModuleDependencies, componentDataDependencies } = store.getState()
-      const page = pages.get(queryJob.id)
-      const moduleDependencies = Array.from(queryModuleDependencies.get(queryJob.id) || [])
+
+      // const publicDir = path.join(program.directory, `public`)
+      // const { pages, queryModuleDependencies, componentDataDependencies } = store.getState()
+      // const page = pages.get(queryJob.id)
+      // const moduleDependencies = Array.from(queryModuleDependencies.get(queryJob.id) || [])
 
 
 
-      console.log(require(`util`).inspect({ id: queryJob.id, moduleDependencies, componentDataDependencies }, { depth: null, color: true }))
+      // console.log(require(`util`).inspect({ id: queryJob.id, moduleDependencies, componentDataDependencies }, { depth: null, color: true }))
 
-      await pageDataUtil.write({ publicDir }, page, result, moduleDependencies)
+      // await pageDataUtil.write({ publicDir }, page, result, moduleDependencies)
+
+
+      // We need to save this temporarily in cache because
+      // this might be incomplete at the moment
+      // since it will not contain included static queries yet
+      // Those will be added later and that is when this file will
+      // be written to `public`
+      const resultPath = path.join(
+        program.directory,
+        `.cache`,
+        `json`,
+        `${queryJob.id.replace(/\//g, `_`)}.json`
+      )
+      await fs.outputFile(resultPath, resultJSON)
     } else {
       // The babel plugin is hard-coded to load static queries from
       // public/static/d/
