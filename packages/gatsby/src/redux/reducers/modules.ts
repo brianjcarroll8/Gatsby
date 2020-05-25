@@ -1,4 +1,5 @@
 import { ActionsUnion, IGatsbyState, IDependencyModule } from "../types"
+import { emitter } from "../"
 
 export const modulesReducer = (
   state: IGatsbyState["modules"] = new Map<string, IDependencyModule>(),
@@ -6,7 +7,10 @@ export const modulesReducer = (
 ): IGatsbyState["modules"] => {
   switch (action.type) {
     case `REGISTER_MODULE`: {
-      state.set(action.payload.moduleID, { ...action.payload, queryIDs: new Set<String>() })
+      state.set(action.payload.moduleID, {
+        ...action.payload,
+        queryIDs: new Set<string>(),
+      })
 
       return state
     }
@@ -14,7 +18,9 @@ export const modulesReducer = (
       const dependencyModule = state.get(action.payload.moduleID)
 
       if (!dependencyModule) {
-        throw new Error("[dev] trying to create module dependency without registed module")
+        throw new Error(
+          `[dev] trying to create module dependency without registed module`
+        )
       }
 
       dependencyModule.queryIDs.add(action.payload.path)
@@ -31,10 +37,14 @@ export const modulesReducer = (
           // TO-DO: add handling for forced ones
           if (dependencyModule.queryIDs.size === 0) {
             state.delete(moduleID)
+            emitter.emit({
+              type: `UNREGISTER_MODULE`,
+              payload: {
+                moduleID,
+              },
+            })
           }
         }
-
-
       })
 
       return state

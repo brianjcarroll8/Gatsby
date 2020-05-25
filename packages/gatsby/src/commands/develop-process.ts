@@ -10,7 +10,7 @@ import webpackDevMiddleware from "webpack-dev-middleware"
 import glob from "glob"
 import express from "express"
 import got from "got"
-import webpack from "webpack"
+import webpack, { Stats } from "webpack"
 import graphqlHTTP from "express-graphql"
 import graphqlPlayground from "graphql-playground-middleware-express"
 import graphiqlExplorer from "gatsby-graphiql-explorer"
@@ -198,7 +198,7 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
       graphqlPlayground({
         endpoint: `/___graphql`,
       }),
-      () => { }
+      () => {}
     )
   } else {
     graphiqlExplorer(app, {
@@ -294,17 +294,13 @@ async function startServer(program: IDevelopArgs): Promise<IServer> {
   const webpackDevMiddlewareInstance = webpackDevMiddleware(compiler, {
     logLevel: `silent`,
     publicPath: devConfig.output.publicPath,
-    watchOptions: devConfig.devServer
-      ? devConfig.devServer.watchOptions
-      : null,
+    watchOptions: devConfig.devServer ? devConfig.devServer.watchOptions : null,
     stats: `errors-only`,
   })
 
   const webpackWatching = webpackDevMiddlewareInstance.context.watching
 
-  app.use(
-    webpackDevMiddlewareInstance
-  )
+  app.use(webpackDevMiddlewareInstance)
 
   // Expose access to app for advanced use cases
   const { developMiddleware } = store.getState().config
@@ -495,13 +491,13 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
   })
   queryWatcher.startWatchDeletePage()
 
-
   debugger
 
+  console.log(`----START----`)
 
-  console.log('----START----')
-
-  let { compiler, webpackActivity, webpackWatching } = await startServer(program)
+  let { compiler, webpackActivity, webpackWatching } = await startServer(
+    program
+  )
 
   interface IPreparedUrls {
     lanUrlForConfig: string
@@ -591,9 +587,9 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     console.log()
     console.log(
       `View ${
-      process.env.GATSBY_GRAPHQL_IDE === `playground`
-        ? `the GraphQL Playground`
-        : `GraphiQL`
+        process.env.GATSBY_GRAPHQL_IDE === `playground`
+          ? `the GraphQL Playground`
+          : `GraphiQL`
       }, an in-browser IDE, to explore your site's data and schema`
     )
     console.log()
@@ -601,12 +597,12 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     if (urls.lanUrlForTerminal) {
       console.log(
         `  ${chalk.bold(`Local:`)}            ${
-        urls.localUrlForTerminal
+          urls.localUrlForTerminal
         }___graphql`
       )
       console.log(
         `  ${chalk.bold(`On Your Network:`)}  ${
-        urls.lanUrlForTerminal
+          urls.lanUrlForTerminal
         }___graphql`
       )
     } else {
@@ -694,7 +690,39 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     done()
   })
 
+  let storedStats: Stats | undefined
+  const doTheThingWithPageData = (): void => {
+    if (!storedStats) {
+      throw new Error(`welp, that's too early - we didn't store stats yet`)
+    }
+
+    const state = store.getState()
+    const mapOfPagesToStaticQueryHashes = mapPagesToStaticQueryHashes(
+      state,
+      storedStats
+    )
+
+    const publicDir = path.join(program.directory, `public`)
+
+    mapOfPagesToStaticQueryHashes.forEach(
+      async (staticQueryHashes, pagePath) => {
+        const page = state.pages.get(pagePath)
+        const moduleDependencies = Array.from(
+          state.queryModuleDependencies.get(pagePath) || []
+        )
+
+        await pageDataUtil.writePageData({ publicDir }, page, {
+          staticQueryHashes,
+          moduleDependencies,
+        })
+      }
+    )
+
+    websocketManager.flushPageData()
+  }
+
   let isFirstCompile = true
+
   // "done" event fires when Webpack has finished recompiling the bundle.
   // Whether or not you have warnings or errors, you will get this event.
   compiler.hooks.done.tapAsync(`print gatsby instructions`, function (
@@ -756,27 +784,8 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     // )
 
     if (isSuccessful) {
-      const state = store.getState()
-      const mapOfPagesToStaticQueryHashes = mapPagesToStaticQueryHashes(
-        state,
-        stats
-      )
-
-      const publicDir = path.join(program.directory, `public`)
-
-      mapOfPagesToStaticQueryHashes.forEach(
-        async (staticQueryHashes, pagePath) => {
-          const page = state.pages.get(pagePath)
-          const moduleDependencies = Array.from(state.queryModuleDependencies.get(pagePath) || [])
-
-          await pageDataUtil.writePageData({ publicDir }, page, {
-            staticQueryHashes,
-            moduleDependencies,
-          })
-        }
-      )
-
-      websocketManager.flushPageData()
+      storedStats = stats
+      doTheThingWithPageData()
     }
 
     done()

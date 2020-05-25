@@ -14,6 +14,7 @@ export function mapPagesToStaticQueryHashes(
       const { component } = page
       const module = modules.find(module => module.resource === component)
       if (!module) {
+        // ConcatanatedModule :sob:
         map.set(path, {
           component,
           dependencies: [],
@@ -24,7 +25,6 @@ export function mapPagesToStaticQueryHashes(
         //   component,
         //   modules
         // })
-
       }
       const dependencies = uniq(
         module.dependencies.filter(m => m.module).map(m => m.module.resource)

@@ -204,7 +204,7 @@ actions.createPage = (
     if (invalidFields.length > 0) {
       const error = `${
         invalidFields.length === 1 ? singularMessage : pluralMessage
-        }
+      }
 
 ${invalidFields.map(f => `  * "${f}"`).join(`\n`)}
 
@@ -476,7 +476,7 @@ ${reservedFields.map(f => `  * "${f}"`).join(`\n`)}
   const contextModified =
     !!oldPage && !_.isEqual(oldPage.context, internalPage.context)
 
-  console.log(internalPage.path, contextModified)
+  // console.log(internalPage.path, contextModified)
 
   const alternateSlashPath = page.path.endsWith(`/`)
     ? page.path.slice(0, -1)
@@ -485,10 +485,10 @@ ${reservedFields.map(f => `  * "${f}"`).join(`\n`)}
   if (store.getState().pages.has(alternateSlashPath)) {
     report.warn(
       chalk.bold.yellow(`Non-deterministic routing danger: `) +
-      `Attempting to create page: "${page.path}", but page "${alternateSlashPath}" already exists\n` +
-      chalk.bold.yellow(
-        `This could lead to non-deterministic routing behavior`
-      )
+        `Attempting to create page: "${page.path}", but page "${alternateSlashPath}" already exists\n` +
+        chalk.bold.yellow(
+          `This could lead to non-deterministic routing behavior`
+        )
     )
   }
 
@@ -541,7 +541,7 @@ actions.deleteNode = (options: any, plugin: Plugin, args: any) => {
 
           The node type "${node.internal.type}" is owned by "${
         typeOwners[node.internal.type]
-        }".
+      }".
 
           The node object passed to "deleteNode":
 
@@ -811,7 +811,7 @@ const createNode = (
 
         The node type "${node.internal.type}" is owned by "${
         typeOwners[node.internal.type]
-        }".
+      }".
 
         If you copy and pasted code from elsewhere, you'll need to pick a new type name
         for your new node(s).
@@ -1358,7 +1358,7 @@ const maybeAddPathPrefix = (path, pathPrefix) => {
   const isRelativeProtocol = path.startsWith(`//`)
   return `${
     parsed.protocol != null || isRelativeProtocol ? `` : pathPrefix
-    }${path}`
+  }${path}`
 }
 
 /**

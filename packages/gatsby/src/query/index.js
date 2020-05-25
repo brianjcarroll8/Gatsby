@@ -102,10 +102,7 @@ const popNodeQueries = state => {
     return dirtyIds
   }, new Set())
 
-
-  boundActionCreators.deleteComponentsDependencies(
-    [...uniqDirties]
-  )
+  boundActionCreators.deleteComponentsDependencies([...uniqDirties])
 
   queuedDirtyActions = []
   return uniqDirties
@@ -206,7 +203,7 @@ const createQueryRunningActivity = (queryJobsCount, parentSpan) => {
       done: () => {
         report.completeActivity(`query-running`)
       },
-      tick: () => { },
+      tick: () => {},
     }
   }
 }
@@ -377,20 +374,20 @@ const startListeningToDevelopQueue = ({ graphqlTracing } = {}) => {
   })
 
   emitter.on(`API_RUNNING_QUEUE_EMPTY`, runQueuedQueries)
-    ;[
-      `DELETE_CACHE`,
-      `CREATE_NODE`,
-      `DELETE_NODE`,
-      `DELETE_NODES`,
-      `SET_SCHEMA_COMPOSER`,
-      `SET_SCHEMA`,
-      `ADD_FIELD_TO_NODE`,
-      `ADD_CHILD_NODE_TO_PARENT_NODE`,
-    ].forEach(eventType => {
-      emitter.on(eventType, event => {
-        graphqlRunner = null
-      })
+  ;[
+    `DELETE_CACHE`,
+    `CREATE_NODE`,
+    `DELETE_NODE`,
+    `DELETE_NODES`,
+    `SET_SCHEMA_COMPOSER`,
+    `SET_SCHEMA`,
+    `ADD_FIELD_TO_NODE`,
+    `ADD_CHILD_NODE_TO_PARENT_NODE`,
+  ].forEach(eventType => {
+    emitter.on(eventType, event => {
+      graphqlRunner = null
     })
+  })
 }
 
 const enqueueExtractedQueryId = pathname => {

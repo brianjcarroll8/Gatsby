@@ -57,13 +57,12 @@ export type GatsbyReduxStore = Store<IGatsbyState, ActionsUnion> & {
   dispatch: ThunkDispatch<IGatsbyState, undefined, ActionsUnion>
 }
 
-export const configureStore = (
-  initialState: IGatsbyState
-): GatsbyReduxStore => createStore(
-  combineReducers<IGatsbyState>({ ...reducers }),
-  initialState,
-  applyMiddleware(thunk as ThunkMiddleware<IGatsbyState, ActionsUnion>, multi)
-)
+export const configureStore = (initialState: IGatsbyState): GatsbyReduxStore =>
+  createStore(
+    combineReducers<IGatsbyState>({ ...reducers }),
+    initialState,
+    applyMiddleware(thunk as ThunkMiddleware<IGatsbyState, ActionsUnion>, multi)
+  )
 
 export const store: GatsbyReduxStore = configureStore(readState())
 
@@ -91,12 +90,12 @@ store.subscribe(() => {
   // const state = store.getState()
   const { lastAction, modules, queryModuleDependencies } = store.getState()
 
-  if ([`CREATE_MODULE_DEPENDENCY`, `DELETE_COMPONENTS_DEPENDENCIES`, `REGISTER_MODULE`].includes(lastAction.type)) {
-    console.log(require(`util`).inspect({
-      action: lastAction.type,
-      modules, queryModuleDependencies
-    }, { depth: null, color: true }))
-  }
+  // if ([`CREATE_MODULE_DEPENDENCY`, `DELETE_COMPONENTS_DEPENDENCIES`, `REGISTER_MODULE`].includes(lastAction.type)) {
+  //   console.log(require(`util`).inspect({
+  //     action: lastAction.type,
+  //     modules, queryModuleDependencies
+  //   }, { depth: null, color: true }))
+  // }
 
   emitter.emit(lastAction.type, lastAction)
 })
