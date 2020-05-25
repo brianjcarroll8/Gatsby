@@ -10,7 +10,7 @@ interface IProxyControls {
   server: any
 }
 
-const noop = (): void => { }
+const noop = (): void => {}
 
 export const startDevelopProxy = (input: {
   proxyPort: number
@@ -24,10 +24,7 @@ export const startDevelopProxy = (input: {
     changeOrigin: true,
     preserveHeaderKeyCase: true,
     autoRewrite: true,
-    ws: true,
   })
-
-
 
   // Noop on proxy errors, as this throws a bunch of "Socket hang up"
   // ones whenever the page is refreshed
@@ -43,12 +40,12 @@ export const startDevelopProxy = (input: {
       return
     }
 
-    // if (req.url === `/socket.io/socket.io.js`) {
-    //   res.end(
-    //     fs.readFileSync(require.resolve(`socket.io-client/dist/socket.io.js`))
-    //   )
-    //   return
-    // }
+    if (req.url === `/socket.io/socket.io.js`) {
+      res.end(
+        fs.readFileSync(require.resolve(`socket.io-client/dist/socket.io.js`))
+      )
+      return
+    }
 
     if (
       shouldServeRestartingScreen ||
@@ -60,11 +57,6 @@ export const startDevelopProxy = (input: {
 
     proxy.web(req, res)
   })
-
-  server.on('upgrade', function (req, socket, head) {
-    console.log('on upgrade')
-    proxy.ws(req, socket, head);
-  });
 
   server.listen(input.proxyPort)
 
