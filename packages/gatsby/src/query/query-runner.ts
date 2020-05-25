@@ -37,7 +37,7 @@ export const queryRunner = async (
   queryJob: IQueryJob,
   parentSpan: Span | undefined
 ): Promise<IExecutionResult> => {
-  console.log('Running query', queryJob.id)
+  // console.log('Running query', queryJob.id)
 
   const { program } = store.getState()
 
@@ -164,18 +164,14 @@ export const queryRunner = async (
     resultHashes.set(queryJob.id, resultHash)
 
     if (queryJob.isPage) {
-
       // const publicDir = path.join(program.directory, `public`)
       // const { pages, queryModuleDependencies, componentDataDependencies } = store.getState()
       // const page = pages.get(queryJob.id)
       // const moduleDependencies = Array.from(queryModuleDependencies.get(queryJob.id) || [])
 
-
-
       // console.log(require(`util`).inspect({ id: queryJob.id, moduleDependencies, componentDataDependencies }, { depth: null, color: true }))
 
       // await pageDataUtil.write({ publicDir }, page, result, moduleDependencies)
-
 
       // We need to save this temporarily in cache because
       // this might be incomplete at the moment

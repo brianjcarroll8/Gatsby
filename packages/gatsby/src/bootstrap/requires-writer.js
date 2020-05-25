@@ -273,13 +273,13 @@ const startListener = () => {
   })
 
   emitter.on(`REGISTER_MODULE`, action => {
-    console.log(`REGISTER_MODULE`, action.payload.moduleID)
+    // console.log(`REGISTER_MODULE`, action.payload.moduleID)
     reporter.pendingActivity({ id: `requires-writer` })
     debouncedWriteAll()
   })
 
   emitter.on(`UNREGISTER_MODULE`, action => {
-    console.log(`UNREGISTER_MODULE`, action.payload.moduleID)
+    // console.log(`UNREGISTER_MODULE`, action.payload.moduleID)
     reporter.pendingActivity({ id: `requires-writer` })
     debouncedWriteAll()
   })

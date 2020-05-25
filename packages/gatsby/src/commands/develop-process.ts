@@ -666,9 +666,9 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     })
   }
 
-  compiler.hooks.invalid.tap(`log compiling`, function (...args) {
-    console.log(`set invalid`, args, this)
-  })
+  // compiler.hooks.invalid.tap(`log compiling`, function (...args) {
+  //   console.log(`set invalid`, args, this)
+  // })
 
   compiler.hooks.watchRun.tapAsync(`log compiling`, function (_, done) {
     if (webpackActivity) {

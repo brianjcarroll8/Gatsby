@@ -75,7 +75,7 @@ const popNodeQueries = state => {
 
     if (!node || !node.id || !node.internal.type) return dirtyIds
 
-    console.log(`dirty node`, node.id)
+    // console.log(`dirty node`, node.id)
 
     // Find components that depend on this node so are now dirty.
     if (state.componentDataDependencies.nodes.has(node.id)) {
@@ -86,7 +86,7 @@ const popNodeQueries = state => {
       })
     }
 
-    console.log(`dirty connection`, node.internal.type)
+    // console.log(`dirty connection`, node.internal.type)
 
     // Find connections that depend on this node so are now invalid.
     if (state.componentDataDependencies.connections.has(node.internal.type)) {
