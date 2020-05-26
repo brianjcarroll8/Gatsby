@@ -68,20 +68,39 @@ export class PageQueryStore extends React.Component {
     // - location changed
     // - page data for path changed
 
-    return (
+    const shouldUpdate =
       this.props.location !== nextProps.location ||
       this.state.path !== nextState.path ||
       this.state.pageQueryData[normalizePagePath(nextState.path)] !==
         nextState.pageQueryData[normalizePagePath(nextState.path)]
-    )
+
+    if (shouldUpdate) {
+      console.log(`[query-result-store] shouldComponentUpdate`, {
+        locationD: this.props.location !== nextProps.location,
+        pathD: this.state.path !== nextState.path,
+        pageQueryD:
+          this.state.pageQueryData[normalizePagePath(nextState.path)] !==
+          nextState.pageQueryData[normalizePagePath(nextState.path)],
+        currentProps: { ...this.props },
+        currentState: { ...this.state },
+        nextProps: { ...nextProps },
+        nextState: { ...nextState },
+      })
+    }
+
+    return shouldUpdate
   }
 
   render() {
     const data = this.state.pageQueryData[getPathFromProps(this.props)]
+
     // eslint-disable-next-line
     if (!data) {
       return <div />
     }
+
+    // const { moduleDependencies, ...data } = stuff
+    console.log(`[query-result-store] Render`)
 
     return <PageRenderer {...this.props} {...data} />
   }

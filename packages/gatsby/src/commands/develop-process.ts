@@ -711,14 +711,23 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
           state.queryModuleDependencies.get(pagePath) || []
         )
 
-        await pageDataUtil.writePageData({ publicDir }, page, {
+        const body = await pageDataUtil.writePageData({ publicDir }, page, {
           staticQueryHashes,
           moduleDependencies,
         })
+
+        // const
+        websocketManager.emitPageData({
+          ...body.result,
+          id: pagePath,
+          result: {
+            data: body.result.data,
+            pageContext: body.result.pageContext,
+            moduleDependencies: body.moduleDependencies,
+          },
+        })
       }
     )
-
-    websocketManager.flushPageData()
   }
 
   let isFirstCompile = true

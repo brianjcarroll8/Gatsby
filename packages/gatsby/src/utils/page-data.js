@@ -21,7 +21,11 @@ const remove = async ({ publicDir }, pagePath) => {
   return Promise.resolve()
 }
 
-const writePageData = async ({ publicDir }, page, { staticQueryHashes, moduleDependencies }) => {
+const writePageData = async (
+  { publicDir },
+  page,
+  { staticQueryHashes, moduleDependencies }
+) => {
   const inputFilePath = path.join(
     publicDir,
     `..`,
@@ -52,6 +56,8 @@ const writePageData = async ({ publicDir }, page, { staticQueryHashes, moduleDep
   })
 
   await fs.outputFile(outputFilePath, bodyStr)
+
+  return body
 }
 
 module.exports = {
