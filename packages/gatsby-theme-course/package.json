@@ -1,32 +1,32 @@
 {
-	"name": "gatsby-theme-course",
-	"version": "0.0.4",
-	"main": "index.js",
-	"author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
-	"license": "MIT",
-	"peerDependencies": {
-		"gatsby": "^2.19.42",
-		"react": "^16.13.0",
-		"react-dom": "^16.13.0"
-	},
-	"dependencies": {
-		"@mdx-js/mdx": "^1.6.0",
-		"@theme-ui/presets": "^0.3.0",
-		"gatsby-plugin-mdx": "^1.2.1",
-		"gatsby-plugin-react-helmet": "^3.3.0",
-		"gatsby-plugin-sharp": "^2.6.0",
-		"gatsby-plugin-theme-ui": "^0.3.0",
-		"gatsby-remark-images": "^3.3.0",
-		"gatsby-source-filesystem": "^2.3.0",
-		"mdx-utils": "^0.2.0",
-		"prism-react-renderer": "^1.1.0",
-		"react-helmet": "^6.0.0",
-		"react-live": "^2.2.2",
-		"theme-ui": "^0.3.1"
-	},
-	"scripts": {
-		"build": "gatsby build",
-		"clean": "gatsby clean",
-		"develop": "gatsby develop"
-	}
+  "name": "gatsby-theme-course",
+  "version": "0.0.5",
+  "main": "index.js",
+  "author": "madalynrose <hello@madalyn.dev> (@madalynrose)",
+  "license": "MIT",
+  "peerDependencies": {
+    "gatsby": "^2.19.42",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^1.6.4",
+    "@theme-ui/presets": "^0.3.0",
+    "gatsby-plugin-mdx": "^1.2.12",
+    "gatsby-plugin-react-helmet": "^3.3.0",
+    "gatsby-plugin-sharp": "^2.6.9",
+    "gatsby-plugin-theme-ui": "^0.3.0",
+    "gatsby-remark-images": "^3.3.0",
+    "gatsby-source-filesystem": "^2.3.8",
+    "mdx-utils": "^0.2.0",
+    "prism-react-renderer": "^1.1.0",
+    "react-helmet": "^6.0.0",
+    "react-live": "^2.2.2",
+    "theme-ui": "^0.3.1"
+  },
+  "scripts": {
+    "build": "gatsby build",
+    "clean": "gatsby clean",
+    "develop": "gatsby develop"
+  }
 }
