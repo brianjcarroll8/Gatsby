@@ -21,7 +21,11 @@ const remove = async ({ publicDir }, pagePath) => {
   return Promise.resolve()
 }
 
-const writePageData = async ({ publicDir }, page, { staticQueryHashes, moduleDependencies }) => {
+const writePageData = async (
+  { publicDir },
+  page,
+  { staticQueryHashes, moduleDependencies, pageDataProcessors }
+) => {
   const inputFilePath = path.join(
     publicDir,
     `..`,
@@ -31,6 +35,15 @@ const writePageData = async ({ publicDir }, page, { staticQueryHashes, moduleDep
   )
   const outputFilePath = getFilePath({ publicDir }, page.path)
   const result = await fs.readJSON(inputFilePath)
+
+  const pageProcessorsObj = {}
+
+  if (pageDataProcessors) {
+    pageDataProcessors.forEach((value, key) => {
+      pageProcessorsObj[key] = Array.from(value)
+    })
+  }
+
   const body = {
     componentChunkName: page.componentChunkName,
     path: page.path,
@@ -38,6 +51,7 @@ const writePageData = async ({ publicDir }, page, { staticQueryHashes, moduleDep
     moduleDependencies: moduleDependencies,
     result,
     staticQueryHashes,
+    pageProcessors: pageProcessorsObj,
   }
   const bodyStr = JSON.stringify(body)
   // transform asset size to kB (from bytes) to fit 64 bit to numbers

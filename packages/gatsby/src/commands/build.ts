@@ -158,11 +158,17 @@ module.exports = async function build(program: IBuildArgs): Promise<void> {
 
   mapOfPagesToStaticQueryHashes.forEach(async (staticQueryHashes, pagePath) => {
     const page = state.pages.get(pagePath)
-    const moduleDependencies = Array.from(state.queryModuleDependencies.get(pagePath) || [])
+    const moduleDependencies = Array.from(
+      state.queryModuleDependencies.get(pagePath) || []
+    )
+
+    const pageDataProcessors =
+      state.pageDataProcessors.get(pagePath) || new Map()
 
     await pageDataUtil.writePageData({ publicDir }, page, {
       staticQueryHashes,
       moduleDependencies,
+      pageDataProcessors,
     })
   })
 

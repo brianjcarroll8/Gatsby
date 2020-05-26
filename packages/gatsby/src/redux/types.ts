@@ -235,6 +235,7 @@ export interface IGatsbyState {
   pageData: Map<Identifier, string>
   modules: Map<string, IDependencyModule>
   queryModuleDependencies: Map<string, Set<string>>
+  pageDataProcessors: Map<string, Map<string, Array<string>>>
 }
 
 export interface IDependencyModule {
@@ -242,7 +243,7 @@ export interface IDependencyModule {
   source: string
   type: string
   importName?: string
-  queryIDs: Set<String>
+  queryIDs: Set<string>
   // forced: boolean
 }
 
@@ -306,6 +307,7 @@ export type ActionsUnion =
   | ICreateJobAction
   | ISetJobAction
   | IEndJobAction
+  | IAddPageDataProcessorAction
 
 interface ISetBabelPluginAction {
   type: `SET_BABEL_PLUGIN`
@@ -515,8 +517,8 @@ export interface ICreateResolverContext {
   plugin: IGatsbyPlugin
   traceId?: string
   payload:
-  | IGatsbyPluginContext
-  | { [camelCasedPluginNameWithoutPrefix: string]: IGatsbyPluginContext }
+    | IGatsbyPluginContext
+    | { [camelCasedPluginNameWithoutPrefix: string]: IGatsbyPluginContext }
 }
 
 export interface ICreatePageAction {
@@ -673,4 +675,13 @@ export interface IAddPageDataStatsAction {
 export interface ITouchNodeAction {
   type: `TOUCH_NODE`
   payload: Identifier
+}
+
+export interface IAddPageDataProcessorAction {
+  type: `ADD_PAGE_DATA_PROCESSOR`
+  payload: {
+    queryId: string
+    path: string
+    moduleId: string
+  }
 }

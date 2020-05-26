@@ -2,6 +2,38 @@ const path = require(`path`)
 const slug = require(`slug`)
 const { slash } = require(`gatsby-core-utils`)
 
+exports.createResolvers = async ({ createResolvers }) => {
+  createResolvers({
+    ImageSharpFluid: {
+      component: {
+        type: "JSON",
+        resolve(parent, args, context, info) {
+          const moduleId = context.pageModel.addModule({
+            source: "gatsby-image",
+          })
+          context.addPageDataProcessor({
+            info,
+            processorSource:
+              "gatsby/cache-dir/page-data-processors/asComponent",
+          })
+          return {
+            moduleId,
+            args: {
+              fluid: {
+                base64: parent.base64,
+                aspectRatio: parent.aspectRatio,
+                src: parent.src,
+                srcSet: parent.scrSet,
+                sizes: parent.sizes,
+              },
+            },
+          }
+        },
+      },
+    },
+  })
+}
+
 // Implement the Gatsby API “createPages”. This is
 // called after the Gatsby bootstrap is finished so you have
 // access to any information necessary to programmatically

@@ -126,6 +126,7 @@ const toPageResources = (pageData, component = null) => {
     component,
     json: pageData.result,
     page,
+    pageProcessors: pageData.pageProcessors,
   }
 }
 
@@ -201,9 +202,15 @@ export class BaseLoader {
 
         let pageData = result.payload
 
-        const { componentChunkName, staticQueryHashes = [], moduleDependencies = [] } = pageData
+        const {
+          componentChunkName,
+          staticQueryHashes = [],
+          moduleDependencies = [],
+        } = pageData
 
-        const moduleDependenciesBatchPromise = Promise.all(this.fetchAndEmitModuleDependencies(moduleDependencies))
+        const moduleDependenciesBatchPromise = Promise.all(
+          this.fetchAndEmitModuleDependencies(moduleDependencies)
+        )
 
         const componentChunkPromise = this.loadComponent(
           componentChunkName
@@ -448,9 +455,9 @@ export class ProdLoader extends BaseLoader {
     const loadComponent = (chunkName, key = `components`) =>
       asyncRequires[key][chunkName]
         ? asyncRequires[key][chunkName]()
-          .then(preferDefault)
-          // loader will handle the case when component is null
-          .catch(() => null)
+            .then(preferDefault)
+            // loader will handle the case when component is null
+            .catch(() => null)
         : Promise.resolve()
 
     super(loadComponent, matchPaths)

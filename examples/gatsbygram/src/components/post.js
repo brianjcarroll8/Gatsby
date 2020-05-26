@@ -2,7 +2,6 @@ import * as PropTypes from "prop-types"
 import React from "react"
 import HeartIcon from "react-icons/lib/fa/heart"
 import { Link, graphql } from "gatsby"
-import Img from "gatsby-image"
 
 import { rhythm, scale } from "../utils/typography"
 import presets from "../utils/presets"
@@ -27,6 +26,7 @@ class Post extends React.Component {
   render() {
     const { smallImage, likes, id } = this.props.post
     const { small } = smallImage.childImageSharp
+    console.log(small)
     return (
       <Link
         data-testid="post"
@@ -65,8 +65,7 @@ class Post extends React.Component {
             overflow: `hidden`,
           }}
         >
-          <Img
-            fluid={{ ...small }}
+          <small.component
             css={{
               margin: 0,
               height: `100%`,
@@ -133,11 +132,12 @@ export const postFragment = graphql`
     smallImage: image {
       childImageSharp {
         small: fluid(maxWidth: 292, maxHeight: 292) {
-          src
-          srcSet
-          aspectRatio
-          sizes
-          tracedSVG
+          component
+          # src
+          # srcSet
+          # aspectRatio
+          # sizes
+          # tracedSVG
         }
       }
     }

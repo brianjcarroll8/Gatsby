@@ -20,6 +20,7 @@ import { nodesTouchedReducer } from "./nodes-touched"
 import { babelrcReducer } from "./babelrc"
 import { jobsReducer } from "./jobs"
 import { queryModuleDependenciesReducer } from "./query-module-dependencies"
+import { pageDataProcessorsReducer } from "./page-data-processors"
 
 /**
  * @property exports.nodesTouched Set<string>
@@ -52,5 +53,6 @@ module.exports = {
   pageDataStats: pageDataStatsReducer,
   pageData: pageDataReducer,
   modules: modulesReducer,
-  queryModuleDependencies: queryModuleDependenciesReducer
+  queryModuleDependencies: queryModuleDependenciesReducer,
+  pageDataProcessors: pageDataProcessorsReducer,
 }

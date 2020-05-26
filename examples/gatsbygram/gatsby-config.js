@@ -59,8 +59,6 @@ module.exports = {
     // html file so the site works offline and is otherwise
     // resistant to bad networks. Works with almost any
     // site!
-    `gatsby-plugin-offline`,
-    // This plugin sets up Google Analytics for you.
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
