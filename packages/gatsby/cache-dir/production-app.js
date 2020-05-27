@@ -73,6 +73,7 @@ apiRunnerAsync(`onClientEntry`).then(() => {
               location,
               staticQueryData: pageResources.staticQueryData,
             })
+
             processPageData(
               pageResources.pageProcessors,
               pageResources.json.data

@@ -2,7 +2,6 @@ import React, { createElement } from "react"
 import PropTypes from "prop-types"
 import { publicLoader } from "./loader"
 import { apiRunner } from "./api-runner-browser"
-import processPageData from "./process-page-data"
 
 // Renders page
 class PageRenderer extends React.Component {
@@ -16,11 +15,6 @@ class PageRenderer extends React.Component {
       props: this.props,
       loader: publicLoader,
     })
-
-    processPageData(
-      this.props.pageResources.pageProcessors,
-      this.props.pageResources.json.data
-    )
 
     const pageElement =
       replacementElement ||

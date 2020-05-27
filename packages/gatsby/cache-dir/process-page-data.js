@@ -23,6 +23,9 @@ function runModulesOnPath(json, path, modules) {
   }
 
   if (curr) {
-    curr[path[0]] = modules.reduce((acc, next) => next(acc), curr[path[0]])
+    curr[path[0]] = modules.reduce(
+      (acc, next) => next(acc, { getModule }),
+      curr[path[0]]
+    )
   }
 }
