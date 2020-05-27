@@ -838,8 +838,6 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
 
       await pageDataUtil.flush()
       webpackStatusUtil.markAsDone()
-
-      console.log(store.getState().pendingPageDataWrites)
     }
 
     done()

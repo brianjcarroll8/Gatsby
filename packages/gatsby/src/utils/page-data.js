@@ -125,8 +125,6 @@ const flush = async () => {
         result,
       })
     }
-
-    console.log({ pagePath })
   }
 
   store.dispatch({
