@@ -63,7 +63,7 @@ export const deleteComponentsDependencies = (
   // get list of modules
   const { queryModuleDependencies } = store.getState()
 
-  let modules = new Set<string>()
+  const modules = new Set<string>()
 
   const addModule = modules.add.bind(modules)
   paths.forEach(path => {
