@@ -164,15 +164,6 @@ export const queryRunner = async (
     resultHashes.set(queryJob.id, resultHash)
 
     if (queryJob.isPage) {
-      // const publicDir = path.join(program.directory, `public`)
-      // const { pages, queryModuleDependencies, componentDataDependencies } = store.getState()
-      // const page = pages.get(queryJob.id)
-      // const moduleDependencies = Array.from(queryModuleDependencies.get(queryJob.id) || [])
-
-      // console.log(require(`util`).inspect({ id: queryJob.id, moduleDependencies, componentDataDependencies }, { depth: null, color: true }))
-
-      // await pageDataUtil.write({ publicDir }, page, result, moduleDependencies)
-
       // We need to save this temporarily in cache because
       // this might be incomplete at the moment
       // since it will not contain included static queries yet
@@ -185,6 +176,12 @@ export const queryRunner = async (
         `${queryJob.id.replace(/\//g, `_`)}.json`
       )
       await fs.outputFile(resultPath, resultJSON)
+      store.dispatch({
+        type: `ADD_PENDING_PAGE_DATA_WRITE`,
+        payload: {
+          path: queryJob.id,
+        },
+      })
     } else {
       // The babel plugin is hard-coded to load static queries from
       // public/static/d/
