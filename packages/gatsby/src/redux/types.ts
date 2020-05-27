@@ -235,7 +235,7 @@ export interface IGatsbyState {
   pageData: Map<Identifier, string>
   modules: Map<string, IDependencyModule>
   queryModuleDependencies: Map<string, Set<string>>
-  pageDataProcessors: Map<string, Map<string, Array<string>>>
+  pageDataProcessors: Map<string, Map<string, Set<string>>>
 }
 
 export interface IDependencyModule {

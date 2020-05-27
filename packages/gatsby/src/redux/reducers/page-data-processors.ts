@@ -24,6 +24,16 @@ export function pageDataProcessorsReducer(
       processorsByPath.add(action.payload.moduleID)
       return state
     }
+
+    case `DELETE_COMPONENTS_DEPENDENCIES`: {
+      const { paths } = action.payload
+
+      paths.forEach(path => {
+        state.delete(path)
+      })
+
+      return state
+    }
   }
 
   return state
