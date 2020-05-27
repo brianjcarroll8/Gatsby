@@ -336,7 +336,7 @@ export function addPageDataProcessor({
       }),
       addModuleDependencyToQueryResult({
         moduleID: processorModuleId,
-        path,
+        path: queryID,
       }),
       {
         type: `ADD_PAGE_DATA_PROCESSOR`,
