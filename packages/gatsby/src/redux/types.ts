@@ -247,7 +247,7 @@ export interface IDependencyModule {
   source: string
   type: string
   importName?: string
-  queryIDs: Set<String>
+  queryIDs: Set<string>
   // forced: boolean
 }
 

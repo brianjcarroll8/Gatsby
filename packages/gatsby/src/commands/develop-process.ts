@@ -4,7 +4,6 @@ import { isEqual } from "lodash"
 import openurl from "better-opn"
 import chokidar from "chokidar"
 import { SchemaComposer } from "graphql-compose"
-import path from "path"
 
 import webpackHotMiddleware from "webpack-hot-middleware"
 import webpackDevMiddleware from "webpack-dev-middleware"
@@ -66,10 +65,11 @@ import {
   showFeedbackRequest,
 } from "../utils/feedback"
 import {
-  mapPagesToStaticQueryHashes,
+  // mapPagesToStaticQueryHashes,
   mapTemplatesToStaticQueryHashes,
 } from "../utils/map-pages-to-static-query-hashes"
-import pageDataUtil from "../utils/page-data"
+import * as pageDataUtil from "../utils/page-data"
+import * as webpackStatusUtil from "../utils/webpack-status"
 
 import { Stage, IProgram } from "./types"
 
@@ -397,6 +397,7 @@ interface IDevelopArgs extends IProgram {
 }
 
 module.exports = async (program: IDevelopArgs): Promise<void> => {
+  program.command = `develop`
   // We want to prompt the feedback request when users quit develop
   // assuming they pass the heuristic check to know they are a user
   // we want to request feedback from, and we're not annoying them.
@@ -420,6 +421,7 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     )
   }
   initTracer(program.openTracingConfigFile)
+  webpackStatusUtil.markAsPending()
   report.pendingActivity({ id: `webpack-develop` })
   telemetry.trackCli(`DEVELOP_START`)
   telemetry.startBackgroundUpdate()
@@ -670,9 +672,10 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     })
   }
 
-  // compiler.hooks.invalid.tap(`log compiling`, function (...args) {
-  //   console.log(`set invalid`, args, this)
-  // })
+  compiler.hooks.invalid.tap(`log compiling`, function (...args) {
+    // console.log(`set invalid`, args, this)
+    webpackStatusUtil.markAsPending()
+  })
 
   compiler.hooks.watchRun.tapAsync(`log compiling`, function (_, done) {
     if (webpackActivity) {
@@ -694,45 +697,45 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
     done()
   })
 
-  let storedStats: Stats | undefined
-  const doTheThingWithPageData = (): void => {
-    if (!storedStats) {
-      throw new Error(`welp, that's too early - we didn't store stats yet`)
-    }
+  // let storedStats: Stats | undefined
+  // const doTheThingWithPageData = (): void => {
+  //   if (!storedStats) {
+  //     throw new Error(`welp, that's too early - we didn't store stats yet`)
+  //   }
 
-    const state = store.getState()
-    const mapOfPagesToStaticQueryHashes = mapPagesToStaticQueryHashes(
-      state,
-      storedStats
-    )
+  //   const state = store.getState()
+  //   const mapOfPagesToStaticQueryHashes = mapPagesToStaticQueryHashes(
+  //     state,
+  //     storedStats
+  //   )
 
-    const publicDir = path.join(program.directory, `public`)
+  //   const publicDir = path.join(program.directory, `public`)
 
-    mapOfPagesToStaticQueryHashes.forEach(
-      async (staticQueryHashes, pagePath) => {
-        const page = state.pages.get(pagePath)
-        const moduleDependencies = Array.from(
-          state.queryModuleDependencies.get(pagePath) || []
-        )
+  //   mapOfPagesToStaticQueryHashes.forEach(
+  //     async (staticQueryHashes, pagePath) => {
+  //       const page = state.pages.get(pagePath)
+  //       const moduleDependencies = Array.from(
+  //         state.queryModuleDependencies.get(pagePath) || []
+  //       )
 
-        const body = await pageDataUtil.writePageData({ publicDir }, page, {
-          staticQueryHashes,
-          moduleDependencies,
-        })
+  //       const body = await pageDataUtil.writePageData({ publicDir }, page, {
+  //         staticQueryHashes,
+  //         moduleDependencies,
+  //       })
 
-        // const
-        websocketManager.emitPageData({
-          ...body.result,
-          id: pagePath,
-          result: {
-            data: body.result.data,
-            pageContext: body.result.pageContext,
-            moduleDependencies: body.moduleDependencies,
-          },
-        })
-      }
-    )
-  }
+  //       // const
+  //       websocketManager.emitPageData({
+  //         ...body.result,
+  //         id: pagePath,
+  //         result: {
+  //           data: body.result.data,
+  //           pageContext: body.result.pageContext,
+  //           moduleDependencies: body.moduleDependencies,
+  //         },
+  //       })
+  //     }
+  //   )
+  // }
 
   let isFirstCompile = true
 
@@ -834,6 +837,7 @@ module.exports = async (program: IDevelopArgs): Promise<void> => {
       )
 
       await pageDataUtil.flush()
+      webpackStatusUtil.markAsDone()
 
       console.log(store.getState().pendingPageDataWrites)
     }
