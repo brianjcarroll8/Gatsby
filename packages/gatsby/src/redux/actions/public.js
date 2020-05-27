@@ -1471,26 +1471,4 @@ actions.removePageData = (id: PageDataRemove) => {
 
 actions.registerModule = registerModule
 
-actions.addPageDataProcessor = ({
-  queryId,
-  path,
-  processorSource,
-}) => dispatch => {
-  const processorModuleId = generateModuleId({ source: processorSource })
-  dispatch([
-    actions.registerModule({
-      moduleId: processorModuleId,
-      source: processorSource,
-    }),
-    {
-      type: `ADD_PAGE_DATA_PROCESSOR`,
-      payload: {
-        queryId,
-        path,
-        moduleId: processorModuleId,
-      },
-    },
-  ])
-}
-
 module.exports = { actions }

@@ -10,10 +10,10 @@ export function pageDataProcessorsReducer(
     }
 
     case `ADD_PAGE_DATA_PROCESSOR`: {
-      let processorMap = state.get(action.payload.queryId)
+      let processorMap = state.get(action.payload.queryID)
       if (!processorMap) {
         processorMap = new Map()
-        state.set(action.payload.queryId, processorMap)
+        state.set(action.payload.queryID, processorMap)
       }
 
       let processorsByPath = processorMap.get(action.payload.path)
@@ -21,7 +21,7 @@ export function pageDataProcessorsReducer(
         processorsByPath = new Set()
         processorMap.set(action.payload.path, processorsByPath)
       }
-      processorsByPath.add(action.payload.moduleId)
+      processorsByPath.add(action.payload.moduleID)
       return state
     }
   }

@@ -9,12 +9,14 @@ import { IGraphQLRunnerStats } from "../query/types"
 import { IGatsbyResolverContext, IGraphQLSpanTracer } from "./type-definitions"
 
 import { store } from "../redux"
-import { actions } from "../redux/actions/public"
 import {
   registerModule,
   generateModuleId,
 } from "../redux/actions/modules/register-module"
-import { addModuleDependencyToQueryResult } from "../redux/actions/internal"
+import {
+  addModuleDependencyToQueryResult,
+  addPageDataProcessor,
+} from "../redux/actions/internal"
 import { pathToArray } from "../query/utils"
 
 export default function withResolverContext<TSource, TArgs>({
@@ -105,8 +107,8 @@ export default function withResolverContext<TSource, TArgs>({
       const path = pathToArrayFlattening(info.path).join(`.`)
       if (context && context.path) {
         store.dispatch(
-          actions.addPageDataProcessor({
-            queryId: context.path,
+          addPageDataProcessor({
+            queryID: context.path,
             path,
             processorSource,
           })

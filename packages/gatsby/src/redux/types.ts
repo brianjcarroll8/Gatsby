@@ -680,8 +680,8 @@ export interface ITouchNodeAction {
 export interface IAddPageDataProcessorAction {
   type: `ADD_PAGE_DATA_PROCESSOR`
   payload: {
-    queryId: string
+    queryID: string
     path: string
-    moduleId: string
+    moduleID: string
   }
 }

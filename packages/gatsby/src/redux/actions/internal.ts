@@ -18,9 +18,12 @@ import {
   IPageQueryRunAction,
   IRemoveStaleJobAction,
   ISetSiteConfig,
+  IAddPageDataProcessorAction,
 } from "../types"
 
 import { store } from "../"
+
+import { registerModule, generateModuleId } from "./modules/register-module"
 
 import { gatsbyConfigSchema } from "../../joi-schemas/joi"
 import { didYouMean } from "../../utils/did-you-mean"
@@ -59,7 +62,6 @@ export const deleteComponentsDependencies = (
 ): IDeleteComponentDependenciesAction => {
   // get list of modules
   const { queryModuleDependencies } = store.getState()
-
 
   let modules = new Set<string>()
 
@@ -308,5 +310,42 @@ export const setSiteConfig = (config?: unknown): ISetSiteConfig => {
   return {
     type: `SET_SITE_CONFIG`,
     payload: normalizedPayload,
+  }
+}
+
+export function addPageDataProcessor({
+  queryID,
+  path,
+  processorSource,
+}: {
+  queryID: string
+  path: string
+  processorSource: string
+}) {
+  return function dispatchAddPageDataProcessor(
+    dispatch: (AnyAction) => void
+  ): void {
+    const processorModuleId = generateModuleId({
+      source: processorSource,
+      importName: undefined,
+    })
+    dispatch([
+      registerModule({
+        moduleID: processorModuleId,
+        source: processorSource,
+      }),
+      addModuleDependencyToQueryResult({
+        moduleID: processorModuleId,
+        path,
+      }),
+      {
+        type: `ADD_PAGE_DATA_PROCESSOR`,
+        payload: {
+          queryID,
+          path,
+          moduleID: processorModuleId,
+        },
+      },
+    ])
   }
 }
