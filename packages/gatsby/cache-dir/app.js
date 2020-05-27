@@ -8,14 +8,38 @@ import emitter from "./emitter"
 import { apiRunner, apiRunnerAsync } from "./api-runner-browser"
 import { setLoader, publicLoader } from "./loader"
 import DevLoader from "./dev-loader"
-import syncRequires from "./sync-requires"
+// import syncRequires from "./sync-requires"
+const syncRequires = require(`./sync-requires`)
 // Generated during bootstrap
 import matchPaths from "./match-paths.json"
 
 window.___emitter = emitter
 
-const loader = new DevLoader(syncRequires, matchPaths)
+let loader = new DevLoader(syncRequires, matchPaths)
 setLoader(loader)
+
+console.log(`wut`)
+module.hot.accept(() => {
+  console.log(`[app.js] what`)
+  return
+})
+
+// setInterval(() => {
+//   console.log(`[app.js]`, module.hot.status())
+// }, 1000)
+
+module.hot.addStatusHandler(status => {
+  console.log(`[app.js] status`, status)
+  if (status === `idle`) {
+    loader.syncRequires = require(`./sync-requires`)
+    // const newSyncReuires = require(`./sync-requires`)
+    // loader = new DevLoader(syncRequires, matchPaths)
+    // setLoader(loader)
+    // loader.setApiRunner(apiRunner)
+    // console.log("reqs?", { newSyncReuires, syncRequires })
+  }
+})
+
 loader.setApiRunner(apiRunner)
 
 window.___loader = publicLoader

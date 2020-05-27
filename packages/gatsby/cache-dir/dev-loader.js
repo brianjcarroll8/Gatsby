@@ -3,9 +3,29 @@ import { findPath } from "./find-path"
 
 class DevLoader extends BaseLoader {
   constructor(syncRequires, matchPaths) {
-    const loadComponent = (chunkName, key = `components`) =>
-      Promise.resolve(syncRequires[key][chunkName])
+    const loadComponent = (chunkName, key = `components`, retry = 0) => {
+      console.log(
+        `loadComponent #${retry + 1}`,
+        { chunkName, key },
+        { ...this.syncRequires }
+      )
+      const mod = this.syncRequires[key][chunkName]
+      const interval = 500
+      const retryDuration = 5000
+      if (!mod && retry < Math.ceil(retryDuration / interval)) {
+        // that might be after hot reload when webpack hot update wasn't handled yet
+        return new Promise(resolve =>
+          setTimeout(() => {
+            this.loadComponent(chunkName, key, retry + 1).then(resolve)
+          }, 500)
+        )
+      }
+
+      return Promise.resolve(mod)
+    }
     super(loadComponent, matchPaths)
+
+    this.syncRequires = syncRequires
   }
 
   loadPage(pagePath) {

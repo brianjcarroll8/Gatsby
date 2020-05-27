@@ -193,6 +193,11 @@ export interface IGatsbyState {
     IGatsbyStaticQueryComponents["id"],
     IGatsbyStaticQueryComponents
   >
+  staticQueriesByTemplate: Map<SystemPath, Identifier[]>
+  pendingPageDataWrites: {
+    pagePaths: Set<string>
+    templatePaths: Set<SystemPath>
+  }
   // @deprecated
   jobs: {
     active: any[] // TODO
@@ -259,6 +264,8 @@ export interface ICachedReduxState {
   pageData: IGatsbyState["pageData"]
   modules: IGatsbyState["modules"]
   queryModuleDependencies: IGatsbyState["queryModuleDependencies"]
+  staticQueriesByTemplate: IGatsbyState["staticQueriesByTemplate"]
+  pendingPageDataWrites: IGatsbyState["pendingPageDataWrites"]
 }
 
 export type ActionsUnion =
@@ -308,6 +315,10 @@ export type ActionsUnion =
   | ISetJobAction
   | IEndJobAction
   | IAddPageDataProcessorAction
+  | ISetStaticQueriesByTemplateAction
+  | IAddPendingPageDataWriteAction
+  | IAddPendingTemplateDataWriteAction
+  | IClearPendingPageDataWritesAction
 
 interface ISetBabelPluginAction {
   type: `SET_BABEL_PLUGIN`
@@ -562,6 +573,32 @@ export interface IRemoveTemplateComponentAction {
   payload: {
     componentPath: string
   }
+}
+
+export interface ISetStaticQueriesByTemplateAction {
+  type: `SET_STATIC_QUERIES_BY_TEMPLATE`
+  payload: {
+    componentPath: string
+    staticQueryHashes: Identifier[]
+  }
+}
+
+export interface IAddPendingPageDataWriteAction {
+  type: `ADD_PENDING_PAGE_DATA_WRITE`
+  payload: {
+    path: string
+  }
+}
+
+export interface IAddPendingTemplateDataWriteAction {
+  type: `ADD_PENDING_TEMPLATE_DATA_WRITE`
+  payload: {
+    componentPath: SystemPath
+  }
+}
+
+export interface IClearPendingPageDataWritesAction {
+  type: `CLEAR_PENDING_PAGE_DATA_WRITES`
 }
 
 export interface IDeletePageAction {

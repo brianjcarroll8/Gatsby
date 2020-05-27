@@ -1,3 +1,4 @@
+import { websocketManager } from "./websocket-manager"
 const fs = require(`fs-extra`)
 const path = require(`path`)
 const { store } = require(`../redux`)
@@ -66,6 +67,71 @@ const writePageData = async (
   })
 
   await fs.outputFile(outputFilePath, bodyStr)
+
+  return body
+}
+
+const flush = async () => {
+  const {
+    pendingPageDataWrites,
+    components,
+    pages,
+    staticQueriesByTemplate,
+    queryModuleDependencies,
+    pageDataProcessors,
+    program,
+  } = store.getState()
+
+  console.log({
+    pendingPageDataWrites,
+  })
+
+  const { pagePaths, templatePaths } = pendingPageDataWrites
+
+  const pagesToWrite = Array.from(templatePaths).reduce(
+    (set, componentPath) => {
+      const { pages } = components.get(componentPath)
+      pages.forEach(set.add.bind(set))
+      return set
+    },
+    new Set(pagePaths.values())
+  )
+
+  for (const pagePath of pagesToWrite) {
+    const page = pages.get(pagePath)
+    const body = await writePageData(
+      { publicDir: path.join(program.directory, `public`) },
+      page,
+      {
+        staticQueryHashes: staticQueriesByTemplate.get(page.componentPath),
+        moduleDependencies: Array.from(
+          queryModuleDependencies.get(pagePath) || []
+        ),
+        pageDataProcessors: pageDataProcessors.get(pagePath) || new Map(),
+      }
+    )
+
+    if (program.command === `develop`) {
+      websocketManager.emitPageData({
+        ...body.result,
+        id: pagePath,
+        result: {
+          data: body.result.data,
+          pageContext: body.result.pageContext,
+          moduleDependencies: body.moduleDependencies,
+          staticQueryHashes: body.staticQueryHashes,
+        },
+      })
+    }
+
+    console.log({ pagePath })
+  }
+
+  store.dispatch({
+    type: `CLEAR_PENDING_PAGE_DATA_WRITES`,
+  })
+
+  return
 }
 
 module.exports = {
@@ -73,4 +139,5 @@ module.exports = {
   writePageData,
   remove,
   fixedPagePath,
+  flush,
 }

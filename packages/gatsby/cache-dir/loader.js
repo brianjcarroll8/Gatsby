@@ -547,4 +547,6 @@ export const publicLoader = {
   loadAppData: () => instance.loadAppData(),
 }
 
+export { instance as internalLoader }
+
 export default publicLoader

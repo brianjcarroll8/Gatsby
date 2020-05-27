@@ -111,10 +111,10 @@ module.exports = async (program: IProgram): Promise<void> => {
   const developProcess = new ControllableScript(`
     const cmd = require(${JSON.stringify(developProcessPath)});
     const args = ${JSON.stringify({
-    ...program,
-    port: developPort,
-    proxyPort,
-  })};
+      ...program,
+      port: developPort,
+      proxyPort,
+    })};
     cmd(args);
   `)
 

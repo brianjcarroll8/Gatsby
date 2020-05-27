@@ -1,5 +1,6 @@
 import { reportError, clearError } from "./error-overlay-handler"
 import normalizePagePath from "./normalize-page-path"
+import { internalLoader } from "./loader"
 
 let socket = null
 
@@ -20,16 +21,14 @@ export default function socketIo() {
         socket = io()
 
         const didDataChange = (msg, queryData) => {
-
           const id =
             msg.type === `staticQueryResult`
               ? msg.payload.id
               : normalizePagePath(msg.payload.id)
 
-          const changed = (
+          const changed =
             !(id in queryData) ||
             JSON.stringify(msg.payload.result) !== JSON.stringify(queryData[id])
-          )
 
           console.log({
             id,
@@ -51,9 +50,29 @@ export default function socketIo() {
             }
           } else if (msg.type === `pageQueryResult`) {
             if (didDataChange(msg, pageQueryData)) {
-              pageQueryData = {
-                ...pageQueryData,
-                [normalizePagePath(msg.payload.id)]: msg.payload.result,
+              // special path for this because we will emit after async stuff
+              if (msg.payload.result) {
+                const { moduleDependencies, ...rest } = msg.payload.result
+                console.log(
+                  `[socket-io] new data via websocket, making sure modules are fine`
+                )
+                Promise.all(
+                  internalLoader.fetchAndEmitModuleDependencies(
+                    moduleDependencies
+                  )
+                ).then(() => {
+                  console.log(
+                    `[socket-io] fetched modules after data hor refresh - passing it down to components`
+                  )
+                  pageQueryData = {
+                    ...pageQueryData,
+                    [normalizePagePath(msg.payload.id)]: msg.payload.result,
+                  }
+
+                  ___emitter.emit(msg.type, msg.payload)
+                })
+
+                return
               }
             }
             // } else if (msg.type === `pageData`) {
@@ -71,7 +90,9 @@ export default function socketIo() {
               clearError(msg.payload.id)
             }
           }
+
           if (msg.type && msg.payload) {
+            console.log(`[socket-io] regular ___emit`)
             ___emitter.emit(msg.type, msg.payload)
           }
         })
