@@ -100,9 +100,9 @@ export class PageQueryStore extends React.Component {
     }
 
     // const { moduleDependencies, ...data } = stuff
-    console.log(`[query-result-store] Render`)
+    console.log(`[query-result-store] Render`, data.result)
 
-    return <PageRenderer {...this.props} {...data} />
+    return <PageRenderer {...this.props} {...data.result} />
   }
 }
 

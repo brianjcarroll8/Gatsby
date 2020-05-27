@@ -37,11 +37,7 @@ const getCachedPageData = async (
       const pageData = await pageDataUtil.read({ publicDir }, pagePath)
 
       return {
-        result: {
-          ...pageData.result,
-          moduleDependencies: pageData.moduleDependencies,
-        },
-
+        result: pageData,
         id: pagePath,
       }
     } catch (err) {

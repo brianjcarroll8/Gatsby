@@ -99,7 +99,7 @@ const flush = async () => {
 
   for (const pagePath of pagesToWrite) {
     const page = pages.get(pagePath)
-    const body = await writePageData(
+    const result = await writePageData(
       { publicDir: path.join(program.directory, `public`) },
       page,
       {
@@ -113,14 +113,8 @@ const flush = async () => {
 
     if (program.command === `develop`) {
       websocketManager.emitPageData({
-        ...body.result,
         id: pagePath,
-        result: {
-          data: body.result.data,
-          pageContext: body.result.pageContext,
-          moduleDependencies: body.moduleDependencies,
-          staticQueryHashes: body.staticQueryHashes,
-        },
+        result,
       })
     }
 
