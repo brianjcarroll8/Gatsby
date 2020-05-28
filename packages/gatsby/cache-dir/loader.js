@@ -1,6 +1,7 @@
 import prefetchHelper from "./prefetch"
 import emitter from "./emitter"
 import { setMatchPaths, findPath, findMatchPath } from "./find-path"
+import processPageData from "./process-page-data"
 
 /**
  * Available resource loading statuses
@@ -236,9 +237,8 @@ export class BaseLoader {
               pageResources,
             })
           }
-          this.pageDb.set(pagePath, finalResult)
           // undefined if final result is an error
-          return pageResources
+          return finalResult
         })
 
         const staticQueryBatchPromise = Promise.all(
@@ -284,9 +284,17 @@ export class BaseLoader {
           staticQueryBatchPromise,
 
           moduleDependenciesBatchPromise,
-        ]).then(([pageResources, staticQueryResults]) => {
+        ]).then(([finalResult, staticQueryResults]) => {
+          if (finalResult.payload) {
+            processPageData(
+              finalResult.payload.pageProcessors,
+              finalResult.payload.json.data
+            )
+            console.log(`finalResult`, finalResult.payload)
+          }
+          this.pageDb.set(pagePath, finalResult)
           return {
-            ...pageResources,
+            ...finalResult.payload,
             staticQueryResults,
           }
         })

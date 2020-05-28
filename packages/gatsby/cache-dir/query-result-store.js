@@ -92,17 +92,18 @@ export class PageQueryStore extends React.Component {
   }
 
   render() {
-    const data = this.state.pageQueryData[getPathFromProps(this.props)]
+    // const data = this.state.pageQueryData[getPathFromProps(this.props)]
+    // console.log("PageStore", data, this.props)
 
     // eslint-disable-next-line
-    if (!data) {
-      return <div />
-    }
+    // if (!data) {
+    //   return <div />
+    // }
 
     // const { moduleDependencies, ...data } = stuff
     console.log(`[query-result-store] Render`)
 
-    return <PageRenderer {...this.props} {...data} />
+    return <PageRenderer {...this.props} {...this.props.pageResources.json} />
   }
 }
 

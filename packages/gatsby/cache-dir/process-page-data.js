@@ -1,10 +1,10 @@
 import { getModule } from "./modules-provider"
 
 export default function processPageData(pageProcessors, json) {
+  console.log(`page data processing`, pageProcessors, json)
   Object.keys(pageProcessors).forEach(key => {
-    console.log(pageProcessors[key])
     const modules = pageProcessors[key].map(moduleId => getModule(moduleId))
-    console.log(modules)
+    console.log(`modules`, modules)
     runModulesOnPath(json, key.split(`.`), modules)
   })
 }
