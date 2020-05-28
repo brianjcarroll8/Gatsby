@@ -52,37 +52,34 @@ export default function socketIo() {
             if (didDataChange(msg, pageQueryData)) {
               // special path for this because we will emit after async stuff
               if (msg.payload.result) {
-                const { moduleDependencies, ...rest } = msg.payload.result
                 console.log(
                   `[socket-io] new data via websocket, making sure modules are fine`
                 )
-                Promise.all(
-                  internalLoader.fetchAndEmitModuleDependencies(
-                    moduleDependencies
-                  )
-                ).then(() => {
-                  console.log(
-                    `[socket-io] fetched modules after data hor refresh - passing it down to components`
-                  )
-                  pageQueryData = {
-                    ...pageQueryData,
-                    [normalizePagePath(msg.payload.id)]: msg.payload.result,
-                  }
 
-                  ___emitter.emit(msg.type, msg.payload)
-                })
+                internalLoader
+                  .handleAndTransformPageData(
+                    {
+                      pageData: msg.payload.result,
+                      pagePath: normalizePagePath(msg.payload.id),
+                    }
+                    // moduleDependencies
+                  )
+                  .then(pageResources => {
+                    console.log(
+                      `[socket-io] fetched modules after data hor refresh - passing it down to components`,
+                      pageResources
+                    )
+                    pageQueryData = {
+                      ...pageQueryData,
+                      [normalizePagePath(msg.payload.id)]: msg.payload.result,
+                    }
+
+                    ___emitter.emit(msg.type, msg.payload)
+                  })
 
                 return
               }
             }
-            // } else if (msg.type === `pageData`) {
-
-            //   if (didDataChange(msg, pageQueryData)) {
-            //     pageQueryData = {
-            //       ...pageQueryData,
-            //       [normalizePagePath(msg.payload.id)]: msg.payload.result,
-            //     }
-            //   }
           } else if (msg.type === `overlayError`) {
             if (msg.payload.message) {
               reportError(msg.payload.id, msg.payload.message)

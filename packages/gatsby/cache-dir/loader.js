@@ -114,11 +114,16 @@ const doesConnectionSupportPrefetch = () => {
   return true
 }
 
-const toPageResources = (pageData, component = null) => {
+const toPageResources = (
+  pageData,
+  component = null,
+  staticQueryResults = null,
+  webpackCompilationHash = null
+) => {
   const page = {
     componentChunkName: pageData.componentChunkName,
     path: pageData.path,
-    webpackCompilationHash: pageData.webpackCompilationHash,
+    webpackCompilationHash: webpackCompilationHash,
     matchPath: pageData.matchPath,
   }
 
@@ -127,6 +132,7 @@ const toPageResources = (pageData, component = null) => {
     json: pageData.result,
     page,
     pageProcessors: pageData.pageProcessors,
+    staticQueryResults,
   }
 }
 
@@ -200,95 +206,20 @@ export class BaseLoader {
           }
         }
 
-        let pageData = result.payload
+        const pageData = result.payload
 
-        const {
-          componentChunkName,
-          staticQueryHashes = [],
-          moduleDependencies = [],
-        } = pageData
-
-        const moduleDependenciesBatchPromise = Promise.all(
-          this.fetchAndEmitModuleDependencies(moduleDependencies)
-        )
-
-        const componentChunkPromise = this.loadComponent(
-          componentChunkName
-        ).then(component => {
-          const finalResult = { createdAt: new Date() }
-          let pageResources
-          if (!component) {
-            finalResult.status = PageResourceStatus.Error
-          } else {
-            finalResult.status = PageResourceStatus.Success
-            if (result.notFound === true) {
-              finalResult.notFound = true
-            }
-            pageData = Object.assign(pageData, {
-              webpackCompilationHash: allData[0]
-                ? allData[0].webpackCompilationHash
-                : ``,
-            })
-            pageResources = toPageResources(pageData, component)
-            finalResult.payload = pageResources
-            emitter.emit(`onPostLoadPageResources`, {
-              page: pageResources,
-              pageResources,
-            })
-          }
-          this.pageDb.set(pagePath, finalResult)
-          // undefined if final result is an error
-          return pageResources
-        })
-
-        const staticQueryBatchPromise = Promise.all(
-          staticQueryHashes.map(staticQueryHash => {
-            console.log(
-              `${pagePath} needs a static query with hash ${staticQueryHash}`
-            )
-
-            // TODO: Get from cache
-
-            // TODO: Get in flight Promise
-
-            return doFetch(`/static/d/${staticQueryHash}.json`).then(req => {
-              const jsonPayload = JSON.parse(req.responseText)
-              console.log(
-                `Static query with hash ${staticQueryHash} was fetched`,
-                jsonPayload
-              )
-              // this.staticQueryDb.set(staticQueryHash, jsonPayload)
-              return { staticQueryHash, jsonPayload }
-            })
+        return this.handleAndTransformPageData({
+          pageData,
+          pagePath,
+          notFound: result.notFound,
+          webpackCompilationHash: allData[0]
+            ? allData[0].webpackCompilationHash
+            : ``,
+        }).then(pageResources => {
+          emitter.emit(`onPostLoadPageResources`, {
+            page: pageResources,
+            pageResources,
           })
-        ).then(staticQueryResults => {
-          console.log({
-            staticQueryResults,
-          })
-          const staticQueryResultsMap = staticQueryResults.reduce(
-            (map, { staticQueryHash, jsonPayload }) => {
-              map[staticQueryHash] = jsonPayload
-              return map
-            },
-            {}
-          )
-          // emitter.emit(`onPostLoadStaticQueryResults`, {
-          //   staticQueryResultsMap,
-          // })
-          this.staticQueryDb.set(pagePath, staticQueryResultsMap)
-          return staticQueryResultsMap
-        })
-
-        return Promise.all([
-          componentChunkPromise,
-          staticQueryBatchPromise,
-
-          moduleDependenciesBatchPromise,
-        ]).then(([pageResources, staticQueryResults]) => {
-          return {
-            ...pageResources,
-            staticQueryResults,
-          }
         })
       })
       // prefer duplication with then + catch over .finally to prevent problems in ie11 + firefox
@@ -303,6 +234,117 @@ export class BaseLoader {
 
     this.inFlightDb.set(pagePath, inFlight)
     return inFlight
+  }
+
+  handleAndTransformPageData({
+    pageData,
+    pagePath,
+    notFound = undefined,
+    webpackCompilationHash = undefined,
+  }) {
+    const {
+      componentChunkName,
+      staticQueryHashes = [],
+      moduleDependencies = [],
+    } = pageData
+
+    const moduleDependenciesBatchPromise = Promise.all(
+      this.fetchAndEmitModuleDependencies(moduleDependencies)
+    )
+
+    const componentChunkPromise = this.loadComponent(componentChunkName)
+
+    const staticQueryBatchPromise = Promise.all(
+      staticQueryHashes.map(staticQueryHash => {
+        console.log(
+          `${pagePath} needs a static query with hash ${staticQueryHash}`
+        )
+
+        // TODO: Get from cache
+
+        // TODO: Get in flight Promise
+
+        return doFetch(`/static/d/${staticQueryHash}.json`).then(req => {
+          const jsonPayload = JSON.parse(req.responseText)
+          console.log(
+            `Static query with hash ${staticQueryHash} was fetched`,
+            jsonPayload
+          )
+          // this.staticQueryDb.set(staticQueryHash, jsonPayload)
+          return { staticQueryHash, jsonPayload }
+        })
+      })
+    ).then(staticQueryResults => {
+      console.log({
+        staticQueryResults,
+      })
+      const staticQueryResultsMap = staticQueryResults.reduce(
+        (map, { staticQueryHash, jsonPayload }) => {
+          map[staticQueryHash] = jsonPayload
+          return map
+        },
+        {}
+      )
+      // emitter.emit(`onPostLoadStaticQueryResults`, {
+      //   staticQueryResultsMap,
+      // })
+      this.staticQueryDb.set(pagePath, staticQueryResultsMap)
+      return staticQueryResultsMap
+    })
+
+    return Promise.all([
+      componentChunkPromise,
+      staticQueryBatchPromise,
+      moduleDependenciesBatchPromise,
+    ]).then(([component, staticQueryResults]) => {
+      const finalResult = { createdAt: new Date() }
+      let pageResources
+      if (!component) {
+        finalResult.status = PageResourceStatus.Error
+      } else {
+        finalResult.status = PageResourceStatus.Success
+
+        if (process.env.NODE_ENV !== `production`) {
+          if (typeof notFound === `undefined`) {
+            const previousResult = this.pageDb.get(pagePath)
+            if (previousResult) {
+              notFound = previousResult.notFound
+            }
+          }
+
+          // this likely came from socket.io data update
+          if (typeof webpackCompilationHash === `undefined`) {
+            webpackCompilationHash = ``
+          }
+        }
+
+        if (notFound === true) {
+          finalResult.notFound = true
+        }
+
+        pageResources = toPageResources(
+          pageData,
+          component,
+          staticQueryResults,
+          webpackCompilationHash
+        )
+        // pageResources.staticQueryResults = staticQueryResults
+        finalResult.payload = pageResources
+      }
+      this.pageDb.set(pagePath, finalResult)
+
+      console.log(`pageDB`, this.pageDb)
+      // undefined if final result is an error
+      return pageResources
+
+      // const pageResources = toPageResources(pageData, component)
+      // pageResources.staticQueryResults = staticQueryResults
+
+      // return {
+      //   component,
+      //   staticQueryResults,
+      // }
+    })
   }
 
   // returns undefined if loading page ran into errors
