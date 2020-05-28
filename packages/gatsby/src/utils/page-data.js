@@ -112,6 +112,14 @@ const flush = async () => {
     )
 
     if (program.command === `develop`) {
+      // const pageProcessorsObj = {}
+
+      // if (pageDataProcessors.has(pagePath)) {
+      //   pageDataProcessors.get(pagePath).forEach((value, key) => {
+      //     pageProcessorsObj[key] = Array.from(value)
+      //   })
+      // }
+
       websocketManager.emitPageData({
         id: pagePath,
         result,

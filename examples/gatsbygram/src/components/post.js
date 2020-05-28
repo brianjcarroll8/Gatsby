@@ -26,6 +26,7 @@ class Post extends React.Component {
   render() {
     const { smallImage, likes, id } = this.props.post
     const { small } = smallImage.childImageSharp
+    console.log(small.component)
     return (
       <Link
         data-testid="post"

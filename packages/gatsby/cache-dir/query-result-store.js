@@ -93,6 +93,7 @@ export class PageQueryStore extends React.Component {
 
   render() {
     const data = this.state.pageQueryData[getPathFromProps(this.props)]
+    console.log(`PageStore`, data, this.props)
 
     // eslint-disable-next-line
     if (!data) {

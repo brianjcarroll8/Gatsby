@@ -21,7 +21,6 @@ import {
 } from "./loader"
 import EnsureResources from "./ensure-resources"
 import stripPrefix from "./strip-prefix"
-import processPageData from "./process-page-data"
 
 // Generated during bootstrap
 import matchPaths from "./match-paths.json"
@@ -74,10 +73,6 @@ apiRunnerAsync(`onClientEntry`).then(() => {
               staticQueryData: pageResources.staticQueryData,
             })
 
-            processPageData(
-              pageResources.pageProcessors,
-              pageResources.json.data
-            )
             return (
               <StaticQueryContext.Provider
                 value={pageResources.staticQueryData}
