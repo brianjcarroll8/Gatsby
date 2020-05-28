@@ -94,14 +94,14 @@ module.exports = {
         path: `${__dirname}/../docs/`,
       },
     },
-    {
-      resolve: `gatsby-source-filesystem`,
-      options: {
-        name: `gatsby-core`,
-        path: `${__dirname}/../packages/gatsby/`,
-        ignore: [`**/dist/**`],
-      },
-    },
+    // {
+    //   resolve: `gatsby-source-filesystem`,
+    //   options: {
+    //     name: `gatsby-core`,
+    //     path: `${__dirname}/../packages/gatsby/`,
+    //     ignore: [`**/dist/**`],
+    //   },
+    // },
     {
       resolve: `gatsby-source-filesystem`,
       options: {
