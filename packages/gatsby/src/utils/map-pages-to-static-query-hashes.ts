@@ -1,6 +1,7 @@
 import { Stats, Module } from "webpack"
 
 import { IGatsbyState } from "../redux/types"
+import { slash } from "gatsby-core-utils"
 
 type MapOfTemplatesToStaticQueryHashes = Map<string, Array<number>>
 
@@ -11,7 +12,10 @@ const findModule = (path, modules): Module | null => {
       if (possibleMod) {
         return possibleMod
       }
-    } else if (m.constructor.name === `NormalModule` && m.resource === path) {
+    } else if (
+      m.constructor.name === `NormalModule` &&
+      slash(m.resource) === path
+    ) {
       return m
     }
   }
@@ -24,6 +28,11 @@ export function mapTemplatesToStaticQueryHashes(
 ): MapOfTemplatesToStaticQueryHashes {
   const { staticQueryComponents, components } = reduxState
 
+  const lazyModules = new Set()
+  reduxState.modules.forEach(moduleDependency => {
+    lazyModules.add(moduleDependency.source)
+  })
+
   const modules = webpackStats.compilation.modules
 
   const getEntrypoints = (
@@ -31,10 +40,11 @@ export function mapTemplatesToStaticQueryHashes(
     entrypoints: Set<string> = new Set(),
     visitedModules = new Set()
   ): Set<string> => {
-    if (visitedModules.has(mod.resource)) {
+    const slashedResource = slash(mod.resource)
+    if (visitedModules.has(slashedResource)) {
       return entrypoints
     }
-    visitedModules.add(mod.resource)
+    visitedModules.add(slashedResource)
 
     if (mod.constructor.name === `ConcatenatedModule`) {
       mod.modules.forEach(m2 => {
@@ -42,8 +52,8 @@ export function mapTemplatesToStaticQueryHashes(
       })
       return entrypoints
     }
-    if (components.has(mod.resource)) {
-      entrypoints.add(mod.resource)
+    if (components.has(slashedResource) || lazyModules.has(slashedResource)) {
+      entrypoints.add(slashedResource)
       return entrypoints
     }
 
@@ -66,7 +76,7 @@ export function mapTemplatesToStaticQueryHashes(
   const map = new Map()
 
   staticQueryComponents.forEach(({ componentPath, hash }) => {
-    const staticQueryComponentModule = findModule(componentPath, modules)
+    const staticQueryComponentModule = findModule(slash(componentPath), modules)
     if (staticQueryComponentModule) {
       const entrypoints = getEntrypoints(staticQueryComponentModule)
       entrypoints.forEach(entrypoint => {

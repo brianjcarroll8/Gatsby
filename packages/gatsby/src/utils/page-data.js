@@ -76,37 +76,110 @@ const flush = async () => {
     pendingPageDataWrites,
     components,
     pages,
+    staticQueryComponents,
     staticQueriesByTemplate,
     queryModuleDependencies,
     pageDataProcessors,
+    modules,
     program,
   } = store.getState()
-
-  console.log({
-    pendingPageDataWrites,
-  })
 
   const { pagePaths, templatePaths } = pendingPageDataWrites
 
   const pagesToWrite = Array.from(templatePaths).reduce(
     (set, componentPath) => {
-      const { pages } = components.get(componentPath)
+      const pageTemplate = components.get(componentPath)
+      if (!pageTemplate) {
+        console.log(`no template for`, componentPath)
+        return set
+      }
+      const { pages } = pageTemplate
       pages.forEach(set.add.bind(set))
       return set
     },
     new Set(pagePaths.values())
   )
 
+  const hashToStaticQueryId = new Map()
+  staticQueryComponents.forEach(({ componentPath, id, hash }) => {
+    hashToStaticQueryId.set(hash, id)
+  })
+
+  console.log({
+    pendingPageDataWrites,
+    hashToStaticQueryId,
+    staticQueriesByTemplate,
+  })
+
+  const pickModulesFromStaticQuery = (staticQueryHash, resources) => {
+    const staticQueryId = hashToStaticQueryId.get(staticQueryHash)
+
+    const modulesUsedByStaticQuery = queryModuleDependencies.get(staticQueryId)
+
+    if (modulesUsedByStaticQuery?.size > 0) {
+      modulesUsedByStaticQuery.forEach(moduleId => {
+        resources.moduleDependencies.add(moduleId)
+        pickStaticQueriesFromModule(moduleId, resources)
+      })
+    }
+  }
+
+  const pickStaticQueriesFromModule = (moduleId, resources) => {
+    const source = modules.get(moduleId)?.source
+    if (!source) {
+      return
+    }
+
+    const statiQueriesUsedByModule = staticQueriesByTemplate.get(source)
+    if (statiQueriesUsedByModule?.length > 0) {
+      statiQueriesUsedByModule.forEach(staticQueryHash => {
+        resources.staticQueryHashes.add(staticQueryHash)
+        pickModulesFromStaticQuery(staticQueryHash, resources)
+      })
+    }
+
+    // staticQueryHashes.push(...(staticQueriesByTemplate.get(source) || []))
+  }
+
   for (const pagePath of pagesToWrite) {
     const page = pages.get(pagePath)
+
+    const resources = {
+      staticQueryHashes: new Set(),
+      moduleDependencies: new Set(),
+    }
+
+    const staticQueryForTemplate = staticQueriesByTemplate.get(
+      page.componentPath
+    )
+    const modulesForPage = queryModuleDependencies.get(pagePath)
+
+    if (staticQueryForTemplate) {
+      staticQueryForTemplate.forEach(staticQueryHash => {
+        resources.staticQueryHashes.add(staticQueryHash)
+        pickModulesFromStaticQuery(staticQueryHash, resources)
+      })
+    }
+
+    if (modulesForPage) {
+      modulesForPage.forEach(moduleId => {
+        resources.moduleDependencies.add(moduleId)
+        pickStaticQueriesFromModule(moduleId, resources)
+      })
+    }
+
+    console.log({
+      path: pagePath,
+      staticQueryHashes: resources.staticQueryHashes,
+      moduleDependencies: resources.moduleDependencies,
+    })
+
     const result = await writePageData(
       { publicDir: path.join(program.directory, `public`) },
       page,
       {
-        staticQueryHashes: staticQueriesByTemplate.get(page.componentPath),
-        moduleDependencies: Array.from(
-          queryModuleDependencies.get(pagePath) || []
-        ),
+        staticQueryHashes: Array.from(resources.staticQueryHashes),
+        moduleDependencies: Array.from(resources.moduleDependencies),
         pageDataProcessors: pageDataProcessors.get(pagePath) || new Map(),
       }
     )

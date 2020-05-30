@@ -52,9 +52,9 @@ export default function withResolverContext<TSource, TArgs>({
       return `that's like graphiql or gatsby-node - DOESNT WORK NOW`
     }
 
-    if (context.path.startsWith(`sq--`)) {
-      return `static query - DOESNT WORK NOW`
-    }
+    // if (context.path.startsWith(`sq--`)) {
+    //   return `static query - DOESNT WORK NOW`
+    // }
 
     // TO-DO: validation
 

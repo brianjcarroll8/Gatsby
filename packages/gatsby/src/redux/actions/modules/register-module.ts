@@ -1,5 +1,6 @@
 import { IRegisterModuleAction } from "../../types"
 import { generateComponentChunkName } from "../../../utils/js-chunk-names"
+import { slash } from "gatsby-core-utils"
 
 export const generateModuleId = ({
   source,
@@ -24,6 +25,7 @@ export const registerModule = (
   },
   plugin = ``
 ): ReturnType => {
+  source = slash(source)
   const _moduleID = moduleID || generateModuleId({ source, type, importName })
 
   return dispatch => {
