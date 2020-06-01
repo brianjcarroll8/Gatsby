@@ -221,6 +221,7 @@ export class BaseLoader {
             page: pageResources,
             pageResources,
           })
+          return pageResources
         })
       })
       // prefer duplication with then + catch over .finally to prevent problems in ie11 + firefox
