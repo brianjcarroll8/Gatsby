@@ -6,18 +6,18 @@ import { createPageDependency } from "../redux/actions/add-page-dependency"
 import { LocalNodeModel } from "./node-model"
 import { defaultFieldResolver } from "./resolvers"
 import { IGraphQLRunnerStats } from "../query/types"
-import { IGatsbyResolverContext, IGraphQLSpanTracer } from "./type-definitions"
+import {
+  IGatsbyResolverContext,
+  IGraphQLSpanTracer,
+  GatsbyGraphQLResolveInfo,
+} from "./type-definitions"
 
 import { store } from "../redux"
 import {
   registerModule,
   generateModuleId,
 } from "../redux/actions/modules/register-module"
-import {
-  addModuleDependencyToQueryResult,
-  addPageDataProcessor,
-} from "../redux/actions/internal"
-import { pathToArray } from "../query/utils"
+import { addModuleDependencyToQueryResult } from "../redux/actions/internal"
 
 export default function withResolverContext<TSource, TArgs>({
   schema,
@@ -27,6 +27,7 @@ export default function withResolverContext<TSource, TArgs>({
   nodeModel,
   stats,
   tracer,
+  addDataProcessor,
 }: {
   schema: GraphQLSchema
   schemaComposer: SchemaComposer<IGatsbyResolverContext<TSource, TArgs>>
@@ -35,6 +36,10 @@ export default function withResolverContext<TSource, TArgs>({
   nodeModel?: any
   stats?: IGraphQLRunnerStats | null
   tracer?: IGraphQLSpanTracer
+  addDataProcessor?: ({
+    info: GatsbyGraphQLResolveInfo,
+    processorSource: string,
+  }) => void
 }): IGatsbyResolverContext<TSource, TArgs> {
   const nodeStore = require(`../db/nodes`)
 
@@ -83,6 +88,10 @@ export default function withResolverContext<TSource, TArgs>({
     return moduleID
   }
 
+  if (!addDataProcessor) {
+    addDataProcessor = function (): void {}
+  }
+
   return {
     ...(context || {}),
     ...(customContext || {}),
@@ -101,33 +110,8 @@ export default function withResolverContext<TSource, TArgs>({
 
     // WIP api shape - just so mdx/demos continue to work
     addModuleDependency,
-
-    // WIP
-    addPageDataProcessor: function ({ info, processorSource }): void {
-      const path = pathToArrayFlattening(info.path).join(`.`)
-      if (context && context.path) {
-        store.dispatch(
-          addPageDataProcessor({
-            queryID: context.path,
-            path,
-            processorSource,
-          })
-        )
-      }
-    },
+    addDataProcessor,
   }
-}
-
-function pathToArrayFlattening(path: Path): Array<string> {
-  const flattened: Array<string> = []
-  let curr: Path | undefined = path
-  while (curr) {
-    if (!Number.isInteger(curr.key)) {
-      flattened.push(curr.key)
-    }
-    curr = curr.prev
-  }
-  return flattened.reverse()
 }
 
 module.exports = withResolverContext

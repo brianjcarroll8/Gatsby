@@ -11,7 +11,7 @@ exports.createResolvers = async ({ createResolvers }) => {
           const moduleId = context.pageModel.addModule({
             source: "gatsby-image",
           })
-          context.addPageDataProcessor({
+          context.addDataProcessor({
             info,
             processorSource:
               "gatsby/cache-dir/page-data-processors/asComponent",

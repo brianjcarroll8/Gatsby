@@ -25,7 +25,7 @@ const remove = async ({ publicDir }, pagePath) => {
 const writePageData = async (
   { publicDir },
   page,
-  { staticQueryHashes, moduleDependencies, pageDataProcessors }
+  { staticQueryHashes, moduleDependencies }
 ) => {
   const inputFilePath = path.join(
     publicDir,
@@ -37,14 +37,6 @@ const writePageData = async (
   const outputFilePath = getFilePath({ publicDir }, page.path)
   const result = await fs.readJSON(inputFilePath)
 
-  const pageProcessorsObj = {}
-
-  if (pageDataProcessors) {
-    pageDataProcessors.forEach((value, key) => {
-      pageProcessorsObj[key] = Array.from(value)
-    })
-  }
-
   const body = {
     componentChunkName: page.componentChunkName,
     path: page.path,
@@ -52,7 +44,6 @@ const writePageData = async (
     moduleDependencies: moduleDependencies,
     result,
     staticQueryHashes,
-    pageProcessors: pageProcessorsObj,
   }
   const bodyStr = JSON.stringify(body)
   // transform asset size to kB (from bytes) to fit 64 bit to numbers
@@ -79,7 +70,6 @@ const flush = async () => {
     staticQueryComponents,
     staticQueriesByTemplate,
     queryModuleDependencies,
-    pageDataProcessors,
     modules,
     program,
   } = store.getState()
@@ -105,11 +95,11 @@ const flush = async () => {
     hashToStaticQueryId.set(hash, id)
   })
 
-  console.log({
-    pendingPageDataWrites,
-    hashToStaticQueryId,
-    staticQueriesByTemplate,
-  })
+  // console.log({
+  //   pendingPageDataWrites,
+  //   hashToStaticQueryId,
+  //   staticQueriesByTemplate,
+  // })
 
   const pickModulesFromStaticQuery = (staticQueryHash, resources) => {
     const staticQueryId = hashToStaticQueryId.get(staticQueryHash)
@@ -168,11 +158,11 @@ const flush = async () => {
       })
     }
 
-    console.log({
-      path: pagePath,
-      staticQueryHashes: resources.staticQueryHashes,
-      moduleDependencies: resources.moduleDependencies,
-    })
+    // console.log({
+    //   path: pagePath,
+    //   staticQueryHashes: resources.staticQueryHashes,
+    //   moduleDependencies: resources.moduleDependencies,
+    // })
 
     const result = await writePageData(
       { publicDir: path.join(program.directory, `public`) },
@@ -180,19 +170,10 @@ const flush = async () => {
       {
         staticQueryHashes: Array.from(resources.staticQueryHashes),
         moduleDependencies: Array.from(resources.moduleDependencies),
-        pageDataProcessors: pageDataProcessors.get(pagePath) || new Map(),
       }
     )
 
     if (program.command === `develop`) {
-      // const pageProcessorsObj = {}
-
-      // if (pageDataProcessors.has(pagePath)) {
-      //   pageDataProcessors.get(pagePath).forEach((value, key) => {
-      //     pageProcessorsObj[key] = Array.from(value)
-      //   })
-      // }
-
       websocketManager.emitPageData({
         id: pagePath,
         result,

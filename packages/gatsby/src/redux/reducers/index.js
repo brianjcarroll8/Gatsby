@@ -20,7 +20,6 @@ import { nodesTouchedReducer } from "./nodes-touched"
 import { babelrcReducer } from "./babelrc"
 import { jobsReducer } from "./jobs"
 import { queryModuleDependenciesReducer } from "./query-module-dependencies"
-import { pageDataProcessorsReducer } from "./page-data-processors"
 import { staticQueriesByTemplateReducer } from "./static-queries-by-template"
 import { pendingPageDataWritesReducer } from "./pending-page-data-writes"
 
@@ -56,7 +55,6 @@ module.exports = {
   pageData: pageDataReducer,
   modules: modulesReducer,
   queryModuleDependencies: queryModuleDependenciesReducer,
-  pageDataProcessors: pageDataProcessorsReducer,
   staticQueriesByTemplate: staticQueriesByTemplateReducer,
   pendingPageDataWrites: pendingPageDataWritesReducer,
 }

@@ -18,7 +18,7 @@ const {
 const { RouteAnnouncerProps } = require(`./route-announcer-props`)
 const apiRunner = require(`./api-runner-ssr`)
 const syncRequires = require(`./sync-requires`)
-const processPageData = require(`./process-page-data`).default
+const runDataProcessors = require(`./run-data-processors`).default
 const { version: gatsbyVersion } = require(`gatsby/package.json`)
 
 const stats = JSON.parse(
@@ -213,7 +213,7 @@ export default (pagePath, callback) => {
         pathContext: pageData.result ? pageData.result.pageContext : undefined,
       }
 
-      processPageData(pageData.pageProcessors, pageData.result.data)
+      runDataProcessors(pageData.result)
 
       const pageElement = createElement(
         syncRequires.components[componentChunkName],

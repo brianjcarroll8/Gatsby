@@ -82,7 +82,6 @@ export const saveState = (): void => {
     pageData: state.pageData,
     modules: state.modules,
     queryModuleDependencies: state.queryModuleDependencies,
-    pageDataProcessors: state.pageDataProcessors,
     // pages: state.pages,
     pendingPageDataWrites: state.pendingPageDataWrites,
     staticQueriesByTemplate: state.staticQueriesByTemplate,

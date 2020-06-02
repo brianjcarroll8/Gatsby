@@ -1,9 +1,10 @@
-import { GraphQLResolveInfo } from "graphql"
+import { GraphQLResolveInfo, ExecutionResult } from "graphql"
 
 import { IPhantomReporter } from "gatsby-cli/lib/reporter"
 
 import { IGraphQLRunnerStats } from "../query/types"
 import { Path } from "graphql/jsutils/Path"
+import { ExecutionResultDataDefault } from "graphql/execution/execute"
 
 export interface IGatsbyResolverContext<TSource, TArgs> {
   defaultFieldResolver: GatsbyResolver<TSource, TArgs>
@@ -51,4 +52,8 @@ export interface IGatsbyPageInfo {
 export interface IGraphQLSpanTracer {
   getParentActivity(): IPhantomReporter
   createResolverActivity(path: Path, name: string): IPhantomReporter
+}
+
+export type GatsbyExecutionResult = ExecutionResult & {
+  dataProcessors?: { [path: string]: Array<string> }
 }

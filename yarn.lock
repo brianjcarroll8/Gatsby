@@ -11421,6 +11421,15 @@ gather-stream@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/gather-stream/-/gather-stream-1.0.0.tgz#b33994af457a8115700d410f317733cbe7a0904b"
 
+gatsby-image@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/gatsby-image/-/gatsby-image-2.4.5.tgz#c14f549a224a0306e20c1b39f3f6fef41b0918f6"
+  integrity sha512-XqSUEJX42ufWuce8JXaDRYKxpFBUqVoNRhG2lGABUenwUqLc2UAYebb5xXUQ7HZJciGi5HdoJtWuZOy5NzphsA==
+  dependencies:
+    "@babel/runtime" "^7.9.6"
+    object-fit-images "^3.2.4"
+    prop-types "^15.7.2"
+
 gatsby-node-helpers@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/gatsby-node-helpers/-/gatsby-node-helpers-0.3.0.tgz#3bdca3b7902a702a5834fef280ad66d51099d57c"

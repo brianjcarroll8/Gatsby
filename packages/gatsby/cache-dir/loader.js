@@ -1,7 +1,7 @@
 import prefetchHelper from "./prefetch"
 import emitter from "./emitter"
 import { setMatchPaths, findPath, findMatchPath } from "./find-path"
-import processPageData from "./process-page-data"
+import runDataProcessors from "./run-data-processors"
 
 /**
  * Available resource loading statuses
@@ -331,7 +331,7 @@ export class BaseLoader {
           webpackCompilationHash
         )
 
-        processPageData(pageResources.pageProcessors, pageResources.json.data)
+        runDataProcessors(pageResources.json)
         // pageResources.staticQueryResults = staticQueryResults
         finalResult.payload = pageResources
       }
