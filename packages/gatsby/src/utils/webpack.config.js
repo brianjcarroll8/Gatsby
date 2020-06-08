@@ -171,7 +171,7 @@ module.exports = async (
         }
       case `develop-html`:
         return {
-          main: directoryPath(`.cache/develop-static-entry`),
+          main: directoryPath(`.cache/develop-static-entry-2`),
         }
       case `build-html`:
         return {
