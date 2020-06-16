@@ -11,6 +11,7 @@ const Promise = require(`bluebird`)
 const telemetry = require(`gatsby-telemetry`)
 
 const apiRunnerNode = require(`../utils/api-runner-node`)
+import { transform } from "@babel/core"
 import { getBrowsersList } from "../utils/browserslist"
 import { createSchemaCustomization } from "../utils/create-schema-customization"
 import { startPluginRunner } from "../redux/plugin-runner"
@@ -290,12 +291,16 @@ module.exports = async (args: BootstrapArgs) => {
   })
   activity.start()
   const srcDir = `${__dirname}/../../cache-dir`
+
   const siteDir = cacheDirectory
+  // TODO: Go through each file in the siteDir, compile it with babel, and replace it's contents
+  // THIS IS REQUIRED TO GET develop SSR working
   const tryRequire = `${__dirname}/../utils/test-require-error.js`
   try {
     await fs.copy(srcDir, siteDir, {
       clobber: true,
     })
+
     await fs.copy(tryRequire, `${siteDir}/test-require-error.js`, {
       clobber: true,
     })

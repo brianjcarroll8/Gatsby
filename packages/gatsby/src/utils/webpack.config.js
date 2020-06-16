@@ -166,20 +166,20 @@ module.exports = async (
             `${require.resolve(
               `webpack-hot-middleware/client`
             )}?path=${getHmrPath()}`,
-            directoryPath(`.cache/app`),
+            directoryPath(`.cache/entry`),
           ],
         }
       case `develop-html`:
         return {
-          main: directoryPath(`.cache/develop-static-entry-2`),
+          main: directoryPath(`.cache/entry`),
         }
       case `build-html`:
         return {
-          main: directoryPath(`.cache/static-entry`),
+          main: directoryPath(`.cache/entry`),
         }
       case `build-javascript`:
         return {
-          app: directoryPath(`.cache/production-app`),
+          app: directoryPath(`.cache/entry`),
         }
       default:
         throw new Error(`The state requested ${stage} doesn't exist.`)

@@ -354,9 +354,10 @@ export class BaseLoader {
 }
 
 const createComponentUrls = componentChunkName =>
-  (window.___chunkMapping[componentChunkName] || []).map(
-    chunk => __PATH_PREFIX__ + chunk
-  )
+  (typeof window !== "undefined"
+    ? window.___chunkMapping[componentChunkName] || []
+    : []
+  ).map(chunk => __PATH_PREFIX__ + chunk)
 
 export class ProdLoader extends BaseLoader {
   constructor(asyncRequires, matchPaths) {

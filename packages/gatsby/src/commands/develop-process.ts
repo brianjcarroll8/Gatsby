@@ -3,6 +3,7 @@ import fs from "fs"
 import openurl from "better-opn"
 import chokidar from "chokidar"
 import { SchemaComposer } from "graphql-compose"
+require("@babel/register")
 
 import webpackHotMiddleware from "webpack-hot-middleware"
 import webpackDevMiddleware from "webpack-dev-middleware"
@@ -141,7 +142,7 @@ async function startServer(program: IProgram): Promise<IServer> {
     }
   }
 
-  await createIndexHtml(indexHTMLActivity)
+  // await createIndexHtml(indexHTMLActivity)
 
   indexHTMLActivity.end()
 
@@ -166,6 +167,17 @@ async function startServer(program: IProgram): Promise<IServer> {
    * Set up the express app.
    **/
   const app = express()
+
+  app.get("/*", (req, res, next) => {
+    // TODO: Install this to gatsby
+    const staticEntry = require(process.cwd() + "/.cache/static-entry")
+    staticEntry(req.path, html => {
+      console.log({ html })
+    })
+
+    next()
+  })
+
   app.use(telemetry.expressMiddleware(`DEVELOP`))
   app.use(
     webpackHotMiddleware(compiler, {

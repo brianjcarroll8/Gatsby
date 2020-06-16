@@ -80,11 +80,16 @@ const renderHTMLQueue = async (
   const segments = chunk(pages, 50)
 
   await Bluebird.map(segments, async pageSegment => {
-    await workerPool.renderHTML({
-      envVars,
-      htmlComponentRendererPath,
-      paths: pageSegment,
-    })
+    try {
+      await workerPool.renderHTML({
+        envVars,
+        htmlComponentRendererPath,
+        paths: pageSegment,
+      })
+    } catch (e) {
+      console.log(e)
+      throw e
+    }
 
     if (activity && activity.tick) {
       activity.tick(pageSegment.length)
