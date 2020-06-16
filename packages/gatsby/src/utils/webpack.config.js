@@ -171,7 +171,11 @@ module.exports = async (
         }
       case `develop-html`:
         return {
+<<<<<<< HEAD
           main: directoryPath(`.cache/entry`),
+=======
+          main: directoryPath(`.cache/develop-static-entry`),
+>>>>>>> parent of 5cf6197a4... Initial attempt to do SSR in develop
         }
       case `build-html`:
         return {

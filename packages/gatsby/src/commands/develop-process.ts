@@ -3,7 +3,7 @@ import fs from "fs"
 import openurl from "better-opn"
 import chokidar from "chokidar"
 import { SchemaComposer } from "graphql-compose"
-require("@babel/register")
+require(`@babel/register`)
 
 import webpackHotMiddleware from "webpack-hot-middleware"
 import webpackDevMiddleware from "webpack-dev-middleware"
@@ -168,9 +168,9 @@ async function startServer(program: IProgram): Promise<IServer> {
    **/
   const app = express()
 
-  app.get("/*", (req, res, next) => {
+  app.get(`/*`, (req, res, next) => {
     // TODO: Install this to gatsby
-    const staticEntry = require(process.cwd() + "/.cache/static-entry")
+    const staticEntry = require(process.cwd() + `/.cache/static-entry`)
     staticEntry(req.path, html => {
       console.log({ html })
     })

@@ -30,9 +30,9 @@ function absolutify(path) {
   // match behavior of @reach/router
   return new URL(
     path,
-    typeof window !== "undefined"
+    typeof window !== `undefined`
       ? window.location.href + (window.location.href.endsWith(`/`) ? `` : `/`)
-      : "/"
+      : `/`
   ).pathname
 }
 

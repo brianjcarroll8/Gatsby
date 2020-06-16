@@ -21,10 +21,10 @@ apiRunnerAsync(`onClientEntry`).then(() => {
   socketIo()
   // Let plugins register a service worker. The plugin just needs
   // to return true.
-  console.log("helllooo")
+  console.log(`helllooo`)
   if (
     apiRunner(`registerServiceWorker`).length > 0 &&
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === `production`
   ) {
     require(`./register-service-worker`)
   }
