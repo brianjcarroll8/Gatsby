@@ -10,7 +10,7 @@ import {
   ComposeScalarTypeConfig,
   ComposeUnionTypeConfig,
 } from "graphql-compose"
-import { GraphQLOutputType } from "graphql"
+import { GraphQLOutputType, GraphQLFieldConfigMap } from "graphql"
 
 export {
   default as Link,
@@ -28,6 +28,118 @@ export const useStaticQuery: <TData = any>(query: any) => TData
 export const parsePath: (path: string) => WindowLocation
 
 export const prefetchPathname: (path: string) => void
+
+type TypeOrTypeName = string | GraphQLOutputType
+
+/**
+ * Optional page dependency information.
+ *
+ */
+interface PageDependencies {
+  /* The path of the page that depends on the retrieved nodes' data */
+  path: string
+  /* Mark this dependency as a connection */
+  connectionType?: string
+}
+
+interface QueryArguments {
+  type: TypeOrTypeName
+  query: { filter: object; sort?: object }
+  firstOnly?: boolean
+}
+
+/**
+ * Gatsby Node Model
+ */
+export interface NodeModel {
+  /**
+   * Get a node from the store by ID and optional type.
+   *
+   * @param args.id ID of the requested node
+   * @param args.type Optional type of the node
+   */
+  getNodeById(
+    args: { id: string; type?: TypeOrTypeName },
+    pageDependencies?: PageDependencies
+  ): Node | null
+
+  /**
+   * Get nodes from the store by IDs and optional type.
+   *
+   * @param args.ids IDs of the requested nodes
+   * @param args.type Optional type of the nodes
+   */
+  getNodesByIds(
+    args: { ids: string[]; type?: TypeOrTypeName },
+    pageDependencies?: PageDependencies
+  ): Node[]
+
+  /**
+   * Get all nodes in the store, or all nodes of a specified type. Note that
+   * this doesn't add tracking to all the nodes, unless pageDependencies are
+   * passed.
+   *
+   * @param args.type Optional type of the nodes
+   */
+  getAllNodes(
+    args: { type?: TypeOrTypeName },
+    pageDependencies?: PageDependencies
+  ): Node[]
+
+  /**
+   * Get nodes of a type matching the specified query.
+   *
+   * @param args.query Query arguments (`filter` and `sort`)
+   * @param args.type Type
+   * @param args.firstOnly If true, return only first match
+   */
+  runQuery(
+    args: QueryArguments,
+    pageDependencies?: PageDependencies
+  ): Promise<Node[]>
+
+  /**
+   * Get the names of all node types in the store.
+   */
+  getTypes(): string[]
+
+  /**
+   * Given a result, that's either a single node or an array of them, track them
+   * using pageDependencies. Defaults to tracking according to current resolver
+   * path. Returns the result back.
+   */
+  trackPageDependencies(result: Node, pageDependencies?: PageDependencies): Node
+  trackPageDependencies(
+    result: Node[],
+    pageDependencies?: PageDependencies
+  ): Node[]
+
+  /**
+   * Finds top most ancestor of node that contains passed Object or Array
+   * @param obj Object/Array belonging to Node object or Node object
+   * @param predicate Optional callback to check if ancestor meets defined conditions
+   * @returns Top most ancestor if predicate is not specified
+   * or first node that meet predicate conditions if predicate is specified
+   */
+  findRootNodeAncestor(
+    obj: object | any[],
+    predicate: (node: Node) => boolean
+  ): Node | null
+
+  /**
+   * Adds link between inline objects/arrays contained in Node object
+   * and that Node object.
+   *
+   * @param node Root Node
+   */
+  trackInlineObjectsInRootNode(node: Node, sanitize: boolean): Node
+}
+
+interface GraphQLResolverContext {
+  nodeModel: NodeModel
+  // Keys added with `createResolverContext`
+  [key: string]: any
+}
 
 /**
  * A props object for adding type safety to your Gatsby pages, can be
@@ -855,7 +967,9 @@ export interface SourceNodesArgs extends ParentSpanPluginArgs {
 
 export interface CreateResolversArgs extends ParentSpanPluginArgs {
   intermediateSchema: object
-  createResolvers: Function
+  createResolvers(
+    configMap: GraphQLFieldConfigMap<object, GraphQLResolverContext>
+  ): void
   traceId: "initial-createResolvers"
 }
 
@@ -913,6 +1027,9 @@ export interface ParentSpanPluginArgs extends NodePluginArgs {
   parentSpan: object
 }
 
+/**
+ * Helper functions available on all gatsby-node APIs.
+ */
 export interface NodePluginArgs {
   /**
    * Use to prefix resources URLs. `pathPrefix` will be either empty string or
@@ -1108,6 +1225,9 @@ export interface BuildArgs extends ParentSpanPluginArgs {
   }>
 }
 
+/**
+ * Actions available on components.
+ */
 export interface Actions {
   /** @see https://www.gatsbyjs.org/docs/actions/#deletePage */
   deletePage(args: { path: string; component: string }): void

@@ -51,7 +51,7 @@ exports.sourceNodes = ({ actions: { createTypes } }) => {
       tableOfContentsDepth: Int
       overview: Boolean
       issue: String
-      jsdoc: [String!]
+      jsdoc: String
       apiCalls: String
     }
 
