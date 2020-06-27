@@ -30,7 +30,9 @@ const HomepageLogoBanner = () => {
   return (
     <section
       sx={{
-        borderBottom: t => `1px solid ${t.colors.ui.border}`,
+        borderBottom: 1,
+        borderBottomStyle: `solid`,
+        borderColor: `ui.border`,
         overflow: `hidden`,
         py: [5, null, null, null, null, null, 7],
         my: [null, null, null, null, null, `-1px`],
