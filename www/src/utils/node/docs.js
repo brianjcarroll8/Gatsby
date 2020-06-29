@@ -1,5 +1,6 @@
 const _ = require(`lodash`)
 const minimatch = require(`minimatch`)
+const { execSync } = require(`child_process`)
 
 const { getPrevAndNext } = require(`../get-prev-and-next.js`)
 const { getMdxContentSlug } = require(`../get-mdx-content-slug`)
@@ -26,6 +27,14 @@ function isCodeFile(node) {
       minimatch(node.relativePath, ignorePattern)
     )
   )
+}
+
+function getLatestUpdate(node) {
+  const date = execSync(
+    `git log -n 1 --format=%cd -- ${node.fileAbsolutePath}`,
+    { encoding: `utf-8` }
+  )
+  return new Date(date)
 }
 
 // convert a string like `/some/long/path/name-of-docs/` to `name-of-docs`
@@ -60,19 +69,11 @@ exports.createSchemaCustomization = ({ actions: { createTypes } }) => {
       anchor: String
       section: String
       locale: String
+      latestUpdate: Date @dateformat
     }
 
     type File implements Node {
       childrenDocumentationJs: DocumentationJs
-      fields: FileFields
-    }
-
-    # Added by gatsby-transformer-gitinfo
-    # TODO add these back upstream
-    type FileFields {
-      gitLogLatestDate: Date @dateformat
-      gitLogLatestAuthorName: String
-      gitLogLatestAuthorEmail: String
     }
 
     type DocumentationJSComponentDescription implements Node {
@@ -209,6 +210,11 @@ exports.onCreateNode = async ({
     createNodeField({ node, name: `anchor`, value: slugToAnchor(slug) })
     createNodeField({ node, name: `slug`, value: slug })
     createNodeField({ node, name: `section`, value: section })
+    createNodeField({
+      node,
+      name: `latestUpdate`,
+      value: getLatestUpdate(node),
+    })
   }
   if (locale) {
     createNodeField({ node, name: `locale`, value: locale })

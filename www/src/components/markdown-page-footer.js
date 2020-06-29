@@ -24,11 +24,11 @@ export default function MarkdownPageFooter(props) {
           >
             <EditIcon sx={{ mr: 2 }} /> Edit this page on GitHub
           </a>
-          {props.page?.parent?.fields?.gitLogLatestDate && (
+          {props.page?.fields?.latestUpdate && (
             <span sx={{ color: `textMuted`, fontSize: 1 }}>
               Last updated:{` `}
-              <time dateTime={props.page.parent.fields.gitLogLatestDate}>
-                {props.page.parent.fields.gitLogLatestDate}
+              <time dateTime={props.page.fields.latestUpdate}>
+                {props.page.fields.latestUpdate}
               </time>
             </span>
           )}
@@ -40,21 +40,14 @@ export default function MarkdownPageFooter(props) {
 
 export const fragment = graphql`
   fragment MarkdownPageFooterMdx on Mdx {
-    parent {
-      ... on File {
-        relativePath
-        fields {
-          gitLogLatestDate(formatString: "MMMM D, YYYY")
-        }
-      }
+    fields {
+      latestUpdate(formatString: "MMMM D, YYYY")
     }
-  }
-  fragment MarkdownPageFooter on MarkdownRemark {
     parent {
       ... on File {
         relativePath
         fields {
-          gitLogLatestDate(formatString: "MMMM D, YYYY")
+          latestUpdate(formatString: "MMMM D, YYYY")
         }
       }
     }
