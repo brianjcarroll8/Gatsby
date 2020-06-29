@@ -46,9 +46,6 @@ export const fragment = graphql`
     parent {
       ... on File {
         relativePath
-        fields {
-          latestUpdate(formatString: "MMMM D, YYYY")
-        }
       }
     }
   }
