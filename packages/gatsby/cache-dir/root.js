@@ -12,30 +12,6 @@ import loader from "./loader"
 import { PageQueryStore, StaticQueryStore } from "./query-result-store"
 import EnsureResources from "./ensure-resources"
 
-import { reportError, clearError } from "./error-overlay-handler"
-
-// TODO: Remove entire block when we make fast-refresh the default
-// In fast-refresh, this logic is all moved into the `error-overlay-handler`
-if (
-  window.__webpack_hot_middleware_reporter__ !== undefined &&
-  process.env.GATSBY_HOT_LOADER !== `fast-refresh`
-) {
-  const overlayErrorID = `webpack`
-  // Report build errors
-  window.__webpack_hot_middleware_reporter__.useCustomOverlay({
-    showProblems(type, obj) {
-      if (type !== `errors`) {
-        clearError(overlayErrorID)
-        return
-      }
-      reportError(overlayErrorID, obj[0])
-    },
-    clear() {
-      clearError(overlayErrorID)
-    },
-  })
-}
-
 navigationInit()
 
 // In gatsby v2 if Router is used in page using matchPaths

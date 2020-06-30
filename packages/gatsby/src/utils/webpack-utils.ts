@@ -654,6 +654,7 @@ export const createWebpackUtils = (
   plugins.fastRefresh = (): Plugin =>
     new ReactRefreshWebpackPlugin({
       overlay: {
+        entry: require.resolve(`./fast-refresh-overlay`),
         sockIntegration: `whm`,
       },
     })
