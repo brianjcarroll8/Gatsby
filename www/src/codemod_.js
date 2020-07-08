@@ -8,6 +8,7 @@ const User = () => (
       justifyContent: `flex-end`,
       mb: 0,
       margin: 1,
+      p: [2, 3, 4, 5, 0],
       mx: [2, null, null, 5, 0],
       top: 6,
       position: `relative`,
