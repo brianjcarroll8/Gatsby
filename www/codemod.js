@@ -47,7 +47,7 @@ function visit(v) {
       }
 
       v.value.elements.forEach((e, index) => {
-        if (index > 0 && index >= pos && e.value !== 0) {
+        if (index >= pos && e.value > pos) {
           e.value += 1
         }
       })
