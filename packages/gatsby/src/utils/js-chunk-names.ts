@@ -8,6 +8,13 @@ export const generateComponentChunkName = (componentPath: string): string => {
   if (program && program.directory) {
     directory = program.directory
   }
-  const name = path.relative(directory, componentPath)
+  let name = path.relative(directory, componentPath)
+
+  console.log({ name })
+
+  if (name.length > 150) {
+    name = name.substring(0, 150)
+  }
+
   return `component---${kebabCase(name)}`
 }

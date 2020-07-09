@@ -18,7 +18,11 @@ export interface IPageDataWithQueryResult extends IPageData {
 }
 
 export function fixedPagePath(pagePath: string): string {
-  return pagePath === `/` ? `index` : pagePath
+  let path = pagePath === `/` ? `index` : pagePath
+  if (path.length > 255) {
+    path = path.substring(0, 255)
+  }
+  return path
 }
 
 function getFilePath(publicDir: string, pagePath: string): string {

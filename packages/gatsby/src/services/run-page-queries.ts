@@ -34,13 +34,17 @@ export async function runPageQueries({
     }
   )
 
-  activity.start()
-  await processPageQueries(pageQueryIds, {
-    state,
-    activity,
-    graphqlRunner,
-    graphqlTracing: program?.graphqlTracing,
-  })
+  try {
+    activity.start()
+    await processPageQueries(pageQueryIds, {
+      state,
+      activity,
+      graphqlRunner,
+      graphqlTracing: program?.graphqlTracing,
+    })
 
-  activity.done()
+    activity.done()
+  } catch (e) {
+    console.log(`failed?`)
+  }
 }
