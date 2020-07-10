@@ -259,7 +259,6 @@ BubbleSort
 bueno
 bugfixes
 Bugsnag
-BuildDataExample
 BuilderIO
 buildpack
 buildpacks
@@ -326,7 +325,6 @@ cli
 CLI
 cliché
 client-centric
-ClientDataExample
 clientside
 CLIs
 Clodui
