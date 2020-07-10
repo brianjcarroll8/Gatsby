@@ -2046,7 +2046,6 @@ Vinci
 Vinod
 VirtualBox
 Vishwakarma
-VisuallyHidden
 VM
 Vogt
 VoiceOver
